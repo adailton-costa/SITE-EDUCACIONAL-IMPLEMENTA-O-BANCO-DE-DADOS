@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de usuario</title>
+    <link rel="stylesheet" href="cadastro.css">
+</head>
+<body>
+    <div class="box">
+        <form action="">
+            <fieldset>
+                <legend><b>Cadastro de Usuário</b></legend>
+                <br>
+                <div class="inputBox">
+                    <input type="text" name="nome" id="nome" class="inputUser" required>
+                    <label for="nome" class="labelInput">Nome Completo</label>
+                </div>
+                <br>
+                <div class="inputBox">
+                    <input type="text" name="email" id="email" class="inputUser" required>
+                    <label for="email" class="labelInput">Email</label>
+                </div>
+                <br>
+                <div class="inputBox">
+                    <input type="password" name="senha" id="senha" class="inputUser" required>
+                    <label for="senha" class="labelInput">Senha</label>
+                </div>
+                <p>Sexo:</p>
+                <input type="radio" name="genero" id="feminino" value="feminino" required>
+                <label for="feminino">Feminino</label>
+                <br>
+                <input type="radio" name="genero" id="masculino" value="masculino" required>
+                <label for="masculino">Masculino</label>
+                <br>
+                <input type="radio" name="genero" id="outro" value="outro" required>
+                <label for="outro">Outro</label>
+                <br><br>
+                <label for="data_nasc"><b>Data de Nascimento</b></label>
+                <input type="date" name="data_nasc" id="data_nasc" required>
+                <br><br>
+                <div class="inputBox">
+                    <input type="text" name="cidade" id="cidade" class="inputUser" required>
+                    <label for="cidade" class="labelInput">Cidade</label>
+                </div>
+                <br>
+                <div class="inputBox">
+                    <input type="text" name="estado" id="estado" class="inputUser" required>
+                    <label for="estado" class="labelInput">Estado</label>
+                </div>
+                <br>
+                <input type="submit" name="submit" id="submit">
+            </fieldset>
+        </form>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAQ0s0EpWm2kmPAC3z0bNphLyjcGieWIBM",
+            authDomain: "siteweb-ca3bc.firebaseapp.com",
+            projectId: "siteweb-ca3bc",
+            storageBucket: "siteweb-ca3bc.firebasestorage.app",
+            messagingSenderId: "312050528441",
+            appId: "1:312050528441:web:70abee0173951c08402b68"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const form = document.querySelector('form');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nome = document.getElementById('nome').value;
+            const email = document.getElementById('email').value;
+            const senha = document.getElementById('senha').value;
+            const genero = document.querySelector('input[name="genero"]:checked').value;
+            const dataNasc = document.getElementById('data_nasc').value;
+            const cidade = document.getElementById('cidade').value;
+            const estado = document.getElementById('estado').value;
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
+                const user = userCredential.user;
+
+                await addDoc(collection(db, "usuarios"), {
+                    uid: user.uid,
+                    nome: nome,
+                    email: email,
+                    genero: genero,
+                    dataNasc: dataNasc,
+                    cidade: cidade,
+                    estado: estado,
+                    createdAt: new Date()
+                });
+
+                alert('Usuário cadastrado com sucesso!');
+                form.reset();
+            } catch (error) {
+            let errorMessage = 'Erro ao cadastrar: ';
+            
+            switch (error.code) {
+                case 'auth/email-already-in-use':
+                    errorMessage += 'Este e-mail já está em uso. ';
+                    errorMessage += '<a href="tela-de-login.html" style="color: white; text-decoration: underline;">Fazer login</a>';
+                    break;
+                case 'auth/invalid-email':
+                    errorMessage += 'E-mail inválido';
+                    break;
+                case 'auth/weak-password':
+                    errorMessage += 'Senha muito fraca (mínimo 6 caracteres)';
+                    break;
+                default:
+                    errorMessage += error.message;
+            }
+
+            const errorDiv = document.createElement('div');
+            errorDiv.innerHTML = errorMessage;
+            errorDiv.style.color = 'red';
+            errorDiv.style.marginTop = '10px';
+            
+            // Insere a mensagem após o botão de submit
+            form.querySelector('fieldset').appendChild(errorDiv);
+            
+            // Remove a mensagem após 5 segundos
+            setTimeout(() => errorDiv.remove(), 5000);
+        }
+        });
+    </script>
+</body>
+</html>
+
+
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de usuario</title>
+    <link rel="stylesheet" href="cadastro.css">
+</head>
+<body>
+    <div class="box">
+        <form action="">
+            <fieldset>
+                <legend><b>Cadastro de Usuário</b></legend>
+                <br>
+                <div class="inputBox">
+                    <input type="text" nome="nome" id="nome" class="inputUser" required>
+                    <label for="nome" class="labelInput">Nome Completo</label>
+                </div>
+                <br>
+                <div class="inputBox">
+                    <input type="text" nome="email" id="email" class="inputUser" required>
+                    <label for="email" class="labelInput">Email</label>
+                </div>
+                <br>
+                <div class="inputBox">
+                    <input type="text" nome="senha" id="senha" class="inputUser" required>
+                    <label for="senha" class="labelInput">Senha</label>
+                </div>
+                <p>Sexo:</p>
+                <input type="radio" nome="genero" id="feminino" value="feminino" required>
+                <label for="feminino">Feminino</label>
+                <br>
+                <input type="radio" nome="genero" id="masculino" value="feminino" required>
+                <label for="masculino">Masculino</label>
+                <br>
+                <input type="radio" nome="genero" id="outro" value="feminino" required>
+                <label for="outro">Outro</label>
+                <br><br>
+                <label for="data_nasc"><b>Data de Nascimento</b></label>
+                <input type="date" nome="data_nasc" id="data_nasc" required>
+                <br><br>
+                <div class="inputBox">
+                    <input type="text" nome="cidade" id="cidade" class="inputUser" required>
+                    <label for="cidade" class="labelInput">Cidade</label>
+                </div>
+                <br>
+                <div class="inputBox">
+                    <input type="text" nome="estado" id="estado" class="inputUser" required>
+                    <label for="estado" class="labelInput">Estado</label>
+                </div>
+                <br>
+                <input type="submit" name="submit" id="submit">
+            </fieldset>
+        </form>
+
+    </div>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyAQ0s0EpWm2kmPAC3z0bNphLyjcGieWIBM",
+          authDomain: "siteweb-ca3bc.firebaseapp.com",
+          projectId: "siteweb-ca3bc",
+          storageBucket: "siteweb-ca3bc.firebasestorage.app",
+          messagingSenderId: "312050528441",
+          appId: "1:312050528441:web:70abee0173951c08402b68"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+      </script>
+
+<script>
+    const auth = firebase.auth();
+  
+    const form = document.querySelector('form');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault(); // impede o envio normal do form
+      const email = document.getElementById('email').value;
+      const senha = document.getElementById('senha').value;
+  
+      auth.createUserWithEmailAndPassword(email, senha)
+        .then((userCredential) => {
+          alert('Usuário cadastrado com sucesso!');
+          // Redirecionar ou limpar o formulário
+          form.reset();
+        })
+        .catch((error) => {
+          alert('Erro ao cadastrar: ' + error.message);
+        });
+    });
+  </script>
+  
+</body>
+</html> -->

@@ -1,0 +1,49 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background-image: linear-gradient(45deg, #0f2027, #203a43, #2c5364);
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+div{
+    background-color: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    padding: 80px;
+    border-radius: 15px;
+    color: white;
+    text-align: center;
+}
+div a {
+color: white; /* Deixa branco */
+text-decoration: none; /* Remove o sublinhado */
+transition: color 0.3s ease; /* Suaviza a transição */
+}
+
+div a:hover {
+color: #007bff; /* Azul ao passar o mouse */
+text-decoration: underline; /* Adiciona sublinhado */
+}
+
+input{
+    padding: 15px;
+    border: none;
+    outline: none;
+    font-size: 15px;
+}
+button{
+    background-color: dodgerblue;
+    border: none;
+    padding: 15px;
+    width: 100%;
+    border-radius: 15px;
+    color: white;
+    font-size: 15px;
+}
+button:hover{
+    background-image: linear-gradient(rgb(0, 80, 172), rgb(80, 19, 192));
+}
