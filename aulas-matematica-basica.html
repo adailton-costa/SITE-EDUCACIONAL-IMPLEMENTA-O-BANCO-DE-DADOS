@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aulas - Matemática Básica | EducaMais</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Fredoka+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="aulas-matematica-basica.css">
+    <style>
+      /* Adicione este CSS se não tiver o arquivo externo */
+      .video-placeholder.disabled {
+          display: none;
+      }
+      .course-content {
+          display: none;
+      }
+      .lesson-item.current {
+          background-color: #f0f8ff;
+      }
+      .complete-btn.completed {
+          background-color: #28a745;
+      }
+      #aula-1 {
+          display: block;
+      }
+  </style>
+  </head>
+<body>
+    <header>
+        <div class="logo">EducaUP</div>
+        <nav>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> Início</a></li>
+                <li><a href="cursos.html"><i class="fas fa-book"></i> Cursos</a></li>
+                <li><a href="#"><i class="fas fa-info-circle"></i> Sobre</a></li>
+                <li><a href="#"><i class="fas fa-envelope"></i> Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="course-header">
+        <div class="course-header-content">
+            <h1 class="course-title">
+                <i class="fas fa-book-open"></i> Matemática Básica
+            </h1>
+            <div class="course-progress-container">
+                <div class="course-progress">
+                    <span class="progress-text">35% concluído</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 35%;"></div>
+                    </div>
+                </div>
+                <a href="#" class="certificate-btn">
+                    <i class="fas fa-certificate"></i> Certificado
+                </a>
+                <button class="reset-btn" onclick="resetProgress()">
+                  Resetar Progresso
+            </div>
+        </div>
+    </div>
+
+    <main class="course-main">
+      <!-- Aula 1 -->
+      <div class="course-content" id="aula-1">
+          <div class="video-container">
+              <div class="video-player">
+                  <div id="placeholder" class="video-placeholder">
+                      <i class="fas fa-play-circle pulse" style="font-size: 4rem;"></i>
+                      <h3>Aula 1: Introdução às Operações</h3>
+                      <p>Clique no botão play para iniciar a aula</p>
+                  </div>
+                  <!-- Video Embutido do YouTube -->
+                  <iframe 
+                      width="560" 
+                      height="315" 
+                      src="https://www.youtube.com/embed/-L5KYD-08AQ?si=SiPTzJT7PHrlaWsW" 
+                      title="YouTube video player" 
+                      frameborder="0" 
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                      referrerpolicy="strict-origin-when-cross-origin" 
+                      allowfullscreen>
+                  </iframe>
+              </div>
+          </div>
+  
+          <div class="video-info">
+              <h2><i class="fas fa-info-circle"></i> Sobre esta aula</h2>
+              <div class="video-meta">
+                  <div class="meta-item"><i class="far fa-clock"></i> 25 minutos</div>
+                  <div class="meta-item"><i class="fas fa-chart-bar"></i> Nível Básico</div>
+                  <div class="meta-item"><i class="far fa-calendar-alt"></i> Disponível agora</div>
+              </div>
+              <div class="video-description">
+                  <p>Nesta aula, vamos aprender as operações básicas: adição, subtração, multiplicação e divisão.</p>
+              </div>
+              <div class="video-actions">
+                  <button class="action-btn complete-btn"><i class="fas fa-check-circle"></i> Marcar como concluída</button>
+                  <button class="action-btn material-btn"><i class="fas fa-file-pdf"></i> Material de apoio</button>
+                  <button class="action-btn next-btn" onclick="showAula(2)"><i class="fas fa-arrow-right"></i> Próxima aula</button>
+              </div>
+          </div>
+      </div>
+  
+      <!-- Aula 2 -->
+      <div class="course-content" id="aula-2">
+        <div class="video-container">
+            <div class="video-player">
+                <div id="placeholder-2" class="video-placeholder">
+                    <i class="fas fa-play-circle pulse" style="font-size: 4rem;"></i>
+                    <h3>Aula 2: Operações Básicas</h3>
+                    <p>Clique no botão play para iniciar a aula</p>
+                </div>
+                <!-- Video Embutido do YouTube -->
+                <iframe 
+                    width="560" 
+                    height="315" 
+                    src="https://www.youtube.com/embed/k2PbBawEV_0?si=npOjhq9c8-5Oiov5" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+
+        <div class="video-info">
+            <h2><i class="fas fa-info-circle"></i> Sobre esta aula</h2>
+            <div class="video-meta">
+                <div class="meta-item"><i class="far fa-clock"></i> 32 minutos</div>
+                <div class="meta-item"><i class="fas fa-chart-bar"></i> Nível Básico</div>
+                <div class="meta-item"><i class="far fa-calendar-alt"></i> Disponível agora</div>
+            </div>
+            <div class="video-description">
+                <p>Nesta aula, vamos aprender as operações básicas: adição, subtração, multiplicação e divisão.</p>
+            </div>
+            <div class="video-actions">
+                <button class="action-btn complete-btn"><i class="fas fa-check-circle"></i> Marcar como concluída</button>
+                <button class="action-btn material-btn"><i class="fas fa-file-pdf"></i> Material de apoio</button>
+                <button class="action-btn next-btn" onclick="showAula(3)"><i class="fas fa-arrow-right"></i> Próxima aula</button>
+            </div>
+        </div>
+    </div>
+
+      <!-- Aula 3 -->
+      <div class="course-content" id="aula-3">
+        <div class="video-container">
+            <div class="video-player">
+                <div id="placeholder-3" class="video-placeholder">
+                    <i class="fas fa-play-circle pulse" style="font-size: 4rem;"></i>
+                    <h3>Aula 3: Números Decimais</h3>
+                    <p>Clique no botão play para iniciar a aula</p>
+                </div>
+                <!-- Video Embutido do YouTube -->
+                <iframe 
+                    width="560" 
+                    height="315" 
+                    src="https://www.youtube.com/embed/lA1lVOBTSlQ?si=ILCWWTGjZKr30Vsu" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+
+        <div class="video-info">
+            <h2><i class="fas fa-info-circle"></i> Sobre esta aula</h2>
+            <div class="video-meta">
+                <div class="meta-item"><i class="far fa-clock"></i> 28 minutos</div>
+                <div class="meta-item"><i class="fas fa-chart-bar"></i> Nível Básico</div>
+                <div class="meta-item"><i class="far fa-calendar-alt"></i> Disponível agora</div>
+            </div>
+            <div class="video-description">
+                <p>Nesta aula, vamos aprender as operações básicas: adição, subtração, multiplicação e divisão.</p>
+            </div>
+            <div class="video-actions">
+                <button class="action-btn complete-btn"><i class="fas fa-check-circle"></i> Marcar como concluída</button>
+                <button class="action-btn material-btn"><i class="fas fa-file-pdf"></i> Material de apoio</button>
+                <button class="action-btn next-btn" onclick="showAula(4)"><i class="fas fa-arrow-right"></i> Próxima aula</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Aula 4 -->
+    <div class="course-content" id="aula-4">
+      <div class="video-container">
+          <div class="video-player">
+              <div id="placeholder-4" class="video-placeholder">
+                  <i class="fas fa-play-circle pulse" style="font-size: 4rem;"></i>
+                  <h3>Aula 4: Introdução às Frações</h3>
+                  <p>Clique no botão play para iniciar a aula</p>
+              </div>
+              <!-- Video Embutido do YouTube -->
+              <iframe 
+                  width="560" 
+                  height="315" 
+                  src="https://www.youtube.com/embed/bPjSy37-D8U?si=Bi6Py9MEAC2kN7Uo" 
+                  title="YouTube video player" 
+                  frameborder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                  referrerpolicy="strict-origin-when-cross-origin" 
+                  allowfullscreen>
+              </iframe>
+          </div>
+      </div>
+
+      <div class="video-info">
+          <h2><i class="fas fa-info-circle"></i> Sobre esta aula</h2>
+          <div class="video-meta">
+              <div class="meta-item"><i class="far fa-clock"></i> 28 minutos</div>
+              <div class="meta-item"><i class="fas fa-chart-bar"></i> Nível Básico</div>
+              <div class="meta-item"><i class="far fa-calendar-alt"></i> Disponível agora</div>
+          </div>
+          <div class="video-description">
+              <p>Nesta aula, vamos aprender as operações básicas: adição, subtração, multiplicação e divisão.</p>
+          </div>
+          <div class="video-actions">
+              <button class="action-btn complete-btn"><i class="fas fa-check-circle"></i> Marcar como concluída</button>
+              <button class="action-btn material-btn"><i class="fas fa-file-pdf"></i> Material de apoio</button>
+              <button class="action-btn next-btn" onclick="showAula(5)"><i class="fas fa-arrow-right"></i> Próxima aula</button>
+          </div>
+      </div>
+  </div>
+
+  <!-- Aula 5 -->
+  <div class="course-content" id="aula-5">
+    <div class="video-container">
+        <div class="video-player">
+            <div id="placeholder-5" class="video-placeholder">
+                <i class="fas fa-play-circle pulse" style="font-size: 4rem;"></i>
+                <h3>Aula 5: Operações com Frações</h3>
+                <p>Clique no botão play para iniciar a aula</p>
+            </div>
+            <!-- Video Embutido do YouTube -->
+            <iframe 
+                width="560" 
+                height="315" 
+                src="https://www.youtube.com/embed/esFA9XaM08g?si=W8xEDMtCf0eWwjIH" 
+                title="YouTube video player" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="strict-origin-when-cross-origin" 
+                allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+
+    <div class="video-info">
+        <h2><i class="fas fa-info-circle"></i> Sobre esta aula</h2>
+        <div class="video-meta">
+            <div class="meta-item"><i class="far fa-clock"></i> 28 minutos</div>
+            <div class="meta-item"><i class="fas fa-chart-bar"></i> Nível Básico</div>
+            <div class="meta-item"><i class="far fa-calendar-alt"></i> Disponível agora</div>
+        </div>
+        <div class="video-description">
+            <p>Nesta aula, vamos aprender as operações básicas: adição, subtração, multiplicação e divisão.</p>
+        </div>
+        <div class="video-actions">
+            <button class="action-btn complete-btn"><i class="fas fa-check-circle"></i> Marcar como concluída</button>
+            <button class="action-btn material-btn"><i class="fas fa-file-pdf"></i> Material de apoio</button>
+            <button class="action-btn next-btn" onclick="showAula(6)"><i class="fas fa-arrow-right"></i> Próxima aula</button>
+        </div>
+    </div>
+</div>
+
+<!-- Aula 6 -->
+<div class="course-content" id="aula-6">
+  <div class="video-container">
+      <div class="video-player">
+          <div id="placeholder-6" class="video-placeholder">
+              <i class="fas fa-play-circle pulse" style="font-size: 4rem;"></i>
+              <h3>Aula 6: Porcentagens</h3>
+              <p>Clique no botão play para iniciar a aula</p>
+          </div>
+          <!-- Video Embutido do YouTube -->
+          <iframe 
+              width="560" 
+              height="315" 
+              src="https://www.youtube.com/embed/CERiIwParX4?si=GxGzdmQjOR8HngDu" 
+              title="YouTube video player" 
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+              referrerpolicy="strict-origin-when-cross-origin" 
+              allowfullscreen>
+          </iframe>
+      </div>
+  </div>
+
+  <div class="video-info">
+      <h2><i class="fas fa-info-circle"></i> Sobre esta aula</h2>
+      <div class="video-meta">
+          <div class="meta-item"><i class="far fa-clock"></i> 28 minutos</div>
+          <div class="meta-item"><i class="fas fa-chart-bar"></i> Nível Básico</div>
+          <div class="meta-item"><i class="far fa-calendar-alt"></i> Disponível agora</div>
+      </div>
+      <div class="video-description">
+          <p>Nesta aula, vamos aprender as operações básicas: adição, subtração, multiplicação e divisão.</p>
+      </div>
+      <div class="video-actions">
+          <button class="action-btn complete-btn"><i class="fas fa-check-circle"></i> Marcar como concluída</button>
+          <button class="action-btn material-btn"><i class="fas fa-file-pdf"></i> Material de apoio</button>
+          <button class="action-btn next-btn" onclick="showAula(7)"><i class="fas fa-arrow-right"></i> Próxima aula</button>
+      </div>
+  </div>
+</div>
+
+<!-- Aula 7 -->
+<div class="course-content" id="aula-7">
+  <div class="video-container">
+      <div class="video-player">
+          <div id="placeholder-7" class="video-placeholder">
+              <i class="fas fa-play-circle pulse" style="font-size: 4rem;"></i>
+              <h3>Aula 7: Introdução às Expressões</h3>
+              <p>Clique no botão play para iniciar a aula</p>
+          </div>
+          <!-- Video Embutido do YouTube -->
+          <iframe 
+              width="560" 
+              height="315" 
+              src="https://www.youtube.com/embed/cFVKlZezMc0?si=2h0Ge6iP29T7QUmK" 
+              title="YouTube video player" 
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+              referrerpolicy="strict-origin-when-cross-origin" 
+              allowfullscreen>
+          </iframe>
+      </div>
+  </div>
+
+  <div class="video-info">
+      <h2><i class="fas fa-info-circle"></i> Sobre esta aula</h2>
+      <div class="video-meta">
+          <div class="meta-item"><i class="far fa-clock"></i> 28 minutos</div>
+          <div class="meta-item"><i class="fas fa-chart-bar"></i> Nível Básico</div>
+          <div class="meta-item"><i class="far fa-calendar-alt"></i> Disponível agora</div>
+      </div>
+      <div class="video-description">
+          <p>Nesta aula, vamos aprender as operações básicas: adição, subtração, multiplicação e divisão.</p>
+      </div>
+      <div class="video-actions">
+          <button class="action-btn complete-btn"><i class="fas fa-check-circle"></i> Marcar como concluída</button>
+          <button class="action-btn material-btn"><i class="fas fa-file-pdf"></i> Material de apoio</button>
+          <button class="action-btn next-btn" onclick="showAula(8)"><i class="fas fa-arrow-right"></i> Próxima aula</button>
+      </div>
+  </div>
+</div>
+
+<!-- Aula 8 -->
+<div class="course-content" id="aula-8">
+  <div class="video-container">
+      <div class="video-player">
+          <div id="placeholder-4" class="video-placeholder">
+              <i class="fas fa-play-circle pulse" style="font-size: 4rem;"></i>
+              <h3>Aula 8: Equações Simples</h3>
+              <p>Clique no botão play para iniciar a aula</p>
+          </div>
+          <!-- Video Embutido do YouTube -->
+          <iframe 
+              width="560" 
+              height="315" 
+              src="https://www.youtube.com/embed/x4k8950MVeg?si=FdLzwvQkuo3EwqHd" 
+              title="YouTube video player" 
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+              referrerpolicy="strict-origin-when-cross-origin" 
+              allowfullscreen>
+          </iframe>
+      </div>
+  </div>
+
+  <div class="video-info">
+      <h2><i class="fas fa-info-circle"></i> Sobre esta aula</h2>
+      <div class="video-meta">
+          <div class="meta-item"><i class="far fa-clock"></i> 28 minutos</div>
+          <div class="meta-item"><i class="fas fa-chart-bar"></i> Nível Básico</div>
+          <div class="meta-item"><i class="far fa-calendar-alt"></i> Disponível agora</div>
+      </div>
+      <div class="video-description">
+          <p>Nesta aula, vamos aprender as operações básicas: adição, subtração, multiplicação e divisão.</p>
+      </div>
+      <div class="video-actions">
+          <button class="action-btn complete-btn"><i class="fas fa-check-circle"></i> Marcar como concluída</button>
+          <button class="action-btn material-btn"><i class="fas fa-file-pdf"></i> Material de apoio</button>
+          <button class="action-btn next-btn" onclick="showAula(9)"><i class="fas fa-arrow-right"></i> Próxima aula</button>
+      </div>
+  </div>
+</div>
+
+            <div class="resources-container">
+                <h3><i class="fas fa-paperclip"></i> Recursos da aula</h3>
+                <div class="resource-item">
+                    <div class="resource-icon"><i class="fas fa-file-pdf"></i></div>
+                    <div class="resource-text">
+                        <h4>Guia de Frações Básicas</h4>
+                        <p>PDF com resumo dos conceitos e exercícios práticos</p>
+                    </div>
+                    <button class="download-btn"><i class="fas fa-download"></i></button>
+                </div>
+                <div class="resource-item">
+                    <div class="resource-icon"><i class="fas fa-file-excel"></i></div>
+                    <div class="resource-text">
+                        <h4>Planilha de Exercícios</h4>
+                        <p>Arquivo Excel com problemas para praticar</p>
+                    </div>
+                    <button class="download-btn"><i class="fas fa-download"></i></button>
+                </div>
+                <div class="resource-item">
+                    <div class="resource-icon"><i class="fas fa-link"></i></div>
+                    <div class="resource-text">
+                        <h4>Links Úteis</h4>
+                        <p>Recursos online complementares sobre frações</p>
+                    </div>
+                    <button class="download-btn"><i class="fas fa-external-link-alt"></i></button>
+                </div>
+            </div>
+
+            <div class="quiz-container">
+                <h3><i class="fas fa-question-circle"></i> Quiz de Revisão</h3>
+                <div class="quiz-question">
+                    <p>1. Em uma fração, o número que fica abaixo da linha e indica em quantas partes o todo foi dividido é chamado de:</p>
+                    <ul class="quiz-options">
+                        <li class="quiz-option">Numerador</li>
+                        <li class="quiz-option selected">Denominador</li>
+                        <li class="quiz-option">Divisor</li>
+                        <li class="quiz-option">Quociente</li>
+                    </ul>
+                </div>
+                <button class="quiz-submit">Enviar Respostas</button>
+            </div>
+        </div>
+
+        <div class="lessons-container">
+            <h2><i class="fas fa-list-ol"></i> Conteúdo do Curso</h2>
+            
+            <div class="module active">
+                <div class="module-header">
+                    <div class="module-title">
+                        <i class="fas fa-folder-open"></i> Módulo 1: Fundamentos
+                    </div>
+                    <div class="module-progress">3/8 aulas</div>
+                </div>
+                <ul class="module-lessons">
+                    <li class="lesson-item">
+                        <i class="lesson-icon far fa-circle"></i>
+                        <div class="lesson-text">
+                            <div class="lesson-title">1. Introdução aos Números</div>
+                            <div class="lesson-meta">
+                                <span class="lesson-duration"><i class="far fa-clock"></i> 25 min</span>
+                                <span class="lesson-status"><i class="fas fa-check"></i> Em andamento</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="lesson-item">
+                        <i class="lesson-icon far fa-circle"></i>
+                        <div class="lesson-text">
+                            <div class="lesson-title">2. Operações Básicas</div>
+                            <div class="lesson-meta">
+                                <span class="lesson-duration"><i class="far fa-clock"></i> 32 min</span>
+                                <span class="lesson-status"><i class="fas fa-lock"></i> Bloqueada</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="lesson-item">
+                        <i class="lesson-icon far fa-circle"></i>
+                        <div class="lesson-text">
+                            <div class="lesson-title">3. Números Decimais</div>
+                            <div class="lesson-meta">
+                                <span class="lesson-duration"><i class="far fa-clock"></i> 28 min</span>
+                                <span class="lesson-status"><i class="fas fa-lock"></i> Bloqueada</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="lesson-item">
+                        <i class="lesson-icon far fa-circle"></i>
+                        <div class="lesson-text">
+                            <div class="lesson-title">4. Introdução às Frações</div>
+                            <div class="lesson-meta">
+                                <span class="lesson-duration"><i class="far fa-clock"></i> 35 min</span>
+                                <span class="lesson-status"><i class="fas fa-lock"></i> Bloqueada</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="lesson-item">
+                        <i class="lesson-icon far fa-circle"></i>
+                        <div class="lesson-text">
+                            <div class="lesson-title">5. Operações com Frações</div>
+                            <div class="lesson-meta">
+                                <span class="lesson-duration"><i class="far fa-clock"></i> 40 min</span>
+                                <span class="lesson-status"><i class="fas fa-lock"></i> Bloqueada</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="lesson-item">
+                        <i class="lesson-icon far fa-circle"></i>
+                        <div class="lesson-text">
+                            <div class="lesson-title">6. Porcentagens</div>
+                            <div class="lesson-meta">
+                                <span class="lesson-duration"><i class="far fa-clock"></i> 30 min</span>
+                                <span class="lesson-status"><i class="fas fa-lock"></i> Bloqueada</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="module">
+                <div class="module-header">
+                    <div class="module-title">
+                        <i class="fas fa-folder"></i> Módulo 2: Álgebra Básica
+                    </div>
+                    <div class="module-progress">0/6 aulas</div>
+                </div>
+                <ul class="module-lessons">
+                    <li class="lesson-item">
+                        <i class="lesson-icon far fa-circle"></i>
+                        <div class="lesson-text">
+                            <div class="lesson-title">7. Introdução às Expressões</div>
+                            <div class="lesson-meta">
+                                <span class="lesson-duration"><i class="far fa-clock"></i> 25 min</span>
+                                <span class="lesson-status"><i class="fas fa-lock"></i> Bloqueada</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="lesson-item">
+                        <i class="lesson-icon far fa-circle"></i>
+                        <div class="lesson-text">
+                            <div class="lesson-title">8. Equações Simples</div>
+                            <div class="lesson-meta">
+                                <span class="lesson-duration"><i class="far fa-clock"></i> 35 min</span>
+                                <span class="lesson-status"><i class="fas fa-lock"></i> Bloqueada</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
+            <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+            <a href="#"><i class="fab fa-youtube"></i> YouTube</a>
+            <a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a>
+        </div>
+        <p class="copyright">© 2023 EducaMais. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos da interface
+            const lessons = document.querySelectorAll('.lesson-item');
+            const progressFill = document.querySelector('.progress-fill');
+            const progressText = document.querySelector('.progress-text');
+            const courseContents = document.querySelectorAll('.course-content');
+            
+            // Estado do progresso
+            let currentLessonIndex = parseInt(localStorage.getItem('currentLesson')) || 0;
+            let completedLessons = JSON.parse(localStorage.getItem('completedLessons')) || [];
+            
+            // Inicialização
+            initCourse();
+
+            // Evento para completar aula
+            document.addEventListener('click', function(e) {
+                const completeBtn = e.target.closest('.complete-btn');
+                if (completeBtn && !completeBtn.classList.contains('completed')) {
+                    markLessonAsCompleted(currentLessonIndex);
+                }
+            });
+
+            // Evento para próxima aula
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.next-btn')) {
+                    navigateToLesson(currentLessonIndex + 1);
+                }
+            });
+
+            // Evento para placeholders de vídeo
+            document.querySelectorAll('.video-placeholder').forEach(placeholder => {
+                placeholder.addEventListener('click', function() {
+                    this.classList.add('disabled');
+                });
+            });
+
+            // Função para resetar progresso
+            window.resetProgress = function() {
+                if (confirm('Tem certeza que deseja resetar todo seu progresso?')) {
+                    localStorage.clear();
+                    location.reload();
+                }
+            }
+
+            // Funções principais
+            function initCourse() {
+                // Marca aulas completas
+                completedLessons.forEach(index => {
+                    if (lessons[index]) {
+                        lessons[index].classList.add('completed');
+                        lessons[index].querySelector('.lesson-icon').className = 'lesson-icon fas fa-check-circle';
+                        const status = lessons[index].querySelector('.lesson-status');
+                        if (status) status.innerHTML = '<i class="fas fa-check"></i> Concluída';
+                    }
+                });
+
+                // Mostra aula atual
+                showCurrentLesson();
+                updateOverallProgress();
+            }
+
+            function markLessonAsCompleted(index) {
+                if (!completedLessons.includes(index)) {
+                    completedLessons.push(index);
+                    localStorage.setItem('completedLessons', JSON.stringify(completedLessons));
+                    
+                    // Atualiza interface
+                    lessons[index].classList.add('completed');
+                    lessons[index].querySelector('.lesson-icon').className = 'lesson-icon fas fa-check-circle';
+                    const status = lessons[index].querySelector('.lesson-status');
+                    if (status) status.innerHTML = '<i class="fas fa-check"></i> Concluída';
+                    
+                    document.querySelectorAll('.complete-btn').forEach(btn => {
+                        btn.classList.add('completed');
+                        btn.innerHTML = '<i class="fas fa-check-circle"></i> Aula Concluída';
+                    });
+
+                    updateOverallProgress();
+                }
+            }
+
+            function navigateToLesson(newIndex) {
+                if (newIndex >= 0 && newIndex < lessons.length) {
+                    // Atualiza aula atual
+                    lessons[currentLessonIndex]?.classList.remove('current');
+                    currentLessonIndex = newIndex;
+                    localStorage.setItem('currentLesson', currentLessonIndex);
+                    
+                    // Mostra nova aula
+                    showCurrentLesson();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+
+            function showCurrentLesson() {
+                // Oculta todas as aulas
+                courseContents.forEach(aula => {
+                    aula.style.display = 'none';
+                });
+
+                // Mostra aula atual (aula-1 até aula-5)
+                const currentAula = document.getElementById(`aula-${currentLessonIndex + 1}`);
+                if (currentAula) {
+                    currentAula.style.display = 'block';
+                    lessons[currentLessonIndex].classList.add('current');
+                    
+                    // Atualiza botão de completar
+                    const completeBtn = currentAula.querySelector('.complete-btn');
+                    if (completeBtn) {
+                        if (completedLessons.includes(currentLessonIndex)) {
+                            completeBtn.classList.add('completed');
+                            completeBtn.innerHTML = '<i class="fas fa-check-circle"></i> Aula Concluída';
+                        } else {
+                            completeBtn.classList.remove('completed');
+                            completeBtn.innerHTML = '<i class="fas fa-check-circle"></i> Marcar como concluída';
+                        }
+                    }
+                }
+            }
+
+            function updateOverallProgress() {
+                const total = lessons.length;
+                const completed = completedLessons.length;
+                const progress = Math.round((completed / total) * 100);
+                
+                progressFill.style.width = `${progress}%`;
+                progressText.textContent = `${progress}% concluído`;
+                
+                // Atualiza módulos
+                document.querySelectorAll('.module').forEach(module => {
+                    const lessonsInModule = module.querySelectorAll('.lesson-item').length;
+                    const completedInModule = module.querySelectorAll('.lesson-item.completed').length;
+                    module.querySelector('.module-progress').textContent = `${completedInModule}/${lessonsInModule} aulas`;
+                });
+            }
+
+            // Toggle dos módulos
+            document.querySelectorAll('.module-header').forEach(header => {
+                header.addEventListener('click', function() {
+                    const module = this.parentElement;
+                    module.classList.toggle('active');
+                });
+            });
+        });
+
+        // Função para mostrar aula específica (mantida para compatibilidade)
+        function showAula(aulaNumber) {
+            const aulas = document.querySelectorAll('.course-content');
+            aulas.forEach(aula => aula.style.display = 'none');
+            
+            const aulaAtual = document.getElementById(`aula-${aulaNumber}`);
+            if (aulaAtual) {
+                aulaAtual.style.display = 'block';
+                localStorage.setItem('currentLesson', aulaNumber - 1);
+                
+                // Atualiza a aula atual na lista
+                document.querySelectorAll('.lesson-item').forEach((item, index) => {
+                    item.classList.remove('current');
+                    if (index === aulaNumber - 1) {
+                        item.classList.add('current');
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

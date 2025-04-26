@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cursos - EducaMais</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Fredoka+One&display=swap" rel="stylesheet">
+    <link rel = "stylesheet" href = "pagina-de-cursos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">EducaUP</div>
+        <nav>
+            <ul>
+                <li><a href="pagina-principal.html"><i class="fas fa-home"></i>Início</a></li>
+                <li><a href="pagina-de-cursos.html"><i class="fas fa-book"></i>Cursos</a></li>
+                <li><a href="#"><i class="fas fa-info-circle"></i> Sobre</a></li>
+                <li><a href="#"><i class="fas fa-envelope"></i> Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="page-hero">
+        <h1>Nossos Cursos</h1>
+        <p>Encontre o curso perfeito para seu aprendizado</p>
+    </section>
+
+    <section class="course-filter">
+        <div class="filter-options">
+            <div class="filter-group">
+                <label for="category">Categoria</label>
+                <select id="category">
+                    <option value="all">Todas as categorias</option>
+                    <option value="math">Matemática</option>
+                    <option value="science">Ciências</option>
+                    <option value="language">Línguas</option>
+                    <option value="history">História</option>
+                    <option value="art">Artes</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="level">Nível</label>
+                <select id="level">
+                    <option value="all">Todos os níveis</option>
+                    <option value="beginner">Iniciante</option>
+                    <option value="intermediate">Intermediário</option>
+                    <option value="advanced">Avançado</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="duration">Duração</label>
+                <select id="duration">
+                    <option value="all">Qualquer duração</option>
+                    <option value="short">Curto (1-5 horas)</option>
+                    <option value="medium">Médio (5-20 horas)</option>
+                    <option value="long">Longo (20+ horas)</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <section class="courses-container">
+        <div class="courses-grid">
+            <!-- Curso 1 -->
+            <div class="course-card">
+                <div class="course-image" style="background-color: #f28482;">
+                    🧮
+                </div>
+                <div class="course-content">
+                    <span class="course-category">Matemática</span>
+                    <h3 class="course-title">Matemática Básica</h3>
+                    <p class="course-description">Domine os fundamentos da matemática com exercícios práticos e exemplos do cotidiano.</p>
+                    <div class="course-meta">
+                        <span class="course-duration">10 horas</span>
+                        <span class="course-level">Iniciante</span>
+                    </div>
+                    <a href="#" class="enroll-btn">Matricular-se</a>
+                </div>
+            </div>
+
+            <!-- Curso 2 -->
+            <div class="course-card">
+                <div class="course-image" style="background-color: #90be6d;">
+                    🔬
+                </div>
+                <div class="course-content">
+                    <span class="course-category">Ciências</span>
+                    <h3 class="course-title">Introdução à Biologia</h3>
+                    <p class="course-description">Explore o mundo vivo e compreenda os princípios básicos da vida.</p>
+                    <div class="course-meta">
+                        <span class="course-duration">15 horas</span>
+                        <span class="course-level">Intermediário</span>
+                    </div>
+                    <a href="#" class="enroll-btn">Matricular-se</a>
+                </div>
+            </div>
+
+            <!-- Curso 3 -->
+            <div class="course-card">
+                <div class="course-image" style="background-color: #4a90e2;">
+                    🗣️
+                </div>
+                <div class="course-content">
+                    <span class="course-category">Línguas</span>
+                    <h3 class="course-title">Inglês para Iniciantes</h3>
+                    <p class="course-description">Aprenda inglês de forma divertida com situações do dia a dia.</p>
+                    <div class="course-meta">
+                        <span class="course-duration">20 horas</span>
+                        <span class="course-level">Iniciante</span>
+                    </div>
+                    <a href="#" class="enroll-btn">Matricular-se</a>
+                </div>
+            </div>
+
+            <!-- Curso 4 -->
+            <div class="course-card">
+                <div class="course-image" style="background-color: #f9c74f;">
+                    🎨
+                </div>
+                <div class="course-content">
+                    <span class="course-category">Artes</span>
+                    <h3 class="course-title">Desenho Criativo</h3>
+                    <p class="course-description">Desenvolva suas habilidades artísticas e expresse sua criatividade.</p>
+                    <div class="course-meta">
+                        <span class="course-duration">8 horas</span>
+                        <span class="course-level">Todos os níveis</span>
+                    </div>
+                    <a href="#" class="enroll-btn">Matricular-se</a>
+                </div>
+            </div>
+
+            <!-- Curso 5 -->
+            <div class="course-card">
+                <div class="course-image" style="background-color: #577590;">
+                    ⏳
+                </div>
+                <div class="course-content">
+                    <span class="course-category">História</span>
+                    <h3 class="course-title">História do Brasil</h3>
+                    <p class="course-description">Conheça os principais eventos que moldaram nosso país.</p>
+                    <div class="course-meta">
+                        <span class="course-duration">12 horas</span>
+                        <span class="course-level">Intermediário</span>
+                    </div>
+                    <a href="#" class="enroll-btn">Matricular-se</a>
+                </div>
+            </div>
+
+            <!-- Curso 6 -->
+            <div class="course-card">
+                <div class="course-image" style="background-color: #43aa8b;">
+                    ➗
+                </div>
+                <div class="course-content">
+                    <span class="course-category">Matemática</span>
+                    <h3 class="course-title">Álgebra Avançada</h3>
+                    <p class="course-description">Aprofunde seus conhecimentos em álgebra com problemas desafiadores.</p>
+                    <div class="course-meta">
+                        <span class="course-duration">25 horas</span>
+                        <span class="course-level">Avançado</span>
+                    </div>
+                    <a href="#" class="enroll-btn">Matricular-se</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="social-links">
+            <a href="#">Facebook</a> | 
+            <a href="#">Instagram</a> | 
+            <a href="#">YouTube</a>
+        </div>
+        <div class="copyright">
+            © 2025 EducaUP - Transformando vidas através da educação.
+        </div>
+    </footer>
+
+    <script>
+        // Filtragem de cursos (funcionalidade básica)
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryFilter = document.getElementById('category');
+            const levelFilter = document.getElementById('level');
+            const durationFilter = document.getElementById('duration');
+            const courseCards = document.querySelectorAll('.course-card');
+
+            function filterCourses() {
+                const categoryValue = categoryFilter.value;
+                const levelValue = levelFilter.value;
+                const durationValue = durationFilter.value;
+
+                courseCards.forEach(card => {
+                    const cardCategory = card.querySelector('.course-category').textContent.toLowerCase();
+                    const cardLevel = card.querySelector('.course-level').textContent.toLowerCase();
+                    const cardDuration = parseInt(card.querySelector('.course-duration').textContent);
+
+                    // Verificar filtros
+                    const categoryMatch = categoryValue === 'all' || 
+                                        (categoryValue === 'math' && cardCategory.includes('matemática')) ||
+                                        (categoryValue === 'science' && cardCategory.includes('ciências')) ||
+                                        (categoryValue === 'language' && cardCategory.includes('línguas')) ||
+                                        (categoryValue === 'history' && cardCategory.includes('história')) ||
+                                        (categoryValue === 'art' && cardCategory.includes('artes'));
+
+                    const levelMatch = levelValue === 'all' || 
+                                     (levelValue === 'beginner' && cardLevel.includes('iniciante')) ||
+                                     (levelValue === 'intermediate' && cardLevel.includes('intermediário')) ||
+                                     (levelValue === 'advanced' && cardLevel.includes('avançado')) ||
+                                     (levelValue === 'all' && cardLevel.includes('todos os níveis'));
+
+                    let durationMatch = true;
+                    if (durationValue === 'short') {
+                        durationMatch = cardDuration <= 5;
+                    } else if (durationValue === 'medium') {
+                        durationMatch = cardDuration > 5 && cardDuration <= 20;
+                    } else if (durationValue === 'long') {
+                        durationMatch = cardDuration > 20;
+                    }
+
+                    // Mostrar/ocultar cards baseado nos filtros
+                    if (categoryMatch && levelMatch && durationMatch) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+            // Adicionar event listeners para os filtros
+            categoryFilter.addEventListener('change', filterCourses);
+            levelFilter.addEventListener('change', filterCourses);
+            durationFilter.addEventListener('change', filterCourses);
+        });
+    </script>
+</body>
+</html>
