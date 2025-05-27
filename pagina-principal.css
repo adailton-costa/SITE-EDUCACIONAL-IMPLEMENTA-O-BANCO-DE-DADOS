@@ -136,6 +136,11 @@ nav a i {
   color: var(--primary-dark);
 }
 
+.feature-link {
+  text-decoration: none; /* Remove o sublinhado */
+  color: inherit; /* Faz com que o link herde a cor do elemento pai */
+}
+
 /* Footer */
 footer {
   background-color: rgba(30, 58, 69, 1);
