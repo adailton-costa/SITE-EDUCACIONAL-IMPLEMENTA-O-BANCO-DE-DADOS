@@ -267,6 +267,56 @@ footer {
     font-size: 0.9rem;
 }
 
+.social-links a:hover {
+    color: var(--accent-yellow);
+}
+
+/* Estilos adicionais para os novos botões */
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            display: inline-block;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            display: inline-block;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .enrollment-status {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .enrollment-status h3 {
+            margin-bottom: 15px;
+            color: #343a40;
+        }
+        
+        .hidden {
+            display: none;
+        }
+
 /* Responsive Design */
 @media (max-width: 768px) {
     header {

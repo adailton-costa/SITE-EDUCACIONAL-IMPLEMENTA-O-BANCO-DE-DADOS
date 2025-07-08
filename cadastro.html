@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de usuario</title>
     <link rel="stylesheet" href="cadastro.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
     <div class="box">
@@ -25,7 +26,16 @@
                 <div class="inputBox">
                     <input type="password" name="senha" id="senha" class="inputUser" required>
                     <label for="senha" class="labelInput">Senha</label>
+                    <i class="fa-solid fa-eye toggle-senha" id="toggleSenha"></i>
                 </div>
+                <div id="senha-feedback" style="font-size: 14px; margin-top: 5px;"></div>
+                <br>
+                <div class="inputBox">
+                    <input type="password" name="confirmarSenha" id="confirmarSenha" class="inputUser" required>
+                    <label for="confirmarSenha" class="labelInput">Confirmar Senha</label>
+                    <i class="fa-solid fa-eye toggle-senha" id="toggleConfirmarSenha"></i>
+                </div>
+                <div id="confirmar-feedback" style="font-size: 14px; margin-top: 5px;"></div>
                 <p>Sexo:</p>
                 <input type="radio" name="genero" id="feminino" value="feminino" required>
                 <label for="feminino">Feminino</label>
@@ -50,6 +60,9 @@
                 </div>
                 <br>
                 <input type="submit" name="submit" id="submit">
+                <br><br>
+                <a href="index.html" class="btn-login">Login</a>
+                
             </fieldset>
         </form>
     </div>
@@ -71,6 +84,20 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+
+        function toggleSenhaCampo(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            icon.addEventListener('click', () => {
+                const isPassword = input.type === 'password';
+                input.type = isPassword ? 'text' : 'password';
+                icon.classList.toggle('fa-eye');
+                icon.classList.toggle('fa-eye-slash');
+            });
+        }
+
+        toggleSenhaCampo('senha', 'toggleSenha');
+        toggleSenhaCampo('confirmarSenha', 'toggleConfirmarSenha');
 
         const form = document.querySelector('form');
         form.addEventListener('submit', async (e) => {
@@ -107,7 +134,7 @@
             switch (error.code) {
                 case 'auth/email-already-in-use':
                     errorMessage += 'Este e-mail já está em uso. ';
-                    errorMessage += '<a href="tela-de-login.html" style="color: white; text-decoration: underline;">Fazer login</a>';
+                    errorMessage += '<a href="index.html" style="color: white; text-decoration: underline;">Fazer login</a>';
                     break;
                 case 'auth/invalid-email':
                     errorMessage += 'E-mail inválido';
@@ -131,6 +158,41 @@
             setTimeout(() => errorDiv.remove(), 5000);
         }
         });
+        const senhaInput = document.getElementById('senha');
+        const confirmarInput = document.getElementById('confirmarSenha');
+        const senhaFeedback = document.getElementById('senha-feedback');
+        const confirmarFeedback = document.getElementById('confirmar-feedback');
+
+        senhaInput.addEventListener('input', () => {
+        const senha = senhaInput.value;
+        let mensagens = [];
+
+        if (senha.length < 6) mensagens.push("Mínimo 6 caracteres");
+        if (!/[A-Z]/.test(senha)) mensagens.push("Pelo menos uma letra maiúscula");
+        if (!/[0-9]/.test(senha)) mensagens.push("Pelo menos um número");
+
+        if (mensagens.length > 0) {
+            senhaFeedback.innerHTML = mensagens.map(msg =>
+                `<i class="fa-solid fa-circle-xmark" style="color: red; margin-right: 6px;"></i>${msg}`
+            ).join("<br>");
+            senhaFeedback.style.color = "red";
+        } else {
+            senhaFeedback.innerHTML = `<i class="fa-solid fa-circle-check" style="color: green; margin-right: 6px;"></i>Senha válida`;
+            senhaFeedback.style.color = "green";
+        }
+    });
+
+    // Verifica se a confirmação bate
+    confirmarInput.addEventListener('input', () => {
+        if (confirmarInput.value !== senhaInput.value) {
+            confirmarFeedback.innerHTML = `<i class="fa-solid fa-circle-xmark" style="color: red; margin-right: 6px;"></i>As senhas não coincidem`;
+            confirmarFeedback.style.color = "red";
+        } else {
+            confirmarFeedback.innerHTML = `<i class="fa-solid fa-circle-check" style="color: green; margin-right: 6px;"></i>Senhas coincidem`;
+            confirmarFeedback.style.color = "green";
+        }
+    });
+
     </script>
 </body>
 </html>

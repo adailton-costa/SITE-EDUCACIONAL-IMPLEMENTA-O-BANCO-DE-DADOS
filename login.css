@@ -1,49 +1,134 @@
-body{
-    font-family: Arial, Helvetica, sans-serif;
-    background-image: linear-gradient(45deg, #0f2027, #203a43, #2c5364);
+/* Reset básico */
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
     height: 100vh;
+    background: linear-gradient(to right, #0f2027, #2c5364, #0f2027);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+/* Card de login */
+#form-login {
+    background-color: #0e1a22;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Título */
+#form-login h1 {
+    margin-bottom: 10px;
+    font-size: 2rem;
+}
+
+/* Subtítulo */
+#form-login p {
+    margin-bottom: 20px;
+    color: #ccc;
+}
+
+/* Campos de entrada */
+#form-login input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #1d2a36;
+    color: white;
+}
+
+#form-login input::placeholder {
+    color: #aaa;
+}
+
+/* Botão */
+#btn-entrar {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #1e90ff;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#btn-entrar:hover {
+    background-color: #03274e;
+}
+
+/* Link de cadastro */
+#form-login a {
+    color: #1e90ff;
+    text-decoration: none;
+}
+
+#form-login a:hover {
+    text-decoration: underline;
+}
+
+/* Mensagem de erro */
+.error-message {
+    color: #ff4d4d;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Animação sutil */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.senha-container {
+    position: relative;
+    width: 100%;
+}
+
+.senha-container input {
+    padding-right: 40px; /* espaço para o ícone */
+}
+
+.toggle-senha {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: #aaa;
+    /* user-select: none; */
+    /* transition: color 0.3s ease; */
+    height: 20%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-div{
-    background-color: rgba(0, 0, 0, 0.6);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    padding: 80px;
-    border-radius: 15px;
-    color: white;
-    text-align: center;
-}
-div a {
-color: white; /* Deixa branco */
-text-decoration: none; /* Remove o sublinhado */
-transition: color 0.3s ease; /* Suaviza a transição */
+
+.toggle-senha:hover {
+    color: #fff;
 }
 
-div a:hover {
-color: #007bff; /* Azul ao passar o mouse */
-text-decoration: underline; /* Adiciona sublinhado */
+/* Responsivo */
+@media (max-width: 500px) {
+    #form-login {
+        padding: 25px;
+        width: 90%;
+    }
 }
 
-input{
-    padding: 15px;
-    border: none;
-    outline: none;
-    font-size: 15px;
-}
-button{
-    background-color: dodgerblue;
-    border: none;
-    padding: 15px;
-    width: 100%;
-    border-radius: 15px;
-    color: white;
-    font-size: 15px;
-}
-button:hover{
-    background-image: linear-gradient(rgb(0, 80, 172), rgb(80, 19, 192));
-}

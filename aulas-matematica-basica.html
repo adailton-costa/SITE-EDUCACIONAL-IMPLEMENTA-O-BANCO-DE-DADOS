@@ -21,9 +21,9 @@
       .complete-btn.completed {
           background-color: #28a745;
       }
-      #aula-1 {
+      /* #aula-1 {
           display: block;
-      }
+      } */
   </style>
   </head>
 <body>
@@ -32,7 +32,7 @@
         <nav>
             <ul>
                 <li><a href="index.html"><i class="fas fa-home"></i> Início</a></li>
-                <li><a href="cursos.html"><i class="fas fa-book"></i> Cursos</a></li>
+                <li><a href="pagina-de-cursos.html"><i class="fas fa-book"></i> Cursos</a></li>
                 <li><a href="#"><i class="fas fa-info-circle"></i> Sobre</a></li>
                 <li><a href="#"><i class="fas fa-envelope"></i> Contato</a></li>
             </ul>
@@ -83,24 +83,73 @@
                   </iframe>
               </div>
           </div>
-  
+
+          <!-- informação da Aula 1 -->
           <div class="video-info">
               <h2><i class="fas fa-info-circle"></i> Sobre esta aula</h2>
               <div class="video-meta">
-                  <div class="meta-item"><i class="far fa-clock"></i> 25 minutos</div>
+                  <div class="meta-item"><i class="far fa-clock"></i> 59 minutos</div>
                   <div class="meta-item"><i class="fas fa-chart-bar"></i> Nível Básico</div>
                   <div class="meta-item"><i class="far fa-calendar-alt"></i> Disponível agora</div>
               </div>
               <div class="video-description">
-                  <p>Nesta aula, vamos aprender as operações básicas: adição, subtração, multiplicação e divisão.</p>
+                  <p>Os números estão por toda parte: na contagem dos dias, na idade das pessoas, nos preços das coisas e até nos esportes! Nesta aula, vamos entender o que são os números, como eles nos ajudam no dia a dia e de que forma podemos usá-los para resolver problemas simples. Você vai aprender a contar, comparar quantidades e descobrir que os números são muito mais divertidos do que parecem!</p>
               </div>
               <div class="video-actions">
                   <button class="action-btn complete-btn"><i class="fas fa-check-circle"></i> Marcar como concluída</button>
                   <button class="action-btn material-btn"><i class="fas fa-file-pdf"></i> Material de apoio</button>
-                  <button class="action-btn next-btn" onclick="showAula(2)"><i class="fas fa-arrow-right"></i> Próxima aula</button>
+                  <button class="action-btn next-btn" data-aula="2">
+                    <i class="fas fa-arrow-right"></i> Próxima aula
+                  </button>
               </div>
           </div>
+          
+          <!-- Recursos da aula -->
+          <div class="resources-container">
+                <h3><i class="fas fa-paperclip"></i> Recursos da aula</h3>
+                <div class="resource-item">
+                    <div class="resource-icon"><i class="fas fa-file-pdf"></i></div>
+                    <div class="resource-text">
+                        <h4>Guia de Frações Básicas</h4>
+                        <p>PDF com resumo dos conceitos e exercícios práticos</p>
+                    </div>
+                    <button class="download-btn"><i class="fas fa-download"></i></button>
+                </div>
+                <div class="resource-item">
+                    <div class="resource-icon"><i class="fas fa-file-excel"></i></div>
+                    <div class="resource-text">
+                        <h4>Planilha de Exercícios</h4>
+                        <p>Arquivo Excel com problemas para praticar</p>
+                    </div>
+                    <button class="download-btn"><i class="fas fa-download"></i></button>
+                </div>
+                <div class="resource-item">
+                    <div class="resource-icon"><i class="fas fa-link"></i></div>
+                    <div class="resource-text">
+                        <h4>Links Úteis</h4>
+                        <p>Recursos online complementares sobre frações</p>
+                    </div>
+                    <button class="download-btn"><i class="fas fa-external-link-alt"></i></button>
+                </div>
+            </div>
+
+        <!-- Quiz da Aula 1 -->
+        <div class="quiz-container" data-aula="1">
+            <h3><i class="fas fa-question-circle"></i> Quiz da Aula 1</h3>
+            <div class="quiz-question">
+            <p>1. Para que usamos os números no dia a dia?</p>
+            <ul class="quiz-options">
+                <li class="quiz-option">Somente para desenhar</li>
+                <li class="quiz-option" data-correta="true">Para contar, medir e resolver problemas</li>
+                <li class="quiz-option">Apenas em jogos de tabuleiro</li>
+                <li class="quiz-option">Nenhuma das alternativas</li>
+            </ul>
+            </div>
+            <button class="quiz-submit">Enviar Respostas</button>
+            <div class="quiz-feedback"></div>
+        </div>
       </div>
+
   
       <!-- Aula 2 -->
       <div class="course-content" id="aula-2">
@@ -128,7 +177,7 @@
         <div class="video-info">
             <h2><i class="fas fa-info-circle"></i> Sobre esta aula</h2>
             <div class="video-meta">
-                <div class="meta-item"><i class="far fa-clock"></i> 32 minutos</div>
+                <div class="meta-item"><i class="far fa-clock"></i> 7 minutos</div>
                 <div class="meta-item"><i class="fas fa-chart-bar"></i> Nível Básico</div>
                 <div class="meta-item"><i class="far fa-calendar-alt"></i> Disponível agora</div>
             </div>
@@ -138,10 +187,28 @@
             <div class="video-actions">
                 <button class="action-btn complete-btn"><i class="fas fa-check-circle"></i> Marcar como concluída</button>
                 <button class="action-btn material-btn"><i class="fas fa-file-pdf"></i> Material de apoio</button>
-                <button class="action-btn next-btn" onclick="showAula(3)"><i class="fas fa-arrow-right"></i> Próxima aula</button>
+                <button class="action-btn next-btn" data-aula="3">
+                    <i class="fas fa-arrow-right"></i> Próxima aula
+                </button>
             </div>
         </div>
-    </div>
+        <!-- Quiz da Aula 2 -->
+        <div class="quiz-container" data-aula="2">
+            <h3><i class="fas fa-question-circle"></i> Quiz da Aula 2</h3>
+            <div class="quiz-question">
+            <p>2. Em uma fração, o número que fica abaixo da linha e indica em quantas partes o todo foi dividido é chamado de:</p>
+            <ul class="quiz-options">
+                <li class="quiz-option">Numerador</li>
+                <li class="quiz-option" data-correta="true">Denominador</li>
+                <li class="quiz-option">Divisor</li>
+                <li class="quiz-option">Quociente</li>
+            </ul>
+            </div>
+            <button class="quiz-submit">Enviar Respostas</button>
+            <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
 
       <!-- Aula 3 -->
       <div class="course-content" id="aula-3">
@@ -169,18 +236,35 @@
         <div class="video-info">
             <h2><i class="fas fa-info-circle"></i> Sobre esta aula</h2>
             <div class="video-meta">
-                <div class="meta-item"><i class="far fa-clock"></i> 28 minutos</div>
+                <div class="meta-item"><i class="far fa-clock"></i> 15 minutos</div>
                 <div class="meta-item"><i class="fas fa-chart-bar"></i> Nível Básico</div>
                 <div class="meta-item"><i class="far fa-calendar-alt"></i> Disponível agora</div>
             </div>
             <div class="video-description">
-                <p>Nesta aula, vamos aprender as operações básicas: adição, subtração, multiplicação e divisão.</p>
+                <p>Números decimais são uma forma de representar quantidades menores que um inteiro ou valores mais precisos que os números inteiros. Eles usam a vírgula (ou ponto, dependendo do padrão) para separar a parte inteira da parte fracionária.</p>
             </div>
             <div class="video-actions">
                 <button class="action-btn complete-btn"><i class="fas fa-check-circle"></i> Marcar como concluída</button>
                 <button class="action-btn material-btn"><i class="fas fa-file-pdf"></i> Material de apoio</button>
-                <button class="action-btn next-btn" onclick="showAula(4)"><i class="fas fa-arrow-right"></i> Próxima aula</button>
+                <button class="action-btn next-btn" data-aula="4">
+                    <i class="fas fa-arrow-right"></i> Próxima aula
+                </button>
             </div>
+        </div>
+        <!-- Quiz da Aula 3 -->
+        <div class="quiz-container" data-aula="3">
+            <h3><i class="fas fa-question-circle"></i> Quiz da Aula 3</h3>
+            <div class="quiz-question">
+            <p>3. Como se lê o número decimal "3,75"?</p>
+            <ul class="quiz-options">
+                <li class="quiz-option">Três inteiros e setenta e cinco décimos</li>
+                <li class="quiz-option" data-correta="true">Três inteiros e setenta e cinco centésimos</li>
+                <li class="quiz-option">Três vírgula setenta e cinco</li>
+                <li class="quiz-option">Trezentos e setenta e cinco milésimos</li>
+            </ul>
+            </div>
+            <button class="quiz-submit">Enviar Respostas</button>
+            <div class="quiz-feedback"></div>
         </div>
     </div>
 
@@ -220,7 +304,9 @@
           <div class="video-actions">
               <button class="action-btn complete-btn"><i class="fas fa-check-circle"></i> Marcar como concluída</button>
               <button class="action-btn material-btn"><i class="fas fa-file-pdf"></i> Material de apoio</button>
-              <button class="action-btn next-btn" onclick="showAula(5)"><i class="fas fa-arrow-right"></i> Próxima aula</button>
+              <button class="action-btn next-btn" data-aula="5">
+                <i class="fas fa-arrow-right"></i> Próxima aula
+              </button>
           </div>
       </div>
   </div>
@@ -261,7 +347,9 @@
         <div class="video-actions">
             <button class="action-btn complete-btn"><i class="fas fa-check-circle"></i> Marcar como concluída</button>
             <button class="action-btn material-btn"><i class="fas fa-file-pdf"></i> Material de apoio</button>
-            <button class="action-btn next-btn" onclick="showAula(6)"><i class="fas fa-arrow-right"></i> Próxima aula</button>
+            <button class="action-btn next-btn" data-aula="6">
+                <i class="fas fa-arrow-right"></i> Próxima aula
+            </button>
         </div>
     </div>
 </div>
@@ -302,7 +390,9 @@
       <div class="video-actions">
           <button class="action-btn complete-btn"><i class="fas fa-check-circle"></i> Marcar como concluída</button>
           <button class="action-btn material-btn"><i class="fas fa-file-pdf"></i> Material de apoio</button>
-          <button class="action-btn next-btn" onclick="showAula(7)"><i class="fas fa-arrow-right"></i> Próxima aula</button>
+          <button class="action-btn next-btn" data-aula="7">
+            <i class="fas fa-arrow-right"></i> Próxima aula
+          </button>
       </div>
   </div>
 </div>
@@ -343,7 +433,9 @@
       <div class="video-actions">
           <button class="action-btn complete-btn"><i class="fas fa-check-circle"></i> Marcar como concluída</button>
           <button class="action-btn material-btn"><i class="fas fa-file-pdf"></i> Material de apoio</button>
-          <button class="action-btn next-btn" onclick="showAula(8)"><i class="fas fa-arrow-right"></i> Próxima aula</button>
+          <button class="action-btn next-btn" data-aula="8">
+            <i class="fas fa-arrow-right"></i> Próxima aula
+          </button>
       </div>
   </div>
 </div>
@@ -352,7 +444,7 @@
 <div class="course-content" id="aula-8">
   <div class="video-container">
       <div class="video-player">
-          <div id="placeholder-4" class="video-placeholder">
+          <div id="placeholder-8" class="video-placeholder">
               <i class="fas fa-play-circle pulse" style="font-size: 4rem;"></i>
               <h3>Aula 8: Equações Simples</h3>
               <p>Clique no botão play para iniciar a aula</p>
@@ -384,53 +476,12 @@
       <div class="video-actions">
           <button class="action-btn complete-btn"><i class="fas fa-check-circle"></i> Marcar como concluída</button>
           <button class="action-btn material-btn"><i class="fas fa-file-pdf"></i> Material de apoio</button>
-          <button class="action-btn next-btn" onclick="showAula(9)"><i class="fas fa-arrow-right"></i> Próxima aula</button>
+          <button class="action-btn next-btn" data-aula="9">
+            <i class="fas fa-arrow-right"></i> Próxima aula
+          </button>
       </div>
   </div>
 </div>
-
-            <div class="resources-container">
-                <h3><i class="fas fa-paperclip"></i> Recursos da aula</h3>
-                <div class="resource-item">
-                    <div class="resource-icon"><i class="fas fa-file-pdf"></i></div>
-                    <div class="resource-text">
-                        <h4>Guia de Frações Básicas</h4>
-                        <p>PDF com resumo dos conceitos e exercícios práticos</p>
-                    </div>
-                    <button class="download-btn"><i class="fas fa-download"></i></button>
-                </div>
-                <div class="resource-item">
-                    <div class="resource-icon"><i class="fas fa-file-excel"></i></div>
-                    <div class="resource-text">
-                        <h4>Planilha de Exercícios</h4>
-                        <p>Arquivo Excel com problemas para praticar</p>
-                    </div>
-                    <button class="download-btn"><i class="fas fa-download"></i></button>
-                </div>
-                <div class="resource-item">
-                    <div class="resource-icon"><i class="fas fa-link"></i></div>
-                    <div class="resource-text">
-                        <h4>Links Úteis</h4>
-                        <p>Recursos online complementares sobre frações</p>
-                    </div>
-                    <button class="download-btn"><i class="fas fa-external-link-alt"></i></button>
-                </div>
-            </div>
-
-            <div class="quiz-container">
-                <h3><i class="fas fa-question-circle"></i> Quiz de Revisão</h3>
-                <div class="quiz-question">
-                    <p>1. Em uma fração, o número que fica abaixo da linha e indica em quantas partes o todo foi dividido é chamado de:</p>
-                    <ul class="quiz-options">
-                        <li class="quiz-option">Numerador</li>
-                        <li class="quiz-option selected">Denominador</li>
-                        <li class="quiz-option">Divisor</li>
-                        <li class="quiz-option">Quociente</li>
-                    </ul>
-                </div>
-                <button class="quiz-submit">Enviar Respostas</button>
-            </div>
-        </div>
 
         <div class="lessons-container">
             <h2><i class="fas fa-list-ol"></i> Conteúdo do Curso</h2>
@@ -506,7 +557,7 @@
                 </ul>
             </div>
             
-            <div class="module">
+            <div class="module active">
                 <div class="module-header">
                     <div class="module-title">
                         <i class="fas fa-folder"></i> Módulo 2: Álgebra Básica
@@ -546,174 +597,401 @@
             <a href="#"><i class="fab fa-youtube"></i> YouTube</a>
             <a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a>
         </div>
-        <p class="copyright">© 2025 EducaUP - Transformando vidas através da educação.</p>
+        <p class="copyright">© 2025 EducaUP </p>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Elementos da interface
-            const lessons = document.querySelectorAll('.lesson-item');
-            const progressFill = document.querySelector('.progress-fill');
-            const progressText = document.querySelector('.progress-text');
-            const courseContents = document.querySelectorAll('.course-content');
-            
-            // Estado do progresso
-            let currentLessonIndex = parseInt(localStorage.getItem('currentLesson')) || 0;
-            let completedLessons = JSON.parse(localStorage.getItem('completedLessons')) || [];
-            
-            // Inicialização
-            initCourse();
+        <script type="module">
 
-            // Evento para completar aula
-            document.addEventListener('click', function(e) {
-                const completeBtn = e.target.closest('.complete-btn');
-                if (completeBtn && !completeBtn.classList.contains('completed')) {
-                    markLessonAsCompleted(currentLessonIndex);
-                }
+        // Importações necessárias
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { 
+        getAuth, 
+        onAuthStateChanged,
+        signOut 
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { 
+        getFirestore, 
+        doc, 
+        setDoc, 
+        getDoc, 
+        updateDoc, 
+        addDoc,
+        collection,
+        serverTimestamp,
+        increment
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Configuração do Firebase
+        const firebaseConfig = {
+        apiKey: "AIzaSyAQ0s0EpWm2kmPAC3z0bNphLyjcGieWIBM",
+        authDomain: "siteweb-ca3bc.firebaseapp.com",
+        projectId: "siteweb-ca3bc",
+        storageBucket: "siteweb-ca3bc.appspot.com",
+        messagingSenderId: "312050528441",
+        appId: "1:312050528441:web:70abee0173951c08402b68"
+        };
+
+        // Inicialização do Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Variáveis globais
+        let tempoInicioAula = null;
+        let aulaAtualId = null;
+        let progressoRef = null;
+
+        // Função principal quando o DOM estiver carregado
+        document.addEventListener('DOMContentLoaded', function () {
+        initCourse();
+        });
+
+        async function initCourse() {
+        // Verifica autenticação do usuário
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+            alert("Você precisa estar logado para acessar o curso.");
+            window.location.href = "login.html";
+            return;
+            }
+
+            console.log("🟢 UID do usuário autenticado:", user.uid);
+
+            const uid = user.uid;
+            progressoRef = doc(db, "progresso", uid);
+
+            // Inicializa documentos se não existirem
+            await initializeUserDocuments(uid);
+
+            // Configura todos os event listeners
+            setupEventListeners();
+
+            // Carrega progresso inicial
+            await loadInitialProgress();
+        });
+        }
+
+        // Função para inicializar documentos do usuário
+        async function initializeUserDocuments(uid) {
+        const progressoSnap = await getDoc(progressoRef);
+
+        // Criar matrícula (com ID aleatório)
+        try {
+            console.log("🟡 Criando matrícula...");
+            await addDoc(collection(db, "matriculas"), {
+            uid,
+            curso: "Matemática Básica",
+            dataMatricula: serverTimestamp(),
+            status: "ativo"
             });
+            console.log("✅ Matrícula criada com sucesso.");
+        } catch (error) {
+            console.error("❌ Erro ao criar matrícula:", error.code, error.message);
+        }
 
-            // Evento para próxima aula
-            document.addEventListener('click', function(e) {
-                if (e.target.closest('.next-btn')) {
-                    navigateToLesson(currentLessonIndex + 1);
-                }
+        // Criar progresso (ID fixo = UID)
+        if (!progressoSnap.exists()) {
+            try {
+            await setDoc(progressoRef, {
+                uid,
+                curso: "Matemática Básica",
+                aulasConcluidas: [],
+                respostasQuiz: {},
+                tempos: {},
+                progresso: 0,
+                tempoGastoTotal: 0,
+                dataCriacao: serverTimestamp()
             });
-
-            // Evento para placeholders de vídeo
-            document.querySelectorAll('.video-placeholder').forEach(placeholder => {
-                placeholder.addEventListener('click', function() {
-                    this.classList.add('disabled');
-                });
-            });
-
-            // Função para resetar progresso
-            window.resetProgress = function() {
-                if (confirm('Tem certeza que deseja resetar todo seu progresso?')) {
-                    localStorage.clear();
-                    location.reload();
-                }
+            console.log("✅ Progresso criado com sucesso.");
+            } catch (error) {
+            console.error("❌ Erro ao criar progresso:", error.code, error.message);
             }
+        }
+        }
 
-            // Funções principais
-            function initCourse() {
-                // Marca aulas completas
-                completedLessons.forEach(index => {
-                    if (lessons[index]) {
-                        lessons[index].classList.add('completed');
-                        lessons[index].querySelector('.lesson-icon').className = 'lesson-icon fas fa-check-circle';
-                        const status = lessons[index].querySelector('.lesson-status');
-                        if (status) status.innerHTML = '<i class="fas fa-check"></i> Concluída';
-                    }
-                });
+        // Função para configurar todos os event listeners
+        function setupEventListeners() {
+        // Botão de marcar aula como concluída
+        document.querySelectorAll(".complete-btn").forEach((btn, index) => {
+            btn.addEventListener("click", () => markLessonAsCompleted(index));
+        });
 
-                // Mostra aula atual
-                showCurrentLesson();
-                updateOverallProgress();
-            }
-
-            function markLessonAsCompleted(index) {
-                if (!completedLessons.includes(index)) {
-                    completedLessons.push(index);
-                    localStorage.setItem('completedLessons', JSON.stringify(completedLessons));
-                    
-                    // Atualiza interface
-                    lessons[index].classList.add('completed');
-                    lessons[index].querySelector('.lesson-icon').className = 'lesson-icon fas fa-check-circle';
-                    const status = lessons[index].querySelector('.lesson-status');
-                    if (status) status.innerHTML = '<i class="fas fa-check"></i> Concluída';
-                    
-                    document.querySelectorAll('.complete-btn').forEach(btn => {
-                        btn.classList.add('completed');
-                        btn.innerHTML = '<i class="fas fa-check-circle"></i> Aula Concluída';
-                    });
-
-                    updateOverallProgress();
-                }
-            }
-
-            function navigateToLesson(newIndex) {
-                if (newIndex >= 0 && newIndex < lessons.length) {
-                    // Atualiza aula atual
-                    lessons[currentLessonIndex]?.classList.remove('current');
-                    currentLessonIndex = newIndex;
-                    localStorage.setItem('currentLesson', currentLessonIndex);
-                    
-                    // Mostra nova aula
-                    showCurrentLesson();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-            }
-
-            function showCurrentLesson() {
-                // Oculta todas as aulas
-                courseContents.forEach(aula => {
-                    aula.style.display = 'none';
-                });
-
-                // Mostra aula atual (aula-1 até aula-5)
-                const currentAula = document.getElementById(`aula-${currentLessonIndex + 1}`);
-                if (currentAula) {
-                    currentAula.style.display = 'block';
-                    lessons[currentLessonIndex].classList.add('current');
-                    
-                    // Atualiza botão de completar
-                    const completeBtn = currentAula.querySelector('.complete-btn');
-                    if (completeBtn) {
-                        if (completedLessons.includes(currentLessonIndex)) {
-                            completeBtn.classList.add('completed');
-                            completeBtn.innerHTML = '<i class="fas fa-check-circle"></i> Aula Concluída';
-                        } else {
-                            completeBtn.classList.remove('completed');
-                            completeBtn.innerHTML = '<i class="fas fa-check-circle"></i> Marcar como concluída';
-                        }
-                    }
-                }
-            }
-
-            function updateOverallProgress() {
-                const total = lessons.length;
-                const completed = completedLessons.length;
-                const progress = Math.round((completed / total) * 100);
-                
-                progressFill.style.width = `${progress}%`;
-                progressText.textContent = `${progress}% concluído`;
-                
-                // Atualiza módulos
-                document.querySelectorAll('.module').forEach(module => {
-                    const lessonsInModule = module.querySelectorAll('.lesson-item').length;
-                    const completedInModule = module.querySelectorAll('.lesson-item.completed').length;
-                    module.querySelector('.module-progress').textContent = `${completedInModule}/${lessonsInModule} aulas`;
-                });
-            }
-
-            // Toggle dos módulos
-            document.querySelectorAll('.module-header').forEach(header => {
-                header.addEventListener('click', function() {
-                    const module = this.parentElement;
-                    module.classList.toggle('active');
-                });
+        // Botão de próxima aula
+        document.querySelectorAll(".next-btn").forEach(btn => {
+            btn.addEventListener("click", function() {
+            const aulaNumber = parseInt(this.getAttribute('data-aula')) || 2;
+            showAula(aulaNumber);
             });
         });
 
-        // Função para mostrar aula específica (mantida para compatibilidade)
-        function showAula(aulaNumber) {
+        // Placeholders de vídeo
+        document.querySelectorAll('.video-placeholder').forEach(placeholder => {
+            placeholder.addEventListener('click', function() {
+            this.classList.add('disabled');
+            });
+        });
+
+        // mostra/oculta modulos
+        document.querySelectorAll(".module-header").forEach(header => {
+            header.addEventListener("click", () => {
+                const module = header.parentElement;
+                module.classList.toggle("active");
+            });
+            });
+
+        // Botão de reset
+        document.querySelector('.reset-btn').addEventListener('click', resetProgress);
+
+        // Evento ao sair da página
+        window.addEventListener("beforeunload", saveTimeOnUnload);
+
+        // Quizzes
+        setupQuizListeners();
+        }
+
+        // Função para marcar aula como concluída
+        async function markLessonAsCompleted(index) {
+            const aulaNumber = index + 1;
+            const progressoSnap = await getDoc(progressoRef);
+            const progressoData = progressoSnap.data();
+            
+            if (!progressoData.aulasConcluidas.includes(aulaNumber)) {
+                const novasAulasConcluidas = [...progressoData.aulasConcluidas, aulaNumber];
+                const totalAulas = 8; // Total de aulas no curso
+                const novoProgresso = Math.round((novasAulasConcluidas.length / totalAulas) * 100);
+                
+                await updateDoc(progressoRef, {
+                    aulasConcluidas: novasAulasConcluidas,
+                    aulasData: {
+                        ...progressoData.aulasData,
+                        [aulaNumber]: serverTimestamp()
+                    },
+                    ultimaAula: aulaNumber,
+                    progresso: novoProgresso,
+                    dataUltimaAtualizacao: serverTimestamp()
+                });
+                
+                // Atualiza apenas o botão da aula atual
+                const currentCompleteBtn = document.querySelector(`#aula-${aulaNumber} .complete-btn`);
+                if (currentCompleteBtn) {
+                    currentCompleteBtn.classList.add('completed');
+                    currentCompleteBtn.innerHTML = '<i class="fas fa-check-circle"></i> Aula Concluída';
+                    currentCompleteBtn.disabled = true;
+                }
+                
+                updateUIProgress(novoProgresso, novasAulasConcluidas.length, totalAulas);
+                alert(`✅ Aula ${aulaNumber} marcada como concluída!`);
+                
+                // Desbloqueia a próxima aula
+                if (aulaNumber < totalAulas) {
+                    const nextLessonItem = document.querySelectorAll('.lesson-item')[aulaNumber];
+                    if (nextLessonItem) {
+                        nextLessonItem.classList.remove('locked');
+                        const status = nextLessonItem.querySelector('.lesson-status');
+                        if (status) status.innerHTML = '<i class="fas fa-play"></i> Disponível';
+                    }
+                }
+            }
+        }
+
+        // Função para navegar entre aulas
+        async function showAula(aulaNumber) {
             const aulas = document.querySelectorAll('.course-content');
+            
+            // Salva tempo da aula anterior
+            if (aulaAtualId && tempoInicioAula) {
+                const tempoAgora = Date.now();
+                const tempoGasto = Math.floor((tempoAgora - tempoInicioAula) / 1000);
+
+                await updateDoc(progressoRef, {
+                    [`tempos.${aulaAtualId}`]: increment(tempoGasto),
+                    tempoGastoTotal: increment(tempoGasto),
+                    dataUltimaAtualizacao: serverTimestamp()
+                });
+            }
+
+            // Esconde todas as aulas
             aulas.forEach(aula => aula.style.display = 'none');
             
-            const aulaAtual = document.getElementById(`aula-${aulaNumber}`);
-            if (aulaAtual) {
-                aulaAtual.style.display = 'block';
-                localStorage.setItem('currentLesson', aulaNumber - 1);
+            // Mostra a aula solicitada
+            const novaAula = document.getElementById(`aula-${aulaNumber}`);
+            if (novaAula) {
+                novaAula.style.display = 'block';
                 
                 // Atualiza a aula atual na lista
                 document.querySelectorAll('.lesson-item').forEach((item, index) => {
                     item.classList.remove('current');
-                    if (index === aulaNumber - 1) {
-                        item.classList.add('current');
-                    }
+                    if (index === aulaNumber - 1) item.classList.add('current');
                 });
+
+                // Reinicia cronômetro
+                aulaAtualId = aulaNumber; // Alteração importante aqui
+                tempoInicioAula = Date.now();
+                
+                // Atualiza no Firestore qual aula está sendo visualizada
+                await updateDoc(progressoRef, {
+                    ultimaAula: aulaNumber,
+                    dataUltimaAtualizacao: serverTimestamp()
+                });
+            } else {
+                console.error(`Aula ${aulaNumber} não encontrada`);
             }
         }
-    </script>
+
+        // Função para salvar tempo ao sair da página
+        async function saveTimeOnUnload() {
+        if (aulaAtualId && tempoInicioAula) {
+            const tempoAgora = Date.now();
+            const tempoGasto = Math.floor((tempoAgora - tempoInicioAula) / 1000);
+
+            await updateDoc(progressoRef, {
+            [`tempos.${aulaAtualId}`]: increment(tempoGasto),
+            tempoGastoTotal: increment(tempoGasto),
+            dataUltimaAtualizacao: serverTimestamp()
+            });
+        }
+        }
+
+        // Função para resetar progresso
+        async function resetProgress() {
+        if (!confirm('Tem certeza que deseja resetar todo seu progresso?')) return;
+
+        try {
+            await updateDoc(progressoRef, {
+            aulasConcluidas: [],
+            tempos: {},
+            tempoGastoTotal: 0,
+            progresso: 0,
+            ultimaAula: 1,
+            dataUltimaAtualizacao: serverTimestamp()
+            });
+
+            localStorage.clear();
+            alert('Progresso resetado com sucesso!');
+            location.reload();
+        } catch (error) {
+            console.error("Erro ao resetar progresso:", error);
+            alert('Erro ao resetar progresso. Por favor, tente novamente.');
+        }
+        }
+
+        // Função para configurar listeners dos quizzes
+        function setupQuizListeners() {
+        document.querySelectorAll(".quiz-container").forEach((container, index) => {
+            const options = container.querySelectorAll(".quiz-option");
+            const submitBtn = container.querySelector(".quiz-submit");
+            const feedback = container.querySelector(".quiz-feedback");
+
+            options.forEach(option => {
+            option.addEventListener("click", function() {
+                options.forEach(o => o.classList.remove("selected"));
+                this.classList.add("selected");
+            });
+            });
+
+            submitBtn.addEventListener("click", async () => {
+            const selected = container.querySelector(".quiz-option.selected");
+            if (!selected) {
+                feedback.textContent = "⚠️ Selecione uma opção.";
+                feedback.className = "quiz-feedback error";
+                feedback.style.display = "block";
+                return;
+            }
+
+            const resposta = selected.textContent.trim();
+            const correta = selected.hasAttribute("data-correta");
+
+            feedback.textContent = correta
+                ? "✅ Resposta correta!"
+                : "❌ Resposta incorreta.";
+            feedback.className = correta ? "quiz-feedback success" : "quiz-feedback error";
+            feedback.style.display = "block";
+
+            const aulaId = `aula-${index + 1}`;
+            await updateDoc(progressoRef, {
+                [`respostasQuiz.${aulaId}`]: { resposta, correta },
+                dataUltimaAtualizacao: serverTimestamp()
+            });
+            });
+        });
+        }
+
+        // Função para carregar progresso inicial
+        async function loadInitialProgress() {
+            const progressoSnap = await getDoc(progressoRef);
+            if (progressoSnap.exists()) {
+                const progresso = progressoSnap.data();
+                const totalAulas = 8;
+                
+                // Atualiza barra de progresso
+                updateUIProgress(progresso.progresso, progresso.aulasConcluidas.length, totalAulas);
+                
+                // Marca aulas concluídas e desbloqueia as seguintes
+                progresso.aulasConcluidas.forEach(aulaNumber => {
+                    const index = aulaNumber - 1;
+                    const lessonItem = document.querySelectorAll(".lesson-item")[index];
+                    if (lessonItem) {
+                        lessonItem.classList.add("completed");
+                        lessonItem.querySelector(".lesson-icon").className = "lesson-icon fas fa-check-circle";
+                        const status = lessonItem.querySelector(".lesson-status");
+                        if (status) status.innerHTML = '<i class="fas fa-check"></i> Concluída';
+                        
+                        // Desbloqueia a próxima aula
+                        if (aulaNumber < totalAulas) {
+                            const nextLessonItem = document.querySelectorAll('.lesson-item')[aulaNumber];
+                            if (nextLessonItem) {
+                                nextLessonItem.classList.remove('locked');
+                                const nextStatus = nextLessonItem.querySelector('.lesson-status');
+                                if (nextStatus) nextStatus.innerHTML = '<i class="fas fa-play"></i> Disponível';
+                            }
+                        }
+                    }
+                    
+                    // Atualiza o botão de conclusão da aula específica
+                    const completeBtn = document.querySelector(`#aula-${aulaNumber} .complete-btn`);
+                    if (completeBtn) {
+                        completeBtn.classList.add('completed');
+                        completeBtn.innerHTML = '<i class="fas fa-check-circle"></i> Aula Concluída';
+                        completeBtn.disabled = true;
+                    }
+                });
+                
+                // Mostra aula atual
+                if (progresso.ultimaAula) {
+                    showAula(progresso.ultimaAula);
+                } else {
+                    showAula(1); // Mostra a primeira aula se não houver última aula definida
+                }
+            }
+        }
+
+        // Função para atualizar a UI do progresso
+        function updateUIProgress(porcentagem, completas, total) {
+        document.querySelector(".progress-fill").style.width = `${porcentagem}%`;
+        document.querySelector(".progress-text").textContent = `${porcentagem}% concluído`;
+        
+        // Atualiza módulos
+        document.querySelectorAll(".module").forEach(module => {
+            const lessonsInModule = module.querySelectorAll(".lesson-item").length;
+            const completedInModule = module.querySelectorAll(".lesson-item.completed").length;
+            module.querySelector(".module-progress").textContent = `${completedInModule}/${lessonsInModule} aulas`;
+        });
+        }
+
+        function verificarAulas() {
+  const totalAulas = 8;
+  
+  for (let i = 1; i <= totalAulas; i++) {
+    const aula = document.getElementById(`aula-${i}`);
+    if (!aula) {
+      console.error(`ERRO CRÍTICO: Aula ${i} não encontrada no DOM!`);
+      return false;
+    }
+  }
+  
+  console.log("Todas as aulas estão carregadas corretamente");
+  return true;
+}
+</script>
 </body>
 </html>

@@ -231,6 +231,10 @@ footer {
     font-size: 0.9rem;
 }
 
+.social-links a:hover {
+    color: var(--accent-yellow);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     header {

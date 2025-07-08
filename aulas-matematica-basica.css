@@ -374,6 +374,7 @@ nav ul li a:hover {
     top: 20px;
     max-height: 90vh;
     overflow-y: auto;
+    min-width: 450px;
 }
 
 .lessons-container h2 {
@@ -425,8 +426,13 @@ nav ul li a:hover {
     transition: max-height 0.3s ease;
 }
 
+.module .module-lessons {
+  display: none;
+}
+
 .module.active .module-lessons {
     max-height: 1000px;
+    display: block;
 }
 
 .lesson-item {
@@ -748,6 +754,20 @@ display: none; /* Remove completamente o placeholder */
 display: none; /* Remove o placeholder */
 }
 
-.course-content {
-    display: none; /* Todas as aulas começam ocultas */
+.quiz-container {
+  display: block;
+}
+
+
+.lesson-item.locked {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.lesson-item .lesson-status i.fa-lock {
+    color: #ff6b6b;
+}
+
+.lesson-item .lesson-status i.fa-play {
+    color: #28a745;
 }

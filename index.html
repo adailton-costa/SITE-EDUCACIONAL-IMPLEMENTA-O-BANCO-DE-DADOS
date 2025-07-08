@@ -5,22 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tela de login</title>
     <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
     <div id="form-login">
-        <h1>Bem-Vindo</h1>
-        <p>Faça seu login</p>
+        <h1>Bem-vindo ao EducaUP</h1>
+        <p>Digite seus dados para acessar sua conta</p>
         <form id="form-login-form">
             <fieldset style="border: none;">
+                <div class="input-container">
+                    <i class="fas fa-user"></i>
                 <input type="email" placeholder="Email" id="email">
                 <br><br>
-                <input type="password" placeholder="Senha" id="senha">
+                <div class="senha-container">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" placeholder="Senha" id="senha">
+                    <i class="fa-solid fa-eye toggle-senha" id="toggleSenha"></i>
+                </div>
                 <br><br>
                 <button id="btn-entrar">Entrar</button>
                 <br><br>
             </fieldset>
         </form>
-        <p><a href="cadastro.html">Não tem uma conta? Criar conta</a></p>
+        <div class="form-group">
+                <a href="index.html">Esqueceu a senha?</a>
+            </div>
+            <br>
+        <p><a href="cadastro.html">Não tem uma conta? Cadastre-se</a></p>
     </div>
 
     <script type="module">
@@ -87,6 +98,19 @@
 
                     setTimeout(() => errorDiv.remove(), 5000);
                 });
+        });
+
+        // Mostrar / ocultar senha
+        const toggleSenha = document.getElementById('toggleSenha');
+        const inputSenha = document.getElementById('senha');
+
+        toggleSenha.addEventListener('click', () => {
+            const isPassword = inputSenha.type === 'password';
+            inputSenha.type = isPassword ? 'text' : 'password';
+
+            // Alterna ícone Font Awesome
+            toggleSenha.classList.toggle('fa-eye');
+            toggleSenha.classList.toggle('fa-eye-slash');
         });
     </script>
 </body>

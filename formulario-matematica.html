@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matemática Básica - EducaMais</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Fredoka+One&display=swap" rel="stylesheet">
-    <link rel = "stylesheet" href = "formulario-matematica.css">
+    <link rel="stylesheet" href="formulario-matematica.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
@@ -50,23 +50,11 @@
             <h3>O que você vai aprender</h3>
             <ul class="module-list">
                 <li class="module-item">
-                    <span>Módulo 1: Operações Básicas</span>
+                    <span>Módulo 1: Fundamentos</span>
                     <span class="module-duration">2 horas</span>
                 </li>
                 <li class="module-item">
-                    <span>Módulo 2: Frações e Decimais</span>
-                    <span class="module-duration">2 horas</span>
-                </li>
-                <li class="module-item">
-                    <span>Módulo 3: Porcentagem</span>
-                    <span class="module-duration">1.5 horas</span>
-                </li>
-                <li class="module-item">
-                    <span>Módulo 4: Introdução à Álgebra</span>
-                    <span class="module-duration">2.5 horas</span>
-                </li>
-                <li class="module-item">
-                    <span>Módulo 5: Geometria Básica</span>
+                    <span>Módulo 2: Álgebra Básica</span>
                     <span class="module-duration">2 horas</span>
                 </li>
             </ul>
@@ -79,34 +67,48 @@
         </div>
         
         <div class="enrollment-form">
-            <h2>Matricule-se Agora</h2>
-            <form id="enrollForm">
-                <div class="form-group">
-                    <label for="name">Nome Completo</label>
-                    <input type="text" id="name" name="name" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="email">E-mail</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="phone">Telefone</label>
-                    <input type="tel" id="phone" name="phone" required>
-                </div>               
-                <button type="submit" class="submit-btn">Confirmar Matrícula</button>
-            </form>
+            <!-- Status de matrícula -->
+            <div id="enrollmentStatus" class="enrollment-status hidden">
+                <h3 id="statusMessage"></h3>
+                <button id="btnAcessarCurso" class="btn-success hidden">
+                    <i class="fas fa-book-open"></i> Acessar Curso
+                </button>
+                <button id="btnCancelarMatricula" class="btn-danger hidden">
+                    <i class="fas fa-user-minus"></i> Cancelar Matrícula
+                </button>
+            </div>
             
-            <div class="features-box">
-                <h3>O que você recebe</h3>
-                <div class="feature-item">
-                    <div class="feature-icon">✓</div>
-                    <span>Certificado de conclusão</span>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">✓</div>
-                    <span>Materiais complementares</span>
+            <!-- Formulário de matrícula (inicialmente visível) -->
+            <div id="formContainer">
+                <h2>Matricule-se Agora</h2>
+                <form id="enrollForm">
+                    <div class="form-group">
+                        <label for="name">Nome Completo</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Telefone</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>               
+                    <button type="submit" class="submit-btn">Confirmar Matrícula</button>
+                </form>
+                
+                <div class="features-box">
+                    <h3>O que você recebe</h3>
+                    <div class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        <span>Certificado de conclusão</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        <span>Materiais complementares</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -114,39 +116,181 @@
 
     <footer>
         <div class="social-links">
-            <a href="#">Facebook</a> | 
-            <a href="#">Instagram</a> | 
-            <a href="#">YouTube</a>
+            <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
+            <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+            <a href="#"><i class="fab fa-youtube"></i> YouTube</a>
+            <a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a>
         </div>
-        <div class="copyright">
-            © 2025 EducaUP - Transformando vidas através da educação.
-        </div>
+        <p class="copyright">© 2025 EducaUP </p>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const enrollForm = document.getElementById('enrollForm');
+    <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { 
+        getFirestore, 
+        doc, 
+        setDoc, 
+        getDoc, 
+        deleteDoc, 
+        serverTimestamp,
+        collection,
+        query,
+        where,
+        getDocs
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAQ0s0EpWm2kmPAC3z0bNphLyjcGieWIBM",
+        authDomain: "siteweb-ca3bc.firebaseapp.com",
+        projectId: "siteweb-ca3bc",
+        storageBucket: "siteweb-ca3bc.appspot.com",
+        messagingSenderId: "312050528441",
+        appId: "1:312050528441:web:70abee0173951c08402b68"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        const enrollForm = document.getElementById("enrollForm");
+        const formContainer = document.getElementById("formContainer");
+        const enrollmentStatus = document.getElementById("enrollmentStatus");
+        const statusMessage = document.getElementById("statusMessage");
+        const btnAcessarCurso = document.getElementById("btnAcessarCurso");
+        const btnCancelarMatricula = document.getElementById("btnCancelarMatricula");
+
+        // Verifica autenticação e matrícula
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                alert("⚠️ Você precisa estar logado para se matricular.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            // Verifica se já está matriculado (AGORA FUNCIONANDO CORRETAMENTE)
+            const jaMatriculado = await verificarMatriculaExistente(user.uid);
             
-            enrollForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Coletar dados do formulário
-                const formData = {
-                    name: document.getElementById('name').value,
-                    email: document.getElementById('email').value,
-                    phone: document.getElementById('phone').value,
-                };
-                
-                // Aqui você normalmente enviaria os dados para um servidor
-                console.log('Dados da matrícula:', formData);
-                
-                // Simular envio bem-sucedido
-                alert('Matrícula realizada com sucesso!');
-                enrollForm.reset();
-               
-                window.location.href = 'formulario-matematica.html';
-            });
+            if (jaMatriculado) {
+                showEnrollmentStatus("Você já está matriculado neste curso!");
+            } else {
+                showEnrollmentForm();
+            }
+
+            // Preenche automaticamente os campos do usuário
+            if (user.displayName) document.getElementById("name").value = user.displayName;
+            if (user.email) document.getElementById("email").value = user.email;
+
+            // Configura eventos dos botões
+            btnCancelarMatricula.addEventListener("click", () => cancelarMatricula(user.uid));
+            btnAcessarCurso.addEventListener("click", () => window.location.href = "aulas-matematica-basica.html");
         });
+
+        // Evento de submit do formulário
+        enrollForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const user = auth.currentUser;
+            if (!user) return;
+
+            await realizarMatricula(user);
+        });
+    });
+
+    // FUNÇÃO CRÍTICA: Verifica se o usuário já está matriculado
+    async function verificarMatriculaExistente(uid) {
+        try {
+            // Consulta otimizada para verificar matrícula
+            const matriculasRef = collection(db, "matriculas");
+            const q = query(matriculasRef, where("uid", "==", uid), where("curso", "==", "Matemática Básica"));
+            const querySnapshot = await getDocs(q);
+            
+            return !querySnapshot.empty;
+        } catch (error) {
+            console.error("Erro ao verificar matrícula:", error);
+            return false;
+        }
+    }
+
+    // Realiza a matrícula com dupla verificação
+    async function realizarMatricula(user) {
+        try {
+            // Verifica novamente se não está matriculado (double-check)
+            const jaMatriculado = await verificarMatriculaExistente(user.uid);
+            if (jaMatriculado) {
+                showEnrollmentStatus("Você já está matriculado!");
+                return;
+            }
+
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const phone = document.getElementById("phone").value;
+
+            // Cria a matrícula com ID composto (UID + Curso) para garantir unicidade
+            const matriculaId = `${user.uid}_matematica_basica`;
+            const matriculaRef = doc(db, "matriculas", matriculaId);
+            
+            await setDoc(matriculaRef, {
+                matriculaId,
+                uid: user.uid,
+                name,
+                email,
+                phone,
+                curso: "Matemática Básica",
+                dataMatricula: serverTimestamp(),
+                status: "ativo"
+            });
+
+            alert("✅ Matrícula realizada com sucesso!");
+            showEnrollmentStatus("Matrícula confirmada com sucesso!");
+        } catch (error) {
+            console.error("❌ Erro na matrícula:", error);
+            alert(`Erro ao realizar matrícula: ${error.message}`);
+        }
+    }
+
+    // Cancela a matrícula
+    async function cancelarMatricula(uid) {
+        if (!confirm("Tem certeza que deseja cancelar sua matrícula?")) return;
+        
+        try {
+            const matriculasRef = collection(db, "matriculas");
+            const q = query(matriculasRef, where("uid", "==", uid), where("curso", "==", "Matemática Básica"));
+            const querySnapshot = await getDocs(q);
+            
+            if (querySnapshot.empty) {
+                alert("Matrícula não encontrada!");
+                return;
+            }
+            
+            // Remove todas as matrículas encontradas (não deveria ter mais de uma)
+            const promises = querySnapshot.docs.map(doc => deleteDoc(doc.ref));
+            await Promise.all(promises);
+            
+            alert("Matrícula cancelada com sucesso!");
+            showEnrollmentForm();
+        } catch (error) {
+            console.error("Erro ao cancelar matrícula:", error);
+            alert("Erro ao cancelar matrícula: " + error.message);
+        }
+    }
+
+    // Mostra o status de matrícula
+    function showEnrollmentStatus(message) {
+        document.getElementById("statusMessage").textContent = message;
+        document.getElementById("enrollmentStatus").classList.remove("hidden");
+        document.getElementById("formContainer").classList.add("hidden");
+        document.getElementById("btnAcessarCurso").classList.remove("hidden");
+        document.getElementById("btnCancelarMatricula").classList.remove("hidden");
+    }
+
+    // Mostra o formulário de matrícula
+    function showEnrollmentForm() {
+        document.getElementById("enrollmentStatus").classList.add("hidden");
+        document.getElementById("formContainer").classList.remove("hidden");
+        document.getElementById("btnAcessarCurso").classList.add("hidden");
+        document.getElementById("btnCancelarMatricula").classList.add("hidden");
+    }
     </script>
 </body>
 </html>
