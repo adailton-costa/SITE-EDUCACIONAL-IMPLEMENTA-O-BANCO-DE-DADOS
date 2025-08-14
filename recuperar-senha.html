@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Recuperar Senha - EducaUP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Fredoka+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="recuperar-senha.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+</head>
+<body>
+  <header>
+    <div class="logo">EducaUP</div>
+    <nav>
+      <ul>
+        <li><a href="#"><i class="fas fa-envelope"></i> Contato</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="course-container">
+  <div class="enrollment-form">
+    <div id="formContainer">
+      <h2 class="titulo-recuperar">Recuperar Senha</h2>
+      <form id="recoverForm">
+        <div class="form-group">
+          <label for="email">Digite seu e-mail cadastrado</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+
+        <button type="submit" class="submit-btn"><i class="fas fa-key"></i> Enviar link de recuperação</button>
+
+        <p class="centralizado">
+          Lembrou da senha? <a href="index.html" class="voltar-link">Voltar ao login</a>
+        </p>
+      </form>
+    </div>
+  </div>
+</main>
+
+  <footer>
+    <div class="social-links">
+      <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
+      <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+      <a href="#"><i class="fab fa-youtube"></i> YouTube</a>
+      <a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a>
+    </div>
+    <p class="copyright">© 2025 EducaUP</p>
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAQ0s0EpWm2kmPAC3z0bNphLyjcGieWIBM",
+      authDomain: "siteweb-ca3bc.firebaseapp.com",
+      projectId: "siteweb-ca3bc",
+      storageBucket: "siteweb-ca3bc.appspot.com",
+      messagingSenderId: "312050528441",
+      appId: "1:312050528441:web:70abee0173951c08402b68"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    document.getElementById("recoverForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+
+      try {
+        await sendPasswordResetEmail(auth, email);
+        alert("📧 Um link de redefinição de senha foi enviado para seu e-mail.");
+      } catch (error) {
+        console.error("Erro:", error.code, error.message);
+        alert("Erro ao enviar: " + error.message);
+      }
+    });
+  </script>
+</body>
+</html>

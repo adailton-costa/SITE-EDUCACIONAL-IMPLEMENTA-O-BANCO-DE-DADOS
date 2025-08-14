@@ -1,0 +1,199 @@
+/* Fonte geral */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(to right, #0f2027, #2c5364, #0f2027);
+  color: #ffffff;
+}
+
+/* Cabeçalho */
+header {
+  background-color: rgb(30, 58, 69, 1);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+header .logo {
+  font-weight: bold;
+  font-size: 40px;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  padding: 0;
+  margin: 0;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: opacity 0.3s;
+}
+
+nav a:hover {
+  color: #f9c74f;
+}
+
+/* Container principal */
+.course-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 70vh;
+  padding: 2rem;
+}
+
+#formContainer {
+  background-color: #0e1a22;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.enrollment-form h2 {
+  font-size: 30px;
+  font-weight: bold;
+  text-align: center;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+}
+
+.enrollment-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.form-group,
+.submit-btn {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  display: block;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  text-align: left;
+  color: #ffffff;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 15px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Botão */
+.submit-btn {
+  margin-top: 20px;
+  background-color: #1e90ff;
+  color: white;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.submit-btn:hover {
+  background-color: #1d2a36;
+}
+
+/* Link voltar */
+.centralizado {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.voltar-link {
+  color: gray;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.voltar-link:hover {
+  color: #f9c74f;
+}
+
+/* Rodapé */
+footer {
+  background-color: rgb(30, 58, 69, 1);
+  text-align: center;
+  padding: 1.5rem 1rem;
+}
+
+footer .social-links {
+  margin-bottom: 0.5rem;
+}
+
+footer .social-links a {
+  margin: 0 0.7rem;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+footer .social-links a:hover {
+  color: #f9c74f;
+}
+
+footer p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #ffffff;
+}
+
+input[type="email"] {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  box-sizing: border-box;
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+  .enrollment-form {
+    padding: 1.5rem;
+  }
+
+  nav ul {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  header {
+    flex-direction: column;
+    text-align: center;
+  }
+}

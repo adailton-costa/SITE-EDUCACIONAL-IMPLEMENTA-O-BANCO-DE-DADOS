@@ -121,6 +121,11 @@ nav a i {
   text-align: center;
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
   transition: transform 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
 }
 
 .feature-card:hover {
@@ -150,6 +155,9 @@ nav a i {
 }
 
 .feature-link {
+  display: block;
+  width: 100%;
+  height: 100%;
   text-decoration: none; /* Remove o sublinhado */
   color: inherit; /* Faz com que o link herde a cor do elemento pai */
 }
@@ -234,10 +242,11 @@ footer {
   display: inline-block;
   background-color: var(--primary-color);
   color: rgb(255, 0, 0);
-  padding: 12px 24px;
+  padding: 60px 24px;
   border-radius: 50%;
   text-decoration: none;
   transition: var(--transition);
+  font-family: 'Fredoka One', cursive;
 }
 
 .about-button:hover {
@@ -246,66 +255,124 @@ footer {
 
 /* CONTACT SECTION */
 .contact {
-  padding: 60px 20px;
-  background-color: #f1f1f1;
+  padding: 80px 20px;
+  background: linear-gradient(135deg, #e0f7fa, #f1f1f1);
+  border-top: 5px solid  rgba(30, 58, 69, 1);
 }
 
 .contact h2 {
   text-align: center;
-  font-size: 2rem;
+  font-size: 2.5rem;
   color: var(--primary-dark);
-  margin-bottom: 40px;
+  margin-bottom: 50px;
   font-family: 'Fredoka One', cursive;
+  position: relative;
+}
+
+.contact h2::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background-color:  rgba(30, 58, 69, 1);
+  margin: 10px auto 0;
+  border-radius: 2px;
 }
 
 .contact-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 3rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
+.contact-info, .map-container {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
 .contact-info h3 {
-  margin-bottom: 10px;
-  color: var(--primary-color);
+  font-size: 1.8rem;
+  color: var(--primary-dark);
+  margin-bottom: 20px;
+  font-family: 'Fredoka One', cursive;
 }
 
 .contact-info p {
-  margin: 6px 0;
-  color: #444;
-}
-
-.contact-form .form-group {
-  margin-bottom: 20px;
-}
-
-.form-control {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 0%;
+  margin: 10px 0;
+  color: #555;
   font-size: 1rem;
+  line-height: 1.6;
+}
+
+.contact-actions {
+  margin-top: 30px;
+}
+
+.contact-actions h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: var(--primary-dark);
 }
 
 .btn-submit {
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: 10px;
+  margin-top: 10px;
+  padding: 12px 24px;
+  background-color: var(--primary-dark);
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .btn-submit:hover {
-  background-color: var(--accent-color);
+  background-color: var(--accent-yellow);
+  color: #333;
+  transform: scale(1.05);
 }
 
-/* Responsive Design */
+.map-container h3 {
+  font-size: 1.8rem;
+  color: var(--primary-dark);
+  margin-bottom: 20px;
+  font-family: 'Fredoka One', cursive;
+}
+
+iframe {
+  width: 100%;
+  height: 300px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Ícones opcionais */
+.btn-submit::before {
+  content: '📧';
+}
+
+.btn-submit:nth-of-type(2)::before {
+  content: '💬';
+}
+
+/* Responsivo */
 @media (max-width: 768px) {
-  header {
-      flex-direction: column;
-      padding: 1rem;
+  .contact h2 {
+    font-size: 2rem;
+  }
+
+  .btn-submit {
+    width: 100%;
+    justify-content: center;
   }
 }
