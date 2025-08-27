@@ -220,11 +220,9 @@
 
   let user;
 
-  // Cursos disponíveis
+  // Cursos disponíveis - ajustado para refletir o curso de Matemática Básica
   const cursosDoUsuario = [
-    { id: "cursoMatematica", nome: "Matemática" },
-    { id: "cursoPortugues", nome: "Português" },
-    { id: "cursoHistoria", nome: "História" }
+    { id: "progresso", nome: "Matemática Básica" }
   ];
 
   function gerarCardsCursos() {
@@ -232,7 +230,7 @@
     container.innerHTML = '';
     cursosDoUsuario.forEach(curso => {
       const div = document.createElement('div');
-      div.classList.add('course-card');
+      div.classList.add('course-card', 'active'); // Já marca como ativo pois só temos um curso
       div.dataset.id = curso.id;
       div.innerHTML = `<h4>${curso.nome}</h4>`;
       div.onclick = () => carregarRelatorio(curso.id);
@@ -240,43 +238,76 @@
     });
   }
 
-  async function carregarRelatorio(courseId) {
-    // Marca card ativo
-    document.querySelectorAll('.course-card').forEach(c => c.classList.remove('active'));
-    const activeCard = document.querySelector(`.course-card[data-id="${courseId}"]`);
-    if(activeCard) activeCard.classList.add('active');
-
+  async function carregarRelatorio() {
     if(!user) return;
 
-    const ref = doc(db, `users/${user.uid}/courses/${courseId}`);
+    // Ajustado para usar a mesma estrutura da aula de matemática
+    const ref = doc(db, "progresso", user.uid);
     const snapshot = await getDoc(ref);
 
     if (snapshot.exists()) {
       const data = snapshot.data();
 
-      document.getElementById('aulasConcluidas').textContent = data.aulasConcluidas || 0;
-      document.getElementById('progresso').textContent = (data.progressoPercentual || 0) + '%';
-      document.getElementById('ultimaAula').textContent = data.ultimaAula || '-';
+      // Ajustando para os nomes de campos usados na aula de matemática
+      const aulasConcluidas = data.aulasConcluidas?.length || 0;
+      const progresso = data.progresso || 0;
+      const ultimaAula = data.ultimaAula || '-';
+      const tempoSegundos = data.tempoGastoTotal || 0;
 
-      const horas = Math.floor((data.tempoTotal || 0) / 3600);
-      const minutos = Math.floor(((data.tempoTotal || 0) % 3600) / 60);
+      // Converter segundos para horas e minutos
+      const horas = Math.floor(tempoSegundos / 3600);
+      const minutos = Math.floor((tempoSegundos % 3600) / 60);
+
+      // Atualizar a UI
+      document.getElementById('aulasConcluidas').textContent = aulasConcluidas;
+      document.getElementById('progresso').textContent = `${progresso}%`;
+      document.getElementById('ultimaAula').textContent = `Aula ${ultimaAula}`;
       document.getElementById('tempoTotal').textContent = `${horas}h ${minutos}min`;
 
+      // Processar quizzes - ajustado para a estrutura de respostasQuiz da aula de matemática
       const quizContainer = document.getElementById('quizHistorico');
       quizContainer.innerHTML = "";
-      (data.quizResults || []).forEach(q => {
-        const li = document.createElement('li');
-        li.innerHTML = `<span>Aula ${q.aula}</span> <span class="quiz-score">${q.acertos}/${q.total}</span>`;
-        quizContainer.appendChild(li);
-      });
+      
+      const respostas = data.respostasQuiz || {};
+      const totalQuizzes = Object.keys(respostas).length;
+      let acertos = 0;
+
+      if (totalQuizzes > 0) {
+        Object.entries(respostas).forEach(([aulaId, resposta]) => {
+          const aulaNum = aulaId.replace('aula-', '');
+          const li = document.createElement('li');
+          
+          if (resposta.correta) acertos++;
+          
+          li.innerHTML = `
+            <span>Aula ${aulaNum}</span>
+            <span class="quiz-score">${resposta.correta ? '✅' : '❌'}</span>
+          `;
+          quizContainer.appendChild(li);
+        });
+
+        // Adicionar resumo de desempenho
+        const liResumo = document.createElement('li');
+        liResumo.style.fontWeight = 'bold';
+        liResumo.style.borderTop = '2px solid #eee';
+        liResumo.style.marginTop = '10px';
+        liResumo.style.paddingTop = '10px';
+        liResumo.innerHTML = `
+          <span>Desempenho geral</span>
+          <span class="quiz-score">${acertos}/${totalQuizzes} acertos</span>
+        `;
+        quizContainer.appendChild(liResumo);
+      } else {
+        quizContainer.innerHTML = "<li>Nenhum quiz respondido ainda.</li>";
+      }
+
     } else {
-      // Curso não implementado ainda ou sem dados
+      // Caso não encontre dados
       document.getElementById('aulasConcluidas').textContent = 0;
       document.getElementById('progresso').textContent = '0%';
       document.getElementById('ultimaAula').textContent = '-';
       document.getElementById('tempoTotal').textContent = '0h 0min';
-      document.getElementById('quizHistorico').innerHTML = '';
-      console.log("Nenhum dado encontrado para este curso.");
+      document.getElementById('quizHistorico').innerHTML = '<li>Nenhum dado encontrado.</li>';
     }
   }
 
@@ -284,14 +315,16 @@
     if (u) {
       user = u;
       gerarCardsCursos();
-      // Carrega curso de Matemática por padrão
-      carregarRelatorio("cursoMatematica");
+      carregarRelatorio(); // Carrega os dados automaticamente
     } else {
       console.log("Usuário não autenticado.");
       alert("Faça login para ver seu progresso.");
+      // Redirecionar para login se desejar
+      // window.location.href = "login.html";
     }
   });
 
 </script>
+
 </body>
 </html>

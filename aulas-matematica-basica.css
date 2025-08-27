@@ -507,6 +507,8 @@ nav ul li a:hover {
     box-shadow: var(--shadow);
     padding: 2rem;
     margin-top: 2rem;
+    height: 400px;
+overflow-y: auto;
 }
 
 .quiz-container h3 {

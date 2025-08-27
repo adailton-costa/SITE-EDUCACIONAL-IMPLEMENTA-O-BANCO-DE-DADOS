@@ -31,7 +31,7 @@
         <div class="logo">EducaUP</div>
         <nav>
             <ul>
-                <li><a href="index.html"><i class="fas fa-home"></i> Início</a></li>
+                <li><a href="pagina-principal.html"><i class="fas fa-home"></i> Início</a></li>
                 <li><a href="pagina-de-cursos.html"><i class="fas fa-book"></i> Cursos</a></li>
                 <li><a href="#"><i class="fas fa-info-circle"></i> Sobre</a></li>
                 <li><a href="#"><i class="fas fa-envelope"></i> Contato</a></li>
@@ -967,29 +967,38 @@
             });
             });
 
-            submitBtn.addEventListener("click", async () => {
-            const selected = container.querySelector(".quiz-option.selected");
-            if (!selected) {
-                feedback.textContent = "⚠️ Selecione uma opção.";
-                feedback.className = "quiz-feedback error";
+                submitBtn.addEventListener("click", async () => {
+                const selected = container.querySelector(".quiz-option.selected");
+                if (!selected) {
+                    feedback.textContent = "⚠️ Selecione uma opção.";
+                    feedback.className = "quiz-feedback error";
+                    feedback.style.display = "block";
+                    return;
+                }
+
+                const resposta = selected.textContent.trim();
+                const correta = selected.hasAttribute("data-correta");
+
+                if (correta) {
+                    feedback.textContent = "✅ Resposta correta!";
+                    feedback.className = "quiz-feedback success";
+                } else {
+                    feedback.textContent = "❌ Resposta incorreta! ⏳ Aguarde a explicação do Assistente...";
+                    feedback.className = "quiz-feedback error";
+
+                    // Remove a parte extra após 10 segundos
+                    setTimeout(() => {
+                        feedback.textContent = "❌ Resposta incorreta!";
+                    }, 10000);
+                }
+
                 feedback.style.display = "block";
-                return;
-            }
 
-            const resposta = selected.textContent.trim();
-            const correta = selected.hasAttribute("data-correta");
-
-            feedback.textContent = correta
-                ? "✅ Resposta correta!"
-                : "❌ Resposta incorreta.";
-            feedback.className = correta ? "quiz-feedback success" : "quiz-feedback error";
-            feedback.style.display = "block";
-
-            const aulaId = `aula-${index + 1}`;
-            await updateDoc(progressoRef, {
-                [`respostasQuiz.${aulaId}`]: { resposta, correta },
-                dataUltimaAtualizacao: serverTimestamp()
-            });
+                const aulaId = `aula-${index + 1}`;
+                await updateDoc(progressoRef, {
+                    [`respostasQuiz.${aulaId}`]: { resposta, correta },
+                    dataUltimaAtualizacao: serverTimestamp()
+                });
             });
         });
         }
@@ -1071,5 +1080,6 @@
   return true;
 }
 </script>
+<script src="quiz-mat.js"></script>
 </body>
 </html>
