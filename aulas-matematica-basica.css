@@ -507,8 +507,8 @@ nav ul li a:hover {
     box-shadow: var(--shadow);
     padding: 2rem;
     margin-top: 2rem;
-    height: 400px;
-overflow-y: auto;
+    height: 450px;
+    overflow-y: auto;
 }
 
 .quiz-container h3 {
@@ -773,3 +773,131 @@ display: none; /* Remove o placeholder */
 .lesson-item .lesson-status i.fa-play {
     color: #28a745;
 }
+
+/* tela do chat */
+.chat-card{
+  background:var(--card);
+  border-radius:12px;
+  box-shadow:0 8px 24px var(--shadow);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  height:480px;
+  border:1px solid rgba(16,24,40,0.04);
+}
+
+/* header */
+.chat-header{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  padding:14px 16px;
+  border-bottom:1px solid rgba(16,24,40,0.04);
+}
+
+.chat-header .avatar {
+    background:linear-gradient(180deg,#111827,#374151);
+    color: #ffffff;
+    width: 40px;
+    height: 40px;
+    width:44px;height:44px;border-radius:10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.chat-header .header-text {
+    display: flex;
+    flex-direction: column;
+    text-align: left; /* <- Adiciona alinhamento à direita */
+    margin-right: auto; /* <- empurra o texto para a direita do header */
+}
+
+.chat-header .title {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.chat-header .subtitle {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* Área das mensagens */
+.messages {
+    flex: 1;
+    list-style: none;
+    padding: 10px;
+    margin: 0;
+    overflow-y: auto;
+    background: #ffffff;
+}
+
+/* composer */
+.composer {
+    display: flex;
+    padding: 10px;
+    background: rgb(255, 255, 255);
+    border-top: 1px solid #ccc;
+    position: sticky;
+    bottom: 0;
+}
+
+.composer .input {
+    flex: 1;
+    resize: none;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 8px 12px;
+    font-size: 14px;
+    margin-right: 10px;
+    background: rgb(30, 58, 69, 1);
+    color: #ffffff;
+}
+
+.composer .send {
+    background: rgb(30, 58, 69, 1);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 8px 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.composer .send:hover {
+    background: rgb(12, 101, 139);
+}
+
+.messages {
+    flex: 1;
+    list-style: none;
+    padding: 10px;
+    margin: 0;
+    overflow-y: auto;
+    background: #f9f9f9;
+}
+
+.message {
+    max-width: 80%;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    display: inline-block;
+    clear: both;
+}
+
+.message.user {
+    background: #1d9bf0;
+    color: #fff;
+    float: right;
+    text-align: right;
+}
+
+.message.ai {
+    background: #e6e6e6;
+    color: #000;
+    float: left;
+}
+/*fim da tela do chat*/

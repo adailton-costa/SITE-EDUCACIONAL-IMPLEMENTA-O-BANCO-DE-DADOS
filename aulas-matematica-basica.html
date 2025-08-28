@@ -666,6 +666,27 @@
                 </ul>
             </div>
         </div>
+
+        <!-- tela de chat IA -->
+        <section class="chat-card" aria-label="Chat de IA">
+            <header class="chat-header">
+                <div class="avatar" aria-hidden="true">AI</div>
+                <div class="header-text">
+                <div class="title">Assistente</div>
+                <div class="subtitle">Sinta-se à vontade para perguntar o que quiser</div>
+                </div>
+            </header>
+
+            <ul id="messages" class="messages" role="log" aria-live="polite">
+                <!-- ...existing messages... -->
+            </ul>
+
+            <form id="composer" class="composer" autocomplete="off" aria-label="Enviar mensagem">
+                <textarea id="input" class="input" rows="1" placeholder="Escreva uma mensagem..." required></textarea>
+                <button type="submit" class="send" aria-label="Enviar mensagem">Enviar</button>
+            </form>
+        </section>
+
     </main>
 
     <footer>
@@ -1081,5 +1102,6 @@
 }
 </script>
 <script src="quiz-mat.js"></script>
+<script src="Chat-IA-Mat.js"></script>
 </body>
 </html>
