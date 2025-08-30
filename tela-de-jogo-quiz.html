@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Master</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { 
+            background: linear-gradient(to right, #0f2027, #2c5364, #0f2027);
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 20px; 
+        }
+        .container { 
+            width: 100%; 
+            max-width: 700px; 
+            background: #fff; 
+            border-radius: 25px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2); 
+            overflow: hidden; 
+            position: relative;
+        }
+
+        .header { 
+            background: linear-gradient(135deg, #056a62, #058277, #056a62); 
+            color: #ffffff; 
+            text-align: center; 
+            padding: 30px 20px; 
+        }
+        .header h1 { 
+            font-size: 2rem; 
+            font-weight: 700; 
+            margin-bottom: 8px; 
+        }
+        .header p { 
+            font-size: 1rem; 
+            opacity: 0.9; 
+        }
+
+        .info-card { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            padding: 15px; 
+            margin: 10px 15px; 
+            border-radius: 12px; 
+            background: #f7f7f7; 
+            font-size: 0.95rem; 
+            font-weight: 500; 
+        }
+        .info-card i { 
+            font-size: 1.4rem; 
+        }
+        .info-card.gold { 
+            background: #fff8e1; 
+            color: #ef6c00; 
+        }
+        .info-card.pink { 
+            background: #fce4ec; 
+            color: #d81b60; 
+        }
+        .info-card.green { 
+            background: #e8f5e9; 
+            color: #388e3c; 
+        }
+
+        .rules { 
+            padding: 15px; 
+            margin: 10px 15px; 
+            background: #fafafa; 
+            border-radius: 12px; 
+            font-size: 0.95rem; 
+            color: #444; 
+        }
+        .rules ul { 
+            list-style: none; 
+        }
+        .rules li { 
+            margin: 8px 0; 
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
+        }
+
+        .difficulty-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px;
+        }
+        
+        /* CORES PERSONALIZADAS PARA OS BOTÕES DE DIFICULDADE */
+        .difficulty-btn[data-difficulty="Fácil"] {
+            background: #c8e6c9; /* Verde claro */
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+        
+        .difficulty-btn[data-difficulty="Médio"] {
+            background: #fff9c4; /* Amarelo */
+            color: #f57f17;
+            border: 1px solid #fff176;
+        }
+        
+        .difficulty-btn[data-difficulty="Difícil"] {
+            background: #ffcdd2; /* Vermelho claro */
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+
+        .difficulty-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            /* border: 1px solid #ccc; */
+            /* background: #f0f0f0; */
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        
+        /* Estilo quando selecionado (manter a cor base mas escurecer) */
+        .difficulty-btn.selected[data-difficulty="Fácil"] {
+            background: #a5d6a7;
+            box-shadow: 0 0 10px rgba(46, 125, 50, 0.5);
+        }
+        
+        .difficulty-btn.selected[data-difficulty="Médio"] {
+            background: #fff176;
+            box-shadow: 0 0 10px rgba(245, 127, 23, 0.5);
+        }
+        
+        .difficulty-btn.selected[data-difficulty="Difícil"] {
+            background: #ef9a9a;
+            box-shadow: 0 0 10px rgba(198, 40, 40, 0.5);
+        }
+
+        .start-btn { 
+            display: block; 
+            width: calc(100% - 30px); 
+            margin: 15px auto 25px; 
+            padding: 15px; 
+            background: linear-gradient(90deg, #00c853, #00e676); 
+            color: #fff; 
+            font-size: 1.2rem; 
+            font-weight: 700; 
+            text-align: center; 
+            border-radius: 50px; 
+            border: none; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+        }
+        .start-btn:hover { 
+            background: linear-gradient(90deg, #00e676, #00c853); 
+            transform: scale(1.03); 
+        }
+        .start-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .game-container { 
+            display: none; 
+            padding: 20px; 
+            position: relative;
+        }
+        
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .score-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .lives-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .heart {
+            color: #ff1744;
+            font-size: 1.5rem;
+        }
+        
+        .streak-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: bold;
+            color: #ff8f00;
+            font-size: 1.1rem;
+            margin-left: 10px;
+            padding: 5px 10px;
+            background: #fff8e1;
+            border-radius: 20px;
+        }
+        
+        .question-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .vertical-timer {
+            position: absolute;
+            right: 20px;
+            top: 80px;
+            bottom: 100px;
+            width: 10px;
+            background: #eee;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .timer-progress {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: #00e676;
+            transition: height 1s linear;
+            height: 100%;
+        }
+        
+        .question { 
+            font-size: 1.2rem; 
+            font-weight: 600; 
+            color: #333; 
+            margin-bottom: 20px; 
+            text-align: center; 
+            padding: 0 10px;
+        }
+
+        .options { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            margin-bottom: 20px;
+        }
+        
+        .option { 
+            background: #fff; 
+            border: 2px solid #ddd; 
+            border-radius: 12px; 
+            padding: 15px; 
+            text-align: center; 
+            font-size: 1rem; 
+            font-weight: 500; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+        }
+        .option:hover { 
+            background: #f0f0f0; 
+        }
+        .option.correct { 
+            background: #c8f7c5; 
+            border-color: #43a047; 
+        }
+        .option.incorrect { 
+            background: #f8d7da; 
+            border-color: #c62828; 
+        }
+        .option.disabled {
+            pointer-events: none;
+        }
+        
+        .next-btn {
+            display: none;
+            width: 100%;
+            padding: 15px;
+            background: #3a1c71;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .next-btn:hover {
+            background: #4d2794;
+        }
+        
+        .category-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            background: #e0e0e0;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        .result-screen {
+            display: none;
+            text-align: center;
+            padding: 30px 20px;
+        }
+        
+        .result-icon {
+            font-size: 4rem;
+            color: #00c853;
+            margin-bottom: 20px;
+        }
+        
+        .result-score {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .result-message {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .play-again-btn {
+            padding: 15px 30px;
+            background: #3a1c71;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .play-again-btn:hover {
+            background: #4d2794;
+        }
+        
+        .streak-animation {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ff8f00;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 10;
+            animation: streakPop 0.5s ease-out;
+        }
+        
+        @keyframes streakPop {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+        
+        .points-popup {
+            position: absolute;
+            font-weight: bold;
+            color: #43a047;
+            opacity: 0;
+            pointer-events: none;
+            animation: pointsFloat 1s ease-out;
+        }
+        
+        @keyframes pointsFloat {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-30px); opacity: 0; }
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3a1c71;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .topic-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 10px 15px;
+            justify-content: center;
+        }
+        
+        .topic-tag {
+            padding: 5px 10px;
+            background: #e3f2fd;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: #1565c0;
+        }
+        
+        .error-message {
+            color: #d32f2f;
+            text-align: center;
+            padding: 10px;
+            margin: 10px;
+            background: #ffebee;
+            border-radius: 8px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="start-screen" id="startScreen">
+        <div class="header">
+            <h1>Quiz Master</h1>
+            <p>Teste seus conhecimentos!</p>
+        </div>
+        <div class="info-card gold"><i class="fas fa-trophy"></i> Sistema de Pontuação - Ganhe pontos por respostas corretas</div>
+        <div class="info-card pink"><i class="fas fa-bolt"></i> Streaks & Multiplicadores - Acerte seguidas para bônus extras</div>
+        <div class="info-card green"><i class="fas fa-tree"></i> Múltiplas Categorias - Ciência, História, Geografia e mais!</div>
+        <div class="rules">
+            <h3>Como Jogar:</h3>
+            <ul>
+                <li><i class="fas fa-heart" style="color: #ff1744;"></i> Você tem 3 vidas</li>
+                <li><i class="fas fa-clock" style="color: #3a1c71;"></i> 35 segundos por questão</li>
+                <li><i class="fas fa-fire" style="color: #ff8f00;"></i> Streaks aumentam sua pontuação</li>
+                <li><i class="fas fa-gem" style="color: #00b0ff;"></i> Questões mais difíceis valem mais pontos</li>
+            </ul>
+        </div>
+        <div style="padding:15px;">
+            <div id="subjectGrid" style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;"></div>
+        </div>
+        <div class="difficulty-buttons">
+            <button class="difficulty-btn" data-difficulty="Fácil">Fácil</button>
+            <button class="difficulty-btn" data-difficulty="Médio">Médio</button>
+            <button class="difficulty-btn" data-difficulty="Difícil">Difícil</button>
+        </div>
+        
+        <!-- Tags de tópicos de matemática (inicialmente ocultas) -->
+        <div class="topic-tags" id="mathTopics" style="display: none;">
+            <div class="topic-tag">Introdução aos números</div>
+            <div class="topic-tag">Operações básicas</div>
+            <div class="topic-tag">Números decimais</div>
+            <div class="topic-tag">Introdução às frações</div>
+            <div class="topic-tag">Operações com frações</div>
+            <div class="topic-tag">Porcentagem</div>
+            <div class="topic-tag">Introdução às expressões</div>
+            <div class="topic-tag">Equações simples</div>
+        </div>
+        
+        <div class="error-message" id="errorMessage"></div>
+        
+        <button class="start-btn" id="startBtn" disabled>▶ Começar Quiz</button>
+    </div>
+
+    <div class="loading" id="loadingScreen">
+        <div class="loading-spinner"></div>
+        <p style="margin-top: 15px;">Gerando perguntas com IA...</p>
+    </div>
+
+    <div class="game-container" id="gameScreen">
+        <div class="game-header">
+            <div style="display: flex; align-items: center;">
+                <div class="score-container">
+                    <i class="fas fa-star" style="color: gold;"></i>
+                    <span id="scoreDisplay">0</span>
+                </div>
+                <div class="streak-container" id="streakContainer" style="display: none;">
+                    <i class="fas fa-fire"></i>
+                    <span id="streakDisplay">x1</span>
+                </div>
+            </div>
+            <div class="lives-container" id="livesDisplay">
+                <i class="fas fa-heart heart"></i>
+                <i class="fas fa-heart heart"></i>
+                <i class="fas fa-heart heart"></i>
+            </div>
+        </div>
+        
+        <div class="question-info">
+            <div class="category-badge" id="categoryDisplay">Arte</div>
+            <div id="difficultyDisplay">FÁCIL • 100 pts</div>
+        </div>
+        
+        <div class="vertical-timer">
+            <div class="timer-progress" id="timerBar"></div>
+        </div>
+        
+        <div class="question" id="questionDisplay">Quem pintou 'A Noite Estrelada'?</div>
+        <div class="options" id="optionsContainer">
+            <div class="option">Pablo Picasso</div>
+            <div class="option">Claude Monet</div>
+            <div class="option">Vincent van Gogh</div>
+            <div class="option">Leonardo da Vinci</div>
+        </div>
+        
+        <button class="next-btn" id="nextBtn">Próxima Pergunta →</button>
+    </div>
+    
+    <div class="result-screen" id="resultScreen">
+        <i class="fas fa-trophy result-icon"></i>
+        <div class="result-score" id="finalScore">0</div>
+        <div class="result-message" id="resultMessage">Parabéns pelo seu desempenho!</div>
+        <button class="play-again-btn" id="playAgainBtn">Jogar Novamente</button>
+    </div>
+</div>
+<script src="tela-de-jogo-quiz.js"></script>
+</body>
+</html>
