@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Professor - EducaUP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Fredoka+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="pagina-principal.css"> <!-- SEU CSS ORIGINAL -->
+  <style>
+    /* Estilos extras específicos para esta página */
+    .hero {
+    height: 150px;
+    padding: 0.5rem;
+    }
+
+    .dashboard-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin: 4rem auto 2rem; /* Aumentei a margem superior para separar do botão */
+      max-width: 1200px;
+      padding: 0 2rem;
+    }
+
+    .card {
+      background-color: var(--white);
+      border-radius: 10px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+    }
+
+    .card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--primary-dark);
+    }
+
+    .btn-add-course {
+      display: inline-block;
+      background-color: var(--primary-dark);
+      color: var(--white);
+      padding: 18px 40px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: bold;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.3rem;
+      transition: all 0.3s ease;
+      margin: 2rem auto;
+      display: block;
+      width: fit-content;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .btn-add-course:hover {
+      background-color: var(--accent-yellow);
+      color: var(--primary-dark);
+      transform: scale(1.1);
+      animation: none;
+    }
+
+    .action-section {
+      text-align: center;
+      padding: 3rem 2rem 1rem;
+      background-color: var(--gray-light);
+    }
+
+    .action-section h2 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2rem;
+      color: var(--primary-dark);
+      margin-bottom: 1rem;
+    }
+
+    .action-section p {
+      max-width: 700px;
+      margin: 0 auto 2rem;
+      font-size: 1.1rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">EducaUP</div>
+    <nav>
+        <ul>
+            <li><a href="index.html" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+        </ul>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Olá, Professor!</h1>
+    <p>Gerencie suas turmas, crie conteúdos incríveis e acompanhe o progresso dos seus alunos.</p>
+  </section>
+
+  <!-- AÇÃO PRINCIPAL: ADICIONAR CURSO (AGORA EM PRIMEIRO LUGAR!) -->
+  <section class="action-section">
+    <h2>🚀 Adicione seu curso à plataforma</h2>
+    <p>Compartilhe seu conhecimento com alunos de todo o Brasil. Crie aulas interativas, quizzes gamificados e acompanhe o aprendizado em tempo real.</p>
+    <a href="professor-cursos.html.html" class="btn-add-course">
+      <i class="fas fa-plus"></i> Adicionar Novo Curso
+    </a>
+  </section>
+
+  <!-- DASHBOARD CARDS (AGORA DEPOIS DO BOTÃO PRINCIPAL) -->
+  <section class="dashboard-cards">
+    <div class="card">
+      <h3>👥 Minhas Turmas</h3>
+      <p>3 turmas ativas</p>
+      <a href="professor-meus-cursos.html" class="btn-submit">Gerenciar</a>
+    </div>
+    <div class="card">
+      <h3>📝 Atividades Pendentes</h3>
+      <p>5 quizzes para revisar</p>
+      <a href="#" class="btn-submit">Corrigir</a>
+    </div>
+    <div class="card">
+      <h3>📈 Desempenho Geral</h3>
+      <p>Média da turma: 82%</p>
+      <a href="#" class="btn-submit">Ver Relatório</a>
+    </div>
+    <div class="card">
+      <h3>🤖 Perguntas da IA</h3>
+      <p>8 novas dúvidas dos alunos</p>
+      <a href="#" class="btn-submit">Responder</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="social-links">
+      <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
+      <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+      <a href="#"><i class="fab fa-youtube"></i> YouTube</a>
+      <a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a>
+    </div>
+    <p class="copyright">© 2025 EducaUP - Área do Professor</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Animação para cards (mantendo seu padrão)
+      function animateOnScroll() {
+        const cards = document.querySelectorAll('.card');
+        cards.forEach((card, index) => {
+          const cardPosition = card.getBoundingClientRect().top;
+          const screenPosition = window.innerHeight / 1.3;
+
+          if (cardPosition < screenPosition) {
+            card.style.transitionDelay = `${index * 0.2}s`;
+            card.classList.add('animate-feature');
+          }
+        });
+      }
+
+      window.addEventListener('scroll', animateOnScroll);
+      animateOnScroll();
+    });
+  </script>
+
+</body>
+</html>

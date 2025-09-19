@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meus Cursos - EducaUP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Fredoka+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="pagina-principal.css"> <!-- SEU CSS ORIGINAL -->
+  <style>
+    /* Estilos específicos para esta página */
+    
+    header {
+    padding: 2.7rem 2rem;
+    height: 10px; /* Altura fixa */
+    }
+    .page-header {
+      background-color: var(--primary);
+      color: var(--white);
+      padding: 0.1rem;
+      text-align: center;
+    }
+
+    .page-header h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2.2rem;
+      margin-bottom: 0;
+    }
+
+    .page-header p {
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .courses-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+    }
+
+    .course-card {
+      background-color: var(--white);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+    }
+
+    .course-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .course-thumbnail {
+      height: 180px;
+      background-color: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-size: 3rem;
+    }
+
+    .course-content {
+      padding: 1.5rem;
+    }
+
+    .course-title {
+      font-size: 1.4rem;
+      color: var(--primary-dark);
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    .course-status {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .status-active {
+      background-color: var(--accent-green);
+      color: white;
+    }
+
+    .status-inactive {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    .course-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 1rem;
+    }
+
+    .btn-edit, .btn-delete {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      text-decoration: none;
+      color: white;
+    }
+
+    .btn-edit {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-edit:hover {
+      background-color: #1a4a7a;
+    }
+
+    .btn-delete {
+      background-color: #e74c3c;
+    }
+
+    .btn-delete:hover {
+      background-color: #c0392b;
+    }
+
+    .btn-add-course-top {
+      display: inline-block;
+      background-color: var(--primary-dark);
+      color: var(--white);
+      padding: 12px 24px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: bold;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      margin: 1rem auto;
+      display: block;
+      width: fit-content;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: all 0.3s ease;
+    }
+
+    .btn-add-course-top:hover {
+      transform: scale(1.05);
+      background-color: #e6b800;
+    }
+
+    /* Responsivo */
+    @media (max-width: 768px) {
+      .course-actions {
+        flex-direction: column;
+      }
+      .btn-edit, .btn-delete {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">EducaUP</div>
+    <nav>
+      <ul>
+        <li><a href="logout.html" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- PÁGINA HEADER -->
+  <section class="page-header">
+    <h1>Meus Cursos</h1>
+    <p>Gerencie os cursos que você criou. Edite, ative, desative ou exclua quando necessário.</p>
+    <a href="professor-cursos.html.html" class="btn-add-course-top">
+      <i class="fas fa-plus"></i> Adicionar Novo Curso
+    </a>
+  </section>
+
+  <!-- LISTA DE CURSOS -->
+  <div class="courses-container">
+
+    <!-- Exemplo de Curso 1 -->
+    <div class="course-card">
+      <div class="course-thumbnail">
+        <i class="fas fa-graduation-cap"></i>
+      </div>
+      <div class="course-content">
+        <h3 class="course-title">Matemática Básica para o 6º Ano</h3>
+        <span class="course-status status-active">Ativo</span>
+        <div class="course-actions">
+          <a href="editar-curso.html?id=1" class="btn-edit">Editar</a>
+          <a href="#" class="btn-delete" onclick="confirmDelete('Matemática Básica')">Excluir</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exemplo de Curso 2 -->
+    <div class="course-card">
+      <div class="course-thumbnail">
+        <i class="fas fa-flask"></i>
+      </div>
+      <div class="course-content">
+        <h3 class="course-title">Ciências: O Corpo Humano</h3>
+        <span class="course-status status-active">Ativo</span>
+        <div class="course-actions">
+          <a href="editar-curso.html?id=2" class="btn-edit">Editar</a>
+          <a href="#" class="btn-delete" onclick="confirmDelete('Ciências: O Corpo Humano')">Excluir</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exemplo de Curso 3 -->
+    <div class="course-card">
+      <div class="course-thumbnail">
+        <i class="fas fa-globe-americas"></i>
+      </div>
+      <div class="course-content">
+        <h3 class="course-title">Geografia do Brasil</h3>
+        <span class="course-status status-inactive">Inativo</span>
+        <div class="course-actions">
+          <a href="editar-curso.html?id=3" class="btn-edit">Editar</a>
+          <a href="#" class="btn-delete" onclick="confirmDelete('Geografia do Brasil')">Excluir</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="social-links">
+      <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
+      <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+      <a href="#"><i class="fab fa-youtube"></i> YouTube</a>
+      <a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a>
+    </div>
+    <p class="copyright">© 2025 EducaUP - Área do Professor</p>
+  </footer>
+
+  <script>
+    function confirmDelete(courseName) {
+      if (confirm(`Tem certeza que deseja excluir o curso "${courseName}"? Essa ação não pode ser desfeita.`)) {
+        alert(`Curso "${courseName}" excluído com sucesso!`);
+        // Aqui você chamaria uma função para deletar via API ou redirecionaria
+        // window.location.href = `/delete-course?name=${encodeURIComponent(courseName)}`;
+      }
+    }
+  </script>
+
+</body>
+</html>

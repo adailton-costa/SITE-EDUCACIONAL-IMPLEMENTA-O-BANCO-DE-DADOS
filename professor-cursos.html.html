@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EducaUP - Criar Curso</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Fredoka+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="pagina-principal.css"> <!-- SEU CSS ORIGINAL -->
+  <style>
+    /* Estilos específicos para esta página — alinhados com seu design */
+
+    body {
+      background-color: var(--gray-light);
+      padding-top: 70px; /* Compensa o header fixo */
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background-color: var(--primary);
+      color: var(--white);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .logo {
+      font-family: 'Fredoka One', cursive;
+      font-size: 24px;
+    }
+
+    .btn-logout {
+      background-color: #e74c3c;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .btn-logout:hover {
+      background-color: #c0392b;
+      transform: scale(1.05);
+    }
+
+    .container-main {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .card {
+      background-color: var(--white);
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.8rem;
+      color: var(--primary-dark);
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .form-label {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      color: var(--primary-dark);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .row {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .col {
+      flex: 1;
+    }
+
+    .color-picker, .emoji-picker {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin: 0.5rem 0 1rem;
+    }
+
+    .color-option, .emoji-option {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+    }
+
+    .color-option.selected, .emoji-option.selected {
+      border-color: var(--primary-dark);
+      transform: scale(1.1);
+    }
+
+    .btn-primary {
+      background-color: var(--primary-dark);
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 50px;
+      font-weight: bold;
+      font-family: 'Fredoka One', cursive;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-block;
+      text-decoration: none;
+      margin-top: 5px;
+      margin-bottom: 15px;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-yellow);
+      color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn-success {
+      background-color: var(--accent-green);
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 50px;
+      font-weight: bold;
+      font-family: 'Fredoka One', cursive;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    .btn-success:hover {
+      background-color: #7cb342;
+      transform: translateY(-2px);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+
+    .table th, .table td {
+      padding: 12px;
+      text-align: center;
+      border: 1px solid #eee;
+    }
+
+    .table th {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .table tbody tr:hover {
+      background-color: #f9f9f9;
+    }
+
+    .btn-warning, .btn-danger {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      margin: 0 2px;
+    }
+
+    .btn-warning {
+      background-color: #f39c12;
+      color: white;
+    }
+
+    .btn-warning:hover {
+      background-color: #d68910;
+    }
+
+    .btn-danger {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background-color: #c0392b;
+    }
+
+    /* Responsivo */
+    @media (max-width: 768px) {
+      .row {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .d-flex {
+        flex-direction: column;
+      }
+
+      .gap-4 {
+        gap: 1.5rem;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">EducaUP</div>
+    <nav>
+      <ul>
+        <li><a href="index.html" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <div class="container-main">
+
+    <!-- Formulário de Criação de Curso -->
+    <!-- Formulário de Criação de Curso -->
+    <div class="card">
+      <h3 class="section-title">Criar Novo Curso</h3>
+      <form id="courseForm">
+        <div class="mb-3">
+          <label class="form-label">Título do Curso *</label>
+          <input type="text" id="courseTitle" class="form-control" required placeholder="Ex: Matemática Básica">
+        </div>
+        <div class="row">
+          <div class="col">
+            <label class="form-label">Categoria *</label>
+            <select id="courseCategory" class="form-control" required>
+              <option value="">Selecione</option>
+              <option value="matematica">Matemática</option>
+              <option value="portugues">Português</option>
+              <option value="ciencias">Ciências</option>
+              <option value="historia">História</option>
+              <option value="ingles">Inglês</option>
+              <option value="programacao">Programação</option>
+              <option value="outros">Outros</option>
+            </select>
+          </div>
+          <div class="col">
+            <label class="form-label">Nível *</label>
+            <select id="courseLevel" class="form-control" required>
+              <option value="">Selecione</option>
+              <option value="iniciante">Iniciante</option>
+              <option value="intermediario">Intermediário</option>
+              <option value="avancado">Avançado</option>
+            </select>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Descrição Curta *</label>
+          <textarea id="shortDescription" class="form-control" required maxlength="150" rows="3" placeholder="Resumo atrativo para a capa do curso"></textarea>
+        </div>
+
+        <!-- NOVO CAMPO: QUANTIDADE DE HORAS -->
+        <div class="mb-3">
+          <label class="form-label">Carga Horária (em horas) *</label>
+          <input type="number" id="courseHours" class="form-control" required min="1" max="500" placeholder="Ex: 40">
+        </div>
+
+        <!-- SUBSEÇÃO: DETALHES DO CONTEÚDO -->
+        <div class="mb-4" style="border-top: 2px dashed #eee; padding-top: 1.5rem; margin-top: 1.5rem;">
+          <h4 style="color: var(--primary-dark); font-family: 'Fredoka One', cursive; margin-bottom: 1.5rem;">
+            📌 Detalhes do Conteúdo
+          </h4>
+
+          <div class="mb-3">
+            <label class="form-label">Sobre o Curso *</label>
+            <textarea id="aboutCourse" class="form-control" required rows="4" placeholder="Descreva o objetivo geral do curso, público-alvo e contexto."></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">O que você vai aprender *</label>
+            <textarea id="learningOutcomes" class="form-control" required rows="4" placeholder="Liste os principais tópicos ou habilidades que o aluno dominará ao final."></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Requisitos</label>
+            <textarea id="prerequisites" class="form-control" rows="3" placeholder="Ex: Conhecimento básico de matemática, acesso à internet, etc."></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Metodologia *</label>
+            <textarea id="methodology" class="form-control" required rows="3" placeholder="Descreva como o curso será ministrado: videoaulas, quizzes, IA, projetos, etc."></textarea>
+          </div>
+        </div>
+
+        <!-- Seção de Estilo Visual -->
+        <div class="row">
+          <div class="col">
+            <label>Cor de Destaque</label>
+            <div class="color-picker">
+              <div class="color-option selected" style="background:#f9c74f" data-color="#f9c74f"></div>
+              <div class="color-option" style="background:#f28482" data-color="#f28482"></div>
+              <div class="color-option" style="background:#90be6d" data-color="#90be6d"></div>
+              <div class="color-option" style="background:#4361ee" data-color="#4361ee"></div>
+            </div>
+            <input type="hidden" id="courseColor" value="#f9c74f">
+          </div>
+          <div class="col">
+            <label>Emoji/Ícone</label>
+            <div class="emoji-picker">
+              <span class="emoji-option selected" data-emoji="🧮">🧮</span>
+              <span class="emoji-option" data-emoji="📚">📚</span>
+              <span class="emoji-option" data-emoji="🔬">🔬</span>
+              <span class="emoji-option" data-emoji="🌍">🌍</span>
+            </div>
+            <input type="hidden" id="courseEmoji" value="🧮">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary">Criar Curso</button>
+      </form>
+    </div>
+    <!-- Adicionar Aula e Lista de Aulas -->
+    <div class="d-flex gap-4 flex-wrap">
+
+     <!-- Adicionar Aula -->
+    <div class="card" style="flex: 1; min-width: 300px;">
+      <h3 class="section-title">Adicionar Aula</h3>
+      <form id="form-aula">
+        <div class="mb-3">
+          <label class="form-label">Número da Aula</label>
+          <input type="number" class="form-control" id="numeroAula" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Título da Aula</label>
+          <input type="text" class="form-control" id="tituloAula" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Descrição</label>
+          <textarea class="form-control" id="descricaoAula" rows="3"></textarea>
+        </div>
+
+        <!-- NOVO CAMPO: DURAÇÃO DA AULA -->
+        <div class="mb-3">
+          <label class="form-label">Duração da Aula (minutos)</label>
+          <input type="number" class="form-control" id="duracaoAula" required min="1" max="300" placeholder="Ex: 15">
+        </div>
+
+        <!-- NOVO CAMPO: MATERIAL DE APOIO -->
+        <div class="mb-3">
+          <label class="form-label">Material de Apoio</label>
+          <input type="file" class="form-control" id="materialApoio" multiple accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.mp4,.zip" style="margin-bottom: 0.25rem;">
+          <small class="form-text" style="color: #666; font-size: 0.9rem; display: block; margin-bottom: 15px;">
+            Aceito: PDF, DOC, imagens, vídeos, ZIP (máx. 50MB por arquivo)
+          </small>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Link do Vídeo</label>
+          <input type="url" class="form-control" id="linkVideo" placeholder="https://youtube.com/...">
+        </div>
+
+        <!-- SUBSEÇÃO: ADICIONAR QUIZ -->
+        <div class="mb-4" style="border-top: 2px dashed #eee; padding-top: 1.5rem; margin-top: 1.5rem;">
+          <h4 style="color: var(--primary-dark); font-family: 'Fredoka One', cursive; margin-bottom: 1.5rem;">
+            Adicionar Quiz a aula
+          </h4>
+
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="ativarQuiz">
+            <label class="form-check-label" for="ativarQuiz">Adicionar quiz ao final desta aula</label>
+          </div>
+
+          <!-- SUBSEÇÃO: ADICIONAR QUIZ -->
+          <div class="mb-4" style="border-top: 2px dashed #eee; padding-top: 1.5rem; margin-top: 1.5rem;">
+            <h4 style="color: var(--primary-dark); font-family: 'Fredoka One', cursive; margin-bottom: 1.5rem;">
+              Adicionar Quiz a aula
+            </h4>
+
+            <!-- NOVO CAMPO: NÚMERO DO QUIZ -->
+            <div class="mb-3">
+              <label class="form-label">Número do Quiz *</label>
+              <input type="number" class="form-control" id="numeroQuiz" required min="1" placeholder="Ex: 1" style="margin-bottom: 0rem;">
+              <small class="form-text" style="color: #666; font-size: 0.9rem; display: block; margin-bottom: 15px;">
+                Identificador único para este quiz (ex: Quiz 1 da Aula 1)
+              </small>
+            </div>
+
+            <!-- CAMPOS DO QUIZ SEMPRE VISÍVEIS -->
+            <div style="padding: 1rem; background-color: #f9f9f9; border-radius: 8px;">
+
+              <div class="mb-3">
+                <label class="form-label">Pergunta *</label>
+                <textarea class="form-control" id="perguntaQuiz" rows="2" placeholder="Ex: Qual é o resultado de 2 + 2?"></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Alternativa A *</label>
+                <input type="text" class="form-control" id="altA" placeholder="Ex: 3">
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Alternativa B *</label>
+                <input type="text" class="form-control" id="altB" placeholder="Ex: 4">
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Alternativa C *</label>
+                <input type="text" class="form-control" id="altC" placeholder="Ex: 5">
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Alternativa D *</label>
+                <input type="text" class="form-control" id="altD" placeholder="Ex: 6">
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Marque a alternativa correta *</label>
+                <div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="respostaCorreta" id="corretaA" value="A">
+                    <label class="form-check-label" for="corretaA">A</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="respostaCorreta" id="corretaB" value="B">
+                    <label class="form-check-label" for="corretaB">B</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="respostaCorreta" id="corretaC" value="C">
+                    <label class="form-check-label" for="corretaC">C</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="respostaCorreta" id="corretaD" value="D">
+                    <label class="form-check-label" for="corretaD">D</label>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        
+        <button type="submit" class="btn-primary w-100">Adicionar Aula</button>
+      </form>
+    </div>
+
+      <!-- Lista de Aulas -->
+      <div class="card" style="flex: 1; min-width: 300px;">
+        <h3 class="section-title" style="color: var(--accent-green);">Lista de Aulas</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Título</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaAulas">
+            <tr>
+              <td>1</td>
+              <td>Introdução ao Curso</td>
+              <td>
+                <button class="btn-warning">Editar</button>
+                <button class="btn-danger">Excluir</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="btn-success">Publicar Curso</button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    // Configurar cores e emojis
+    document.querySelectorAll('.color-option').forEach(o => {
+      o.addEventListener('click', () => {
+        document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('selected'));
+        o.classList.add('selected');
+        document.getElementById('courseColor').value = o.dataset.color;
+      });
+    });
+
+    document.querySelectorAll('.emoji-option').forEach(o => {
+      o.addEventListener('click', () => {
+        document.querySelectorAll('.emoji-option').forEach(opt => opt.classList.remove('selected'));
+        o.classList.add('selected');
+        document.getElementById('courseEmoji').value = o.dataset.emoji;
+      });
+    });
+  </script>
+
+</body>
+</html>
