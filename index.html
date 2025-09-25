@@ -1,117 +1,207 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tela de login</title>
-    <link rel="stylesheet" href="login.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tela de Login - EducaUP</title>
+  <link rel="stylesheet" href="login.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-    <div id="form-login">
-        <h1>Bem-vindo ao EducaUP</h1>
-        <p>Digite seus dados para acessar sua conta</p>
-        <form id="form-login-form">
-            <fieldset style="border: none;">
-                <div class="input-container">
-                    <i class="fas fa-user"></i>
-                <input type="email" placeholder="Email" id="email">
-                <br><br>
-                <div class="senha-container">
-                    <i class="fa-solid fa-lock"></i>
-                    <input type="password" placeholder="Senha" id="senha">
-                    <i class="fa-solid fa-eye toggle-senha" id="toggleSenha"></i>
-                </div>
-                <br><br>
-                <button id="btn-entrar">Entrar</button>
-                <br><br>
-            </fieldset>
-        </form>
-        <div class="form-group">
-                <a href="recuperar-senha.html">Esqueceu a senha?</a>
-            </div>
-            <br>
-        <p><a href="cadastro.html">Não tem uma conta? Cadastre-se</a></p>
+  <div id="form-login">
+    <h1>Bem-vindo ao EducaUP</h1>
+    <p>Digite seus dados para acessar sua conta</p>
+    <form id="form-login-form">
+      <fieldset style="border: none;">
+        <div class="input-container">
+          <i class="fas fa-user"></i>
+          <input type="email" placeholder="Email" id="email">
+        </div>
+        <br><br>
+        <div class="senha-container">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" placeholder="Senha" id="senha">
+          <i class="fa-solid fa-eye toggle-senha" id="toggleSenha"></i>
+        </div>
+        <br><br>
+        <button id="btn-entrar">Entrar</button>
+        <br><br>
+      </fieldset>
+    </form>
+    <div class="form-group">
+      <a href="recuperar-senha.html">Esqueceu a senha?</a>
     </div>
+    <br>
+    <p><a href="cadastro.html">Não tem uma conta? Cadastre-se</a></p>
+  </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+  <!-- ✅ MODAL DE PERFIL -->
+  <div id="profileModal" class="modal">
+    <div class="modal-content">
+      <h2>Escolha como você vai usar</h2>
+      <p>Selecione o perfil que melhor descreve você:</p>
+      <div class="profile-cards">
+        <div class="card aluno" data-profile="aluno">
+          <div class="icon">🎓</div>
+          <h3>Aluno</h3>
+          <p>Acesso às aulas, tarefas e materiais do curso.</p>
+        </div>
+        <div class="card professor" data-profile="professor">
+          <div class="icon">👨‍🏫</div>
+          <h3>Professor</h3>
+          <p>Crie curso, quizzes e acompanhe turma.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAQ0s0EpWm2kmPAC3z0bNphLyjcGieWIBM",
-            authDomain: "siteweb-ca3bc.firebaseapp.com",
-            projectId: "siteweb-ca3bc",
-            storageBucket: "siteweb-ca3bc.firebasestorage.app",
-            messagingSenderId: "312050528441",
-            appId: "1:312050528441:web:70abee0173951c08402b68"
-        };
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
+    // Config Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAQ0s0EpWm2kmPAC3z0bNphLyjcGieWIBM",
+      authDomain: "siteweb-ca3bc.firebaseapp.com",
+      projectId: "siteweb-ca3bc",
+      storageBucket: "siteweb-ca3bc.firebasestorage.app",
+      messagingSenderId: "312050528441",
+      appId: "1:312050528441:web:70abee0173951c08402b68"
+    };
 
-        const button = document.getElementById('btn-entrar');
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const senha = document.getElementById('senha').value;
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-            signInWithEmailAndPassword(auth, email, senha)
-                .then(() => {
-                    alert('Login realizado com sucesso!');
-                    window.location.href = "pagina-principal.html";
-                })
-                .catch((error) => {
-                    let errorMessage = 'Erro ao fazer login: ';
+    // LOGIN
+    const button = document.getElementById('btn-entrar');
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const senha = document.getElementById('senha').value;
 
-                    switch (error.code) {
-                        case 'auth/user-not-found':
-                            errorMessage += 'Usuário não encontrado.';
-                            break;
-                        case 'auth/wrong-password':
-                            errorMessage += 'Senha incorreta.';
-                            break;
-                        case 'auth/invalid-credential':
-                            errorMessage += 'Email ou senha inválidos.';
-                            break;
-                        case 'auth/too-many-requests':
-                            errorMessage += 'Muitas tentativas. Tente novamente mais tarde.';
-                            break;
-                        default:
-                            errorMessage += error.message;
-                    }
+      signInWithEmailAndPassword(auth, email, senha)
+        .then(() => {
+          checkProfileAndShowModal();
+        })
+        .catch((error) => {
+          let errorMessage = 'Erro ao fazer login: ';
+          switch (error.code) {
+            case 'auth/user-not-found':
+              errorMessage += 'Usuário não encontrado.';
+              break;
+            case 'auth/wrong-password':
+              errorMessage += 'Senha incorreta.';
+              break;
+            case 'auth/invalid-credential':
+              errorMessage += 'Email ou senha inválidos.';
+              break;
+            case 'auth/too-many-requests':
+              errorMessage += 'Muitas tentativas. Tente novamente mais tarde.';
+              break;
+            default:
+              errorMessage += error.message;
+          }
 
-                    const errorDiv = document.createElement('div');
-                    errorDiv.innerHTML = errorMessage;
-                    errorDiv.style.color = 'red';
-                    errorDiv.style.marginTop = '10px';
-                    errorDiv.classList.add('error-message');
+          const errorDiv = document.createElement('div');
+          errorDiv.innerHTML = errorMessage;
+          errorDiv.style.color = 'red';
+          errorDiv.style.marginTop = '10px';
+          errorDiv.classList.add('error-message');
 
-                    // Remove erro anterior se houver
-                    const oldError = document.querySelector('.error-message');
-                    if (oldError) oldError.remove();
+          const oldError = document.querySelector('.error-message');
+          if (oldError) oldError.remove();
 
-                    // Adiciona abaixo do botão dentro do fieldset
-                    const form = document.querySelector('#form-login-form');
-                    const fieldset = form.querySelector('fieldset');
-                    fieldset.appendChild(errorDiv);
+          const form = document.querySelector('#form-login-form');
+          const fieldset = form.querySelector('fieldset');
+          fieldset.appendChild(errorDiv);
 
-                    setTimeout(() => errorDiv.remove(), 5000);
-                });
+          setTimeout(() => errorDiv.remove(), 5000);
         });
+    });
 
-        // Mostrar / ocultar senha
-        const toggleSenha = document.getElementById('toggleSenha');
-        const inputSenha = document.getElementById('senha');
+    // Mostrar / ocultar senha
+    const toggleSenha = document.getElementById('toggleSenha');
+    const inputSenha = document.getElementById('senha');
+    toggleSenha.addEventListener('click', () => {
+      const isPassword = inputSenha.type === 'password';
+      inputSenha.type = isPassword ? 'text' : 'password';
+      toggleSenha.classList.toggle('fa-eye');
+      toggleSenha.classList.toggle('fa-eye-slash');
+    });
 
-        toggleSenha.addEventListener('click', () => {
-            const isPassword = inputSenha.type === 'password';
-            inputSenha.type = isPassword ? 'text' : 'password';
+    // Redireciona conforme perfil
+    function redirectByProfile(profile) {
+      if (profile === 'aluno') {
+        window.location.href = "pagina-principal.html";
+      } else {
+        window.location.href = "professor-pagina-inicial.html";
+      }
+    }
 
-            // Alterna ícone Font Awesome
-            toggleSenha.classList.toggle('fa-eye');
-            toggleSenha.classList.toggle('fa-eye-slash');
+    // Salvar perfil no Firestore (só cria uma vez)
+    async function selectProfile(profile) {
+  const user = auth.currentUser;
+  if (!user) {
+    alert("Usuário não autenticado!");
+    return;
+  }
+
+  try {
+    const ref = doc(db, "usuarios", user.uid);
+    const snap = await getDoc(ref);
+
+    if (snap.exists()) {
+      // ✅ Atualiza o perfil mesmo se o documento já existir
+      await setDoc(ref, { profile: profile }, { merge: true });
+    } else {
+      // ✅ Cria o documento com todos os campos
+      await setDoc(ref, {
+        profile: profile,
+        email: user.email,
+        createdAt: serverTimestamp()
+      });
+    }
+
+    document.getElementById("profileModal").style.display = "none";
+    redirectByProfile(profile);
+
+  } catch (error) {
+    console.error("Erro ao salvar perfil: ", error);
+    alert("Erro ao salvar sua escolha. Tente novamente.");
+  }
+}
+
+    // Verificar perfil salvo
+    async function checkProfileAndShowModal() {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      try {
+        const userDoc = await getDoc(doc(db, "usuarios", user.uid));
+        if (userDoc.exists() && userDoc.data().profile) {
+          redirectByProfile(userDoc.data().profile);
+        } else {
+          document.getElementById("profileModal").style.display = "flex";
+        }
+      } catch (error) {
+        console.error("Erro ao verificar perfil: ", error);
+        document.getElementById("profileModal").style.display = "flex";
+      }
+    }
+
+    // Eventos de clique nos cards
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById("profileModal").style.display = "none";
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        card.addEventListener('click', () => {
+          const profile = card.getAttribute('data-profile');
+          selectProfile(profile);
         });
-    </script>
+      });
+    });
+  </script>
 </body>
 </html>

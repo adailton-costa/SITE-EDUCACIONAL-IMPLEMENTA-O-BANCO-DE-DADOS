@@ -60,25 +60,29 @@
       pointer-events: none;
     }
 
-    /* Logo da instituição */
+    /* Estilo base — SEM left ou right */
     .logo-instituicao {
       position: absolute;
       top: 15mm;
-      left: 15mm;
-      width: 70px;
-      height: 70px;
-      background: #004494;
-      border: 2px solid #fff;
-      border-radius: 50%;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
       z-index: 2;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 28px;
-      font-weight: bold;
-      font-family: 'Playfair Display', serif;
+      width: 120px;
+      height: auto;
+    }
+
+    .logo-instituicao img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Posição da logo esquerda */
+    .logo-esquerda {
+      left: 15mm;
+    }
+
+    /* Posição da logo direita */
+    .logo-direita {
+      right: 15mm;
     }
 
     /* Nome da instituição */
@@ -209,10 +213,11 @@
     /* Rodapé com data de emissão e código de verificação */
     .rodape {
       position: absolute;
-      bottom: 10mm;
+      bottom: 5mm;
       left: 0;
       right: 0;
       text-align: center;
+      justify-content: center;
       font-size: 10px;
       color: #777;
       padding: 0 20mm;
@@ -220,7 +225,7 @@
     }
 
     #numero-certificado {
-      position: absolute;
+      position: static;
       bottom: 8mm;
       right: 15mm;
       font-size: 10px;
@@ -279,7 +284,6 @@
         font-size: 14px;
       }
     }
-
   </style>
 </head>
 <body>
@@ -289,8 +293,15 @@
     <!-- Fundo decorativo -->
     <div class="fundo-curvas"></div>
 
-    <!-- Logo da instituição -->
-    <div class="logo-instituicao">UP</div>
+    <!-- Logo da instituição (esquerda) -->
+    <div class="logo-instituicao logo-esquerda">
+      <img src="Logo-EducaUP.png" alt="Logo EducaUP">
+    </div>
+
+    <!-- Logo parceira (direita) -->
+    <div class="logo-instituicao logo-direita">
+      <img src="Logo-EducaUP.png" alt="Logo EducaUP">
+    </div>
 
     <!-- Nome da instituição -->
     <div id="nome-instituicao">EducaUP</div>
@@ -348,25 +359,57 @@
       Código de verificação: <span id="codigo-verificacao">[Código]</span> | 
       Emitido em: <span id="data-emissao-rodape">[Data]</span><br>
       Autenticidade verificável em: www.educaup.com.br/verificar
+      <div id="numero-certificado">ID: [Número]</div>
     </div>
-
-    <div id="numero-certificado">ID: [Número]</div>
   </div>
+
   <!-- Botão de Download -->
-    <div style="margin: 30px 0;">
-      <button onclick="gerarCertificadoPDF()" class="btn-download">
-        <i class="fas fa-download"></i> Baixar Certificado em PDF
-      </button>
-    </div>
+  <div style="margin: 30px 0;">
+    <button onclick="gerarCertificadoPDF()" class="btn-download">
+      <i class="fas fa-download"></i> Baixar Certificado em PDF
+    </button>
+  </div>
 
   <script>
-    function formatarNome(nome) {
-      if (!nome) return 'Participante';
-      return nome.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+    // ✅ Função para formatar nome com acentos corretamente
+    function formatarNomeCorreto(nome) {
+      if (!nome || typeof nome !== 'string') return 'Participante';
+      return nome
+        .split(' ')
+        .map(palavra => {
+          if (palavra.length === 0) return '';
+          return palavra.charAt(0).toLocaleUpperCase('pt-BR') + 
+                 palavra.slice(1).toLocaleLowerCase('pt-BR');
+        })
+        .join(' ');
     }
 
-    function preencherCertificadoCompleto(nomeAluno, nomeCurso, periodo, modalidade, cargaHoraria, localRealizacao, nomeInstituicao, nomeAssinatura, cargoAssinatura, cidadeEstado){
-      document.getElementById('nome-aluno').textContent = formatarNome(nomeAluno) || '[Sem nome]';
+    // ✅ Função para gerar código aleatório curto (ex: Kp7XmQ)
+    function generateRandomCode(length = 6) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    }
+
+    // ✅ Função atualizada para preencher certificado — SEM gerar IDs internamente
+    function preencherCertificadoCompleto(
+      nomeAluno,
+      nomeCurso,
+      periodo,
+      modalidade,
+      cargaHoraria,
+      localRealizacao,
+      nomeInstituicao,
+      nomeAssinatura,
+      cargoAssinatura,
+      cidadeEstado,
+      idCert,
+      codigoVerif
+    ) {
+      document.getElementById('nome-aluno').textContent = formatarNomeCorreto(nomeAluno) || '[Sem nome]';
       document.getElementById('nome-curso').textContent = nomeCurso || '[Sem curso]';
       document.getElementById('periodo-curso').textContent = periodo || '-';
       document.getElementById('modalidade-curso').textContent = modalidade || '-';
@@ -378,13 +421,13 @@
       document.getElementById('cidade-estado').textContent = cidadeEstado || '-';
 
       const today = new Date();
-      const dataFormatada = today.toLocaleDateString('pt-BR', {day:'2-digit', month:'long', year:'numeric'});
+      const dataFormatada = today.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
       document.getElementById('data-emissao').textContent = dataFormatada;
       document.getElementById('data-emissao-rodape').textContent = dataFormatada;
 
-      const id = Date.now();
-      document.getElementById('numero-certificado').textContent = `ID: ${id}`;
-      document.getElementById('codigo-verificacao').textContent = `Código de Verificação: CERT-${today.getFullYear()}-${id}`;
+      // ✅ Exibe exatamente como você pediu:
+      document.getElementById('numero-certificado').textContent = `ID: ${idCert}`;
+      document.getElementById('codigo-verificacao').textContent = codigoVerif;
     }
 
     async function gerarCertificadoPDF(){
@@ -488,7 +531,7 @@
 
       // Extrair e calcular dados
       const nomeAluno = matriculaData?.name 
-        ? formatarNome(matriculaData.name) 
+        ? formatarNomeCorreto(matriculaData.name) 
         : 'Participante';
 
       const nomeCurso = progressoData?.curso || courseMap[cursoKey]?.nome || cursoKey;
@@ -507,15 +550,22 @@
       // Configurações do curso
       const courseCfg = courseMap[cursoKey] || {};
       const localRealizacao = courseCfg.local || 'Plataforma EducaUP';
-
-      // Local de emissão institucional (fixo)
       const cidadeEstadoRodape = 'Manaus, AM';
-
-      // Assinatura
       const nomeAssinatura = courseCfg.assinaturaNome || '-';
       const cargoAssinatura = courseCfg.assinaturaCargo || '-';
 
-      // Preencher certificado
+      // ✅ GERAÇÃO DOS IDs NO FORMATO QUE VOCÊ QUER
+
+      const timestamp = Date.now();
+      // ✅ ID interno completo: UID + curso + timestamp
+      const idCert = `${user.uid}_${cursoKey}_${timestamp}`;
+      
+      // ✅ Código amigável: CERT-ANO-CODIGOALEATORIO
+      const ano = new Date().getFullYear();
+      const randomCode = generateRandomCode(6);
+      const codigoVerif = `CERT-${ano}-${randomCode}`;
+
+      // ✅ Preenche o certificado com os valores corretos
       preencherCertificadoCompleto(
         nomeAluno,
         nomeCurso,
@@ -526,21 +576,16 @@
         'EducaUP',
         nomeAssinatura,
         cargoAssinatura,
-        cidadeEstadoRodape
+        cidadeEstadoRodape,
+        idCert,
+        codigoVerif
       );
 
-      // Gerar IDs
-      const now = Date.now();
-      const idCert = `${now}-${user.uid.slice(0,6)}`;
-      const codigoVerif = `CERT-${new Date().getFullYear()}-${user.uid.slice(0,6)}-${String(now).slice(-4)}`;
-      document.getElementById('numero-certificado').textContent = `ID: ${idCert}`;
-      document.getElementById('codigo-verificacao').textContent = codigoVerif;
-
-      // Registrar emissão
+      // ✅ Salva no Firestore
       try {
-        await setDoc(doc(db, 'certificados', `${user.uid}_${cursoKey}_${now}`), {
+        await setDoc(doc(db, 'certificados', idCert), {
           uid: user.uid,
-          nome: formatarNome(nomeAluno),
+          nome: formatarNomeCorreto(nomeAluno),
           curso: nomeCurso,
           emitidoEm: serverTimestamp(),
           cargaHoraria: cargaHoraria,

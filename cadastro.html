@@ -62,6 +62,219 @@
                 <input type="submit" name="submit" id="submit">
                 <br><br>
                 <a href="index.html" class="btn-login">Login</a>
+            </fieldset>
+        </form>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAQ0s0EpWm2kmPAC3z0bNphLyjcGieWIBM",
+            authDomain: "siteweb-ca3bc.firebaseapp.com",
+            projectId: "siteweb-ca3bc",
+            storageBucket: "siteweb-ca3bc.firebasestorage.app",
+            messagingSenderId: "312050528441",
+            appId: "1:312050528441:web:70abee0173951c08402b68"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        function toggleSenhaCampo(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            icon.addEventListener('click', () => {
+                const isPassword = input.type === 'password';
+                input.type = isPassword ? 'text' : 'password';
+                icon.classList.toggle('fa-eye');
+                icon.classList.toggle('fa-eye-slash');
+            });
+        }
+
+        toggleSenhaCampo('senha', 'toggleSenha');
+        toggleSenhaCampo('confirmarSenha', 'toggleConfirmarSenha');
+
+        const form = document.querySelector('form');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nome = document.getElementById('nome').value;
+            const email = document.getElementById('email').value;
+            const senha = document.getElementById('senha').value;
+            const genero = document.querySelector('input[name="genero"]:checked')?.value;
+            const dataNasc = document.getElementById('data_nasc').value;
+            const cidade = document.getElementById('cidade').value;
+            const estado = document.getElementById('estado').value;
+
+            // Valida se o gênero foi selecionado
+            if (!genero) {
+                alert("Por favor, selecione um gênero.");
+                return;
+            }
+
+            try {
+                // 1. Cria o usuário no Firebase Authentication
+                const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
+                const user = userCredential.user;
+
+                // 2. FAZ LOGIN AUTOMÁTICO — necessário para request.auth != null nas regras
+                await signInWithEmailAndPassword(auth, email, senha);
+
+                // 3. Salva os dados no Firestore com UID como ID do documento
+                await setDoc(doc(db, "usuarios", user.uid), {
+                    nome: nome,
+                    email: email,
+                    genero: genero,
+                    dataNasc: dataNasc,
+                    cidade: cidade,
+                    estado: estado,
+                    createdAt: serverTimestamp() // ✅ Timestamp oficial do Firestore
+                });
+
+                alert('Usuário cadastrado com sucesso!');
+                form.reset();
+
+            } catch (error) {
+                let errorMessage = 'Erro ao cadastrar: ';
+
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        errorMessage += 'Este e-mail já está em uso. ';
+                        errorMessage += '<a href="index.html" style="color: white; text-decoration: underline;">Fazer login</a>';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage += 'E-mail inválido';
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage += 'Senha muito fraca (mínimo 6 caracteres)';
+                        break;
+                    default:
+                        errorMessage += error.message;
+                }
+
+                const errorDiv = document.createElement('div');
+                errorDiv.innerHTML = errorMessage;
+                errorDiv.style.color = 'red';
+                errorDiv.style.marginTop = '10px';
+
+                // Insere a mensagem após o botão de submit
+                const fieldset = form.querySelector('fieldset');
+                fieldset.appendChild(errorDiv);
+
+                // Remove a mensagem após 5 segundos
+                setTimeout(() => {
+                    if (errorDiv.parentNode) {
+                        errorDiv.remove();
+                    }
+                }, 5000);
+            }
+        });
+
+        const senhaInput = document.getElementById('senha');
+        const confirmarInput = document.getElementById('confirmarSenha');
+        const senhaFeedback = document.getElementById('senha-feedback');
+        const confirmarFeedback = document.getElementById('confirmar-feedback');
+
+        senhaInput.addEventListener('input', () => {
+            const senha = senhaInput.value;
+            let mensagens = [];
+
+            if (senha.length < 6) mensagens.push("Mínimo 6 caracteres");
+            if (!/[A-Z]/.test(senha)) mensagens.push("Pelo menos uma letra maiúscula");
+            if (!/[0-9]/.test(senha)) mensagens.push("Pelo menos um número");
+
+            if (mensagens.length > 0) {
+                senhaFeedback.innerHTML = mensagens.map(msg =>
+                    `<i class="fa-solid fa-circle-xmark" style="color: red; margin-right: 6px;"></i>${msg}`
+                ).join("<br>");
+                senhaFeedback.style.color = "red";
+            } else {
+                senhaFeedback.innerHTML = `<i class="fa-solid fa-circle-check" style="color: green; margin-right: 6px;"></i>Senha válida`;
+                senhaFeedback.style.color = "green";
+            }
+        });
+
+        confirmarInput.addEventListener('input', () => {
+            if (confirmarInput.value !== senhaInput.value) {
+                confirmarFeedback.innerHTML = `<i class="fa-solid fa-circle-xmark" style="color: red; margin-right: 6px;"></i>As senhas não coincidem`;
+                confirmarFeedback.style.color = "red";
+            } else {
+                confirmarFeedback.innerHTML = `<i class="fa-solid fa-circle-check" style="color: green; margin-right: 6px;"></i>Senhas coincidem`;
+                confirmarFeedback.style.color = "green";
+            }
+        });
+    </script>
+</body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de usuario</title>
+    <link rel="stylesheet" href="cadastro.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div class="box">
+        <form action="">
+            <fieldset>
+                <legend><b>Cadastro de Usuário</b></legend>
+                <br>
+                <div class="inputBox">
+                    <input type="text" name="nome" id="nome" class="inputUser" required>
+                    <label for="nome" class="labelInput">Nome Completo</label>
+                </div>
+                <br>
+                <div class="inputBox">
+                    <input type="text" name="email" id="email" class="inputUser" required>
+                    <label for="email" class="labelInput">Email</label>
+                </div>
+                <br>
+                <div class="inputBox">
+                    <input type="password" name="senha" id="senha" class="inputUser" required>
+                    <label for="senha" class="labelInput">Senha</label>
+                    <i class="fa-solid fa-eye toggle-senha" id="toggleSenha"></i>
+                </div>
+                <div id="senha-feedback" style="font-size: 14px; margin-top: 5px;"></div>
+                <br>
+                <div class="inputBox">
+                    <input type="password" name="confirmarSenha" id="confirmarSenha" class="inputUser" required>
+                    <label for="confirmarSenha" class="labelInput">Confirmar Senha</label>
+                    <i class="fa-solid fa-eye toggle-senha" id="toggleConfirmarSenha"></i>
+                </div>
+                <div id="confirmar-feedback" style="font-size: 14px; margin-top: 5px;"></div>
+                <p>Sexo:</p>
+                <input type="radio" name="genero" id="feminino" value="feminino" required>
+                <label for="feminino">Feminino</label>
+                <br>
+                <input type="radio" name="genero" id="masculino" value="masculino" required>
+                <label for="masculino">Masculino</label>
+                <br>
+                <input type="radio" name="genero" id="outro" value="outro" required>
+                <label for="outro">Outro</label>
+                <br><br>
+                <label for="data_nasc"><b>Data de Nascimento</b></label>
+                <input type="date" name="data_nasc" id="data_nasc" required>
+                <br><br>
+                <div class="inputBox">
+                    <input type="text" name="cidade" id="cidade" class="inputUser" required>
+                    <label for="cidade" class="labelInput">Cidade</label>
+                </div>
+                <br>
+                <div class="inputBox">
+                    <input type="text" name="estado" id="estado" class="inputUser" required>
+                    <label for="estado" class="labelInput">Estado</label>
+                </div>
+                <br>
+                <input type="submit" name="submit" id="submit">
+                <br><br>
+                <a href="index.html" class="btn-login">Login</a>
                 
             </fieldset>
         </form>
@@ -195,4 +408,4 @@
 
     </script>
 </body>
-</html>
+</html> -->
