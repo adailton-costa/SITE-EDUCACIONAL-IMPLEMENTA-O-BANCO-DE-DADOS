@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">Curso - EducaUP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Fredoka+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="aulas-matematica-basica.css">
+  <style>
+    .video-placeholder.disabled { display: none; }
+    .course-content { display: none; }
+    .lesson-item.current { background-color: #f0f8ff; }
+    .complete-btn.completed { background-color: #28a745; }
+    .quiz-feedback { margin-top: 10px; padding: 8px; border-radius: 4px; }
+    .quiz-feedback.success { background-color: #d4edda; color: #155724; }
+    .quiz-feedback.error { background-color: #f8d7da; color: #721c24; }
+    .lesson-item.completed .lesson-icon { color: #28a745; }
+    .lesson-item.locked { opacity: 0.6; pointer-events: none; }
+    .resource-item { 
+      display: flex; align-items: center; padding: 10px; 
+      border: 1px solid #ddd; margin: 5px 0; border-radius: 5px; 
+    }
+    .resource-icon { font-size: 1.5rem; margin-right: 10px; }
+    .download-btn { margin-left: auto; padding: 5px 10px; }
+    #debugBtn { 
+      position: fixed; top: 10px; right: 10px; z-index: 1000;
+      background: #ff4444; color: white; border: none; padding: 10px;
+      border-radius: 5px; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">EducaUP</div>
+    <nav>
+      <ul>
+        <li><a href="pagina-principal.html"><i class="fas fa-home"></i> Início</a></li>
+        <li><a href="pagina-de-cursos.html"><i class="fas fa-book"></i> Cursos</a></li>
+        <li><a href="#"><i class="fas fa-info-circle"></i> Sobre</a></li>
+        <li><a href="#"><i class="fas fa-envelope"></i> Contato</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="course-header">
+    <div class="course-header-content">
+      <h1 class="course-title" id="courseTitle">
+        <i class="fas fa-book-open"></i> Carregando curso...
+      </h1>
+      <div class="course-progress-container">
+        <div class="course-progress">
+          <span class="progress-text" id="progressText">0% concluído</span>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+          </div>
+        </div>
+        <a href="professor-gerar-Certificado.html" class="certificate-btn" id="btnCertificate" style="display: none;">
+          <i class="fas fa-certificate"></i> Certificado
+        </a>
+        <button class="reset-btn" onclick="resetProgress()">Resetar Progresso</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="course-main">
+    <div id="aulas-container"></div>
+
+    <div class="lessons-container">
+      <h2><i class="fas fa-list-ol"></i> Conteúdo do Curso</h2>
+      <div class="module active">
+        <div class="module-header">
+          <div class="module-title"><i class="fas fa-folder-open"></i> Módulo 1</div>
+          <div class="module-progress" id="moduleProgress">0/0 aulas</div>
+        </div>
+        <ul class="module-lessons" id="lessonsList"></ul>
+      </div>
+    </div>
+
+    <section class="chat-card" aria-label="Chat de IA">
+      <header class="chat-header">
+        <div class="avatar" aria-hidden="true">AI</div>
+        <div class="header-text">
+          <div class="title">Assistente</div>
+          <div class="subtitle">Sinta-se à vontade para perguntar o que quiser</div>
+        </div>
+      </header>
+      <ul id="messages" class="messages" role="log" aria-live="polite"></ul>
+      <form id="composer" class="composer" autocomplete="off" aria-label="Enviar mensagem">
+        <textarea id="input" class="input" rows="1" placeholder="Escreva uma mensagem..." required></textarea>
+        <button type="submit" class="send" aria-label="Enviar mensagem">Enviar</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <div class="social-links">
+      <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
+      <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+      <a href="#"><i class="fab fa-youtube"></i> YouTube</a>
+      <a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a>
+    </div>
+    <p class="copyright">© 2025 EducaUP</p>
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { 
+      getFirestore, doc, collection, getDocs, getDoc, setDoc, 
+      updateDoc, serverTimestamp, increment, addDoc, query, where 
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAQ0s0EpWm2kmPAC3z0bNphLyjcGieWIBM",
+      authDomain: "siteweb-ca3bc.firebaseapp.com",
+      projectId: "siteweb-ca3bc",
+      storageBucket: "siteweb-ca3bc.appspot.com",
+      messagingSenderId: "312050528441",
+      appId: "1:312050528441:web:70abee0173951c08402b68"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    let cursoId;
+    let aulas = [];
+    let progressoRef = null;
+    let aulaAtualId = null;
+    let tempoInicioAula = null;
+    let cursoData = null;
+
+    // 🔍 FUNÇÃO DE DEBUG - VERIFICAR ONDE ESTÁ SALVANDO
+    async function debugFirestore() {
+      const user = auth.currentUser;
+      if (!user) {
+        console.log("❌ Usuário não autenticado");
+        return;
+      }
+      
+      console.log("=== 🔍 DEBUG FIRESTORE ===");
+      console.log("👤 UID do usuário:", user.uid);
+      console.log("🎯 cursoId:", cursoId);
+      console.log("📊 progressoRef:", progressoRef ? progressoRef.path : "NÃO DEFINIDO");
+      
+      // Verifica se o documento progresso existe
+      if (progressoRef) {
+        const progressoSnap = await getDoc(progressoRef);
+        console.log("📁 Documento progresso existe?", progressoSnap.exists());
+        if (progressoSnap.exists()) {
+          console.log("📊 Dados atuais no progresso:", progressoSnap.data());
+        } else {
+          console.log("❌ Documento progresso NÃO existe ainda!");
+        }
+      }
+      
+      // Verifica matriculas
+      try {
+        const matriculasQuery = query(
+          collection(db, "matriculas"), 
+          where("uid", "==", user.uid),
+          where("cursoId", "==", cursoId)
+        );
+        const matriculasSnap = await getDocs(matriculasQuery);
+        console.log("🎓 Matrículas encontradas para este curso:", matriculasSnap.size);
+        
+        matriculasSnap.forEach(doc => {
+          console.log("📋 Matrícula:", doc.id, doc.data());
+        });
+      } catch (error) {
+        console.error("❌ Erro ao buscar matrículas:", error);
+      }
+
+      console.log("=== FIM DEBUG ===");
+    }
+
+    // ✅ CORRETO: Apenas verifica se existe matrícula, NÃO cria nova
+async function initializeUserDocuments(uid) {
+    console.log("=== 🔍 VERIFICANDO MATRÍCULA EXISTENTE ===");
+    
+    // APENAS VERIFICAR se o usuário está matriculado
+    try {
+        console.log("🎓 Verificando matrícula existente...");
+        const matriculasQuery = query(
+            collection(db, "matriculas"), 
+            where("uid", "==", uid),
+            where("cursoId", "==", cursoId)
+        );
+        const matriculasSnap = await getDocs(matriculasQuery);
+        
+        if (matriculasSnap.empty) {
+            console.log("❌ Usuário NÃO está matriculado neste curso");
+            alert("⚠️ Você precisa se matricular neste curso primeiro.");
+            window.location.href = `professor-formulario-curso.html?id=${cursoId}`;
+            return false; // Impede continuar o carregamento
+        } else {
+            console.log("✅ Usuário já matriculado. Matrículas encontradas:", matriculasSnap.size);
+            matriculasSnap.forEach(doc => {
+                console.log("📋 Usando matrícula existente:", doc.id, doc.data());
+            });
+        }
+    } catch (error) {
+        console.error("❌ Erro ao verificar matrícula:", error);
+        alert("Erro ao verificar matrícula. Tente novamente.");
+        return false;
+    }
+
+    // SEGUNDO: Criar progresso se não existir (APENAS progresso, NÃO matrícula)
+    const progressoSnap = await getDoc(progressoRef);
+    console.log("📁 Progresso antes da criação:", progressoSnap.exists());
+    
+    if (!progressoSnap.exists()) {
+        try {
+            console.log("📊 Criando APENAS documento de progresso...");
+            const progressoData = {
+                uid,
+                curso: cursoData.titulo,
+                cursoId: cursoId,
+                aulasConcluidas: [],
+                respostasQuiz: {},
+                tempos: {},
+                aulasData: {},
+                progresso: 0,
+                tempoGastoTotal: 0,
+                dataCriacao: serverTimestamp(),
+                dataUltimaAtualizacao: serverTimestamp()
+            };
+            
+            await setDoc(progressoRef, progressoData);
+            console.log("✅ Progresso criado com sucesso");
+        } catch (error) {
+            console.error("❌ Erro ao criar progresso:", error);
+        }
+    } else {
+        console.log("📊 Progresso já existe");
+    }
+    
+    return true; // Permite continuar o carregamento
+}
+
+    // 🔍 MARCAR AULA COM DEBUG
+    async function markLessonAsCompleted(aulaNumber) {
+      console.log("=== ✅ MARCANDO AULA COMO CONCLUÍDA ===");
+      console.log("Aula:", aulaNumber);
+      
+      if (!progressoRef) {
+        console.error("❌ progressoRef não definido!");
+        return;
+      }
+
+      const progressoSnap = await getDoc(progressoRef);
+      const progressoData = progressoSnap.exists() ? progressoSnap.data() : { aulasConcluidas: [] };
+      
+      console.log("📊 Progresso atual:", progressoData.aulasConcluidas);
+
+      if (!progressoData.aulasConcluidas.includes(aulaNumber)) {
+        const novasAulasConcluidas = [...progressoData.aulasConcluidas, aulaNumber];
+        const totalAulas = aulas.length;
+        const novoProgresso = Math.round((novasAulasConcluidas.length / totalAulas) * 100);
+        
+        console.log("🔄 Atualizando para:", novasAulasConcluidas);
+        console.log("📈 Novo progresso:", novoProgresso + "%");
+
+        const updateData = {
+          aulasConcluidas: novasAulasConcluidas,
+          aulasData: {
+            ...progressoData.aulasData,
+            [aulaNumber]: serverTimestamp()
+          },
+          ultimaAula: aulaNumber,
+          progresso: novoProgresso,
+          dataUltimaAtualizacao: serverTimestamp()
+        };
+
+        console.log("💾 Salvando no Firestore:", updateData);
+        
+        await updateDoc(progressoRef, updateData);
+        console.log("✅ Dados salvos com sucesso no caminho:", progressoRef.path);
+        
+        // Atualiza UI
+        const currentCompleteBtn = document.querySelector(`#aula-${aulaNumber} .complete-btn`);
+        if (currentCompleteBtn) {
+          currentCompleteBtn.classList.add('completed');
+          currentCompleteBtn.innerHTML = '<i class="fas fa-check-circle"></i> Aula Concluída';
+          currentCompleteBtn.disabled = true;
+        }
+        
+        updateUIProgress(novoProgresso, novasAulasConcluidas.length, totalAulas);
+        
+        // Desbloqueia próxima aula
+        if (aulaNumber < totalAulas) {
+          const nextLessonItem = document.querySelectorAll('.lesson-item')[aulaNumber];
+          if (nextLessonItem) {
+            nextLessonItem.classList.remove('locked');
+            const status = nextLessonItem.querySelector('.lesson-status');
+            if (status) status.innerHTML = '<i class="fas fa-play"></i> Disponível';
+          }
+        }
+      } else {
+        console.log("ℹ️ Aula já estava concluída");
+      }
+    }
+
+    // ... (as outras funções permanecem as mesmas, apenas adicionei debug nas principais)
+
+    function getCourseIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('id');
+    }
+
+    function embedYouTube(url) {
+      const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+      const match = url.match(regExp);
+      return match && match[2].length === 11 
+        ? `https://www.youtube.com/embed/${match[2]}`
+        : '';
+    }
+
+    async function showAula(aulaNumber) {
+      console.log("🔄 Mostrando aula:", aulaNumber);
+      
+      if (aulaNumber > 1) {
+        const progressoSnap = await getDoc(progressoRef);
+        const progressoData = progressoSnap.exists() ? progressoSnap.data() : { aulasConcluidas: [] };
+        
+        if (!progressoData.aulasConcluidas.includes(aulaNumber - 1)) {
+          alert("⚠️ Conclua a aula anterior antes de avançar.");
+          return;
+        }
+      }
+
+      if (aulaAtualId && tempoInicioAula) {
+        const tempoAgora = Date.now();
+        const tempoGasto = Math.floor((tempoAgora - tempoInicioAula) / 1000);
+        console.log("⏱️ Salvando tempo da aula", aulaAtualId, ":", tempoGasto, "segundos");
+
+        await updateDoc(progressoRef, {
+          [`tempos.${aulaAtualId}`]: increment(tempoGasto),
+          tempoGastoTotal: increment(tempoGasto),
+          dataUltimaAtualizacao: serverTimestamp()
+        });
+      }
+
+      document.querySelectorAll('.course-content').forEach(aula => aula.style.display = 'none');
+      const novaAula = document.getElementById(`aula-${aulaNumber}`);
+      if (novaAula) {
+        novaAula.style.display = 'block';
+        aulaAtualId = aulaNumber;
+        tempoInicioAula = Date.now();
+        
+        await updateDoc(progressoRef, {
+          ultimaAula: aulaNumber,
+          dataUltimaAtualizacao: serverTimestamp()
+        });
+        
+        console.log("🎬 Aula", aulaNumber, "iniciada");
+      }
+    }
+
+    async function saveTimeOnUnload() {
+      if (aulaAtualId && tempoInicioAula) {
+        const tempoAgora = Date.now();
+        const tempoGasto = Math.floor((tempoAgora - tempoInicioAula) / 1000);
+        console.log("⏱️ Salvando tempo ao sair:", tempoGasto, "segundos");
+
+        await updateDoc(progressoRef, {
+          [`tempos.${aulaAtualId}`]: increment(tempoGasto),
+          tempoGastoTotal: increment(tempoGasto),
+          dataUltimaAtualizacao: serverTimestamp()
+        });
+      }
+    }
+
+    async function resetProgress() {
+      if (!confirm('Tem certeza que deseja resetar todo seu progresso?')) return;
+
+      try {
+        console.log("🔄 Resetando progresso...");
+        await updateDoc(progressoRef, {
+          aulasConcluidas: [],
+          tempos: {},
+          tempoGastoTotal: 0,
+          progresso: 0,
+          ultimaAula: 1,
+          dataUltimaAtualizacao: serverTimestamp()
+        });
+
+        alert('Progresso resetado com sucesso!');
+        location.reload();
+      } catch (error) {
+        console.error("Erro ao resetar:", error);
+        alert('Erro ao resetar progresso.');
+      }
+    }
+
+    function setupQuizListeners() {
+  document.querySelectorAll(".quiz-container").forEach((container) => {
+    const options = container.querySelectorAll(".quiz-option");
+    const submitBtn = container.querySelector(".quiz-submit");
+    const feedback = container.querySelector(".quiz-feedback");
+    const aulaNumber = parseInt(container.getAttribute('data-aula'));
+
+    options.forEach(option => {
+      option.addEventListener("click", function() {
+        options.forEach(o => o.classList.remove("selected"));
+        this.classList.add("selected");
+      });
+    });
+
+    submitBtn.addEventListener("click", async () => {
+  const selected = container.querySelector(".quiz-option.selected");
+  if (!selected) {
+    feedback.textContent = "⚠️ Selecione uma opção.";
+    feedback.className = "quiz-feedback error";
+    feedback.style.display = "block";
+    return;
+  }
+
+  const respostaAluno = selected.textContent.trim();
+  const correta = selected.hasAttribute("data-correta");
+  const perguntaTexto = container.querySelector(".quiz-question p").textContent;
+  const corretaEl = container.querySelector(".quiz-option[data-correta='true']");
+  const respostaCorreta = corretaEl ? corretaEl.textContent.trim() : "Não disponível";
+  const aulaNumero = parseInt(container.getAttribute('data-aula'));
+  const tituloAula = aulas.find(a => a.numero === aulaNumero)?.titulo || "esta aula";
+
+  // Salvar resposta no Firestore
+  await updateDoc(progressoRef, {
+    [`respostasQuiz.aula-${aulaNumero}`]: { 
+      resposta: respostaAluno, 
+      correta,
+      timestamp: serverTimestamp()
+    },
+    dataUltimaAtualizacao: serverTimestamp()
+  });
+
+  if (correta) {
+    feedback.textContent = "✅ Resposta correta!";
+    feedback.className = "quiz-feedback success";
+    feedback.style.display = "block";
+  } else {
+    // Mostrar erro + resposta correta
+    feedback.innerHTML = `
+      ❌ <strong>Você respondeu:</strong> "${respostaAluno}"<br>
+      ✅ <strong>Resposta correta:</strong> "${respostaCorreta}"
+    `;
+    feedback.className = "quiz-feedback error";
+    feedback.style.display = "block";
+
+    // Chamar IA para explicação
+    const explicacao = await gerarExplicacaoIA(perguntaTexto, respostaAluno, respostaCorreta, tituloAula);
+    
+    // Adicionar explicação abaixo
+    const explicacaoEl = document.createElement("div");
+    explicacaoEl.className = "quiz-explicacao";
+    explicacaoEl.style.marginTop = "10px";
+    explicacaoEl.style.padding = "10px";
+    explicacaoEl.style.backgroundColor = "#e9ecef";
+    explicacaoEl.style.borderRadius = "4px";
+    explicacaoEl.style.fontSize = "0.95rem";
+    explicacaoEl.innerHTML = `<strong>💡 Explicação:</strong> ${explicacao}`;
+    
+    // Evitar duplicar se já existir
+    const existente = container.querySelector(".quiz-explicacao");
+    if (existente) existente.remove();
+    
+    container.appendChild(explicacaoEl);
+  }
+});  
+});
+}
+
+
+    function updateUIProgress(porcentagem, completas, total) {
+      document.getElementById("progressFill").style.width = `${porcentagem}%`;
+      document.getElementById("progressText").textContent = `${porcentagem}% concluído`;
+      document.getElementById("moduleProgress").textContent = `${completas}/${total} aulas`;
+      
+      const certBtn = document.getElementById("btnCertificate");
+      if (porcentagem === 100 && certBtn) {
+        // ✅ CORREÇÃO: Inclui o cursoId na URL
+        certBtn.href = `professor-gerar-Certificado.html?cursoId=${cursoId}`;
+        certBtn.style.display = "inline-block";
+      }
+    }
+
+    async function loadInitialProgress() {
+      if (!progressoRef) return;
+      
+      const progressoSnap = await getDoc(progressoRef);
+      if (progressoSnap.exists()) {
+        const progresso = progressoSnap.data();
+        const totalAulas = aulas.length;
+        
+        console.log("📊 Carregando progresso salvo:", progresso);
+        
+        updateUIProgress(progresso.progresso, progresso.aulasConcluidas.length, totalAulas);
+        
+        progresso.aulasConcluidas.forEach(aulaNumber => {
+          const index = aulaNumber - 1;
+          const lessonItem = document.querySelectorAll(".lesson-item")[index];
+          if (lessonItem) {
+            lessonItem.classList.add("completed");
+            lessonItem.querySelector(".lesson-icon").className = "lesson-icon fas fa-check-circle";
+          }
+          
+          const completeBtn = document.querySelector(`#aula-${aulaNumber} .complete-btn`);
+          if (completeBtn) {
+            completeBtn.classList.add('completed');
+            completeBtn.innerHTML = '<i class="fas fa-check-circle"></i> Aula Concluída';
+            completeBtn.disabled = true;
+          }
+        });
+        
+        const ultimaAula = progresso.ultimaAula || 1;
+        showAula(ultimaAula);
+      }
+    }
+
+    // ... (as funções de renderização permanecem iguais)
+
+    function renderAula(aula) {
+      const hasQuiz = aula.quiz && aula.quiz.pergunta;
+      const videoSrc = aula.linkVideo ? embedYouTube(aula.linkVideo) : '';
+      const nextAula = aula.numero + 1;
+
+      return `
+        <div class="course-content" id="aula-${aula.numero}">
+          <div class="video-container">
+            <div class="video-player">
+              ${!videoSrc ? `
+                <div class="video-placeholder">
+                  <i class="fas fa-play-circle pulse" style="font-size: 4rem;"></i>
+                  <h3>Aula ${aula.numero}: ${aula.titulo}</h3>
+                  <p>Vídeo não disponível</p>
+                </div>
+              ` : `
+                <div class="video-placeholder">
+                  <i class="fas fa-play-circle pulse" style="font-size: 4rem;"></i>
+                  <h3>Clique para iniciar</h3>
+                </div>
+                <iframe width="560" height="315" src="${videoSrc}" frameborder="0" allowfullscreen></iframe>
+              `}
+            </div>
+          </div>
+          <div class="video-info">
+            <h2><i class="fas fa-info-circle"></i> Sobre esta aula</h2>
+            <div class="video-meta">
+              <div class="meta-item"><i class="far fa-clock"></i> ${aula.duracao || '?'} min</div>
+              <div class="meta-item"><i class="fas fa-chart-bar"></i> ${aula.nivel || 'Básico'}</div>
+              <div class="meta-item"><i class="far fa-calendar-alt"></i> Disponível</div>
+            </div>
+            <div class="video-description">
+              <p>${aula.descricao || 'Descrição não disponível.'}</p>
+            </div>
+            <div class="video-actions">
+              <button class="action-btn complete-btn" data-aula="${aula.numero}">
+                <i class="fas fa-check-circle"></i> Marcar como concluída
+              </button>
+              <button class="action-btn material-btn" data-aula="${aula.numero}">
+                <i class="fas fa-file-pdf"></i> Material de apoio
+              </button>
+              ${nextAula <= aulas.length ? `
+                <button class="action-btn next-btn" data-aula="${nextAula}">
+                  <i class="fas fa-arrow-right"></i> Próxima aula
+                </button>
+              ` : ''}
+            </div>
+          </div>
+          <div class="resources-container">
+            <h3><i class="fas fa-paperclip"></i> Recursos da aula</h3>
+          </div>
+          ${hasQuiz ? renderQuiz(aula.quiz, aula.numero) : ''}
+        </div>
+      `;
+    }
+
+    function renderQuiz(quiz, aulaNumero) {
+      return `
+        <div class="quiz-container" data-aula="${aulaNumero}">
+          <h3><i class="fas fa-question-circle"></i> Quiz da Aula ${aulaNumero}</h3>
+          <div class="quiz-question">
+            <p>${quiz.pergunta}</p>
+            <ul class="quiz-options">
+              ${quiz.alternativas.map((alt, i) => 
+                `<li class="quiz-option" data-index="${i}" ${alt.correta ? 'data-correta="true"' : ''}>
+                  ${alt.texto}
+                </li>`
+              ).join('')}
+            </ul>
+          </div>
+          <button class="quiz-submit">Enviar Respostas</button>
+          <div class="quiz-feedback"></div>
+        </div>
+      `;
+    }
+
+    function setupDynamicListeners() {
+      document.querySelectorAll('.next-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const aulaNumber = parseInt(e.target.closest('.next-btn').getAttribute('data-aula'));
+          showAula(aulaNumber);
+        });
+      });
+
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('.material-btn')) {
+          const btn = e.target.closest('.material-btn');
+          const aulaId = parseInt(btn.getAttribute('data-aula'));
+          loadMaterialsForLesson(aulaId);
+        }
+      });
+
+      document.querySelectorAll('.complete-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const aulaNumber = parseInt(e.target.closest('.complete-btn').getAttribute('data-aula'));
+          await markLessonAsCompleted(aulaNumber);
+        });
+      });
+
+      setupQuizListeners();
+
+      document.querySelectorAll('.video-placeholder').forEach(placeholder => {
+        placeholder.addEventListener('click', function() {
+          this.classList.add('disabled');
+        });
+      });
+
+      window.addEventListener("beforeunload", saveTimeOnUnload);
+    }
+
+    function loadMaterialsForLesson(aulaId) {
+  const container = document.querySelector(`#aula-${aulaId} .resources-container`);
+  if (!container) return;
+
+  const title = container.querySelector('h3');
+  if (title) title.innerHTML = `<i class="fas fa-paperclip"></i> Materiais - Aula ${aulaId}`;
+
+  let list = container.querySelector('.resource-list');
+  if (!list) {
+    list = document.createElement('div');
+    list.className = 'resource-list';
+    container.appendChild(list);
+  }
+
+  // ✅ BUSCAR MATERIAL DE APOIO DO BANCO DE DADOS
+  const aula = aulas.find(a => a.numero === aulaId);
+  
+  if (!aula || !aula.materialApoio) {
+    list.innerHTML = `
+      <div class="resource-item" style="text-align: center; padding: 2rem; color: #999;">
+        <i class="fas fa-book-open fa-2x"></i>
+        <p>Nenhum material disponível para esta aula</p>
+      </div>
+    `;
+    return;
+  }
+
+  // ✅ RENDERIZAR O MATERIAL DO BANCO
+  const materialUrl = aula.materialApoio;
+  const fileName = extrairNomeArquivo(materialUrl);
+  const fileIcon = getFileIconFromUrl(materialUrl);
+
+  list.innerHTML = `
+    <div class="resource-item">
+      <div class="resource-icon"><i class="fas ${fileIcon}"></i></div>
+      <div class="resource-text">
+        <h4>${fileName}</h4>
+        <p>Material de apoio da aula ${aulaId}</p>
+      </div>
+      <button class="download-btn" onclick="window.open('${materialUrl}', '_blank')">
+        <i class="fas fa-external-link-alt"></i>
+      </button>
+    </div>
+  `;
+}
+
+// ✅ FUNÇÃO AUXILIAR PARA EXTRAIR NOME DO ARQUIVO DA URL
+function extrairNomeArquivo(url) {
+  try {
+    // Para URLs do Google Drive
+    if (url.includes('drive.google.com')) {
+      const match = url.match(/\/d\/([^\/]+)/);
+      if (match) {
+        return 'Arquivo do Google Drive';
+      }
+      return 'Documento do Drive';
+    }
+    
+    // Para URLs normais
+    const urlObj = new URL(url);
+    const pathname = urlObj.pathname;
+    const fileName = pathname.split('/').pop();
+    
+    if (fileName && fileName.includes('.')) {
+      return decodeURIComponent(fileName);
+    }
+    
+    return 'Material de Apoio';
+  } catch (error) {
+    return 'Material da Aula';
+  }
+}
+
+// ✅ FUNÇÃO AUXILIAR PARA DETERMINAR ÍCONE PELA URL
+function getFileIconFromUrl(url) {
+  if (!url) return 'fa-file';
+  
+  const urlLower = url.toLowerCase();
+  
+  if (urlLower.includes('.pdf')) return 'fa-file-pdf';
+  if (urlLower.includes('.doc') || urlLower.includes('.docx')) return 'fa-file-word';
+  if (urlLower.includes('.xls') || urlLower.includes('.xlsx')) return 'fa-file-excel';
+  if (urlLower.includes('.ppt') || urlLower.includes('.pptx')) return 'fa-file-powerpoint';
+  if (urlLower.includes('.zip') || urlLower.includes('.rar')) return 'fa-file-archive';
+  if (urlLower.includes('.jpg') || urlLower.includes('.jpeg') || urlLower.includes('.png') || urlLower.includes('.gif')) 
+    return 'fa-file-image';
+  if (urlLower.includes('drive.google.com')) return 'fa-google-drive';
+  
+  return 'fa-file';
+}
+
+    async function loadCourse() {
+      cursoId = getCourseIdFromUrl();
+      if (!cursoId) {
+        alert("Curso não especificado.");
+        window.location.href = "pagina-de-cursos.html";
+        return;
+      }
+
+      try {
+        const cursoDoc = await getDoc(doc(db, "cursos", cursoId));
+        if (!cursoDoc.exists()) throw new Error("Curso não encontrado");
+        cursoData = cursoDoc.data();
+
+        document.getElementById("courseTitle").innerHTML = `<i class="fas fa-book-open"></i> ${cursoData.titulo}`;
+        document.title = `${cursoData.titulo} - EducaUP`;
+
+        const header = document.querySelector(".course-header");
+        if (header && cursoData.corDestaque) {
+          header.style.backgroundColor = cursoData.corDestaque;
+        }
+
+        const aulasSnapshot = await getDocs(collection(db, "cursos", cursoId, "aulas"));
+        aulas = [];
+        aulasSnapshot.forEach(doc => aulas.push({ id: doc.id, ...doc.data() }));
+        aulas.sort((a, b) => a.numero - b.numero);
+
+        if (aulas.length === 0) {
+          document.getElementById("aulas-container").innerHTML = `
+            <div style="text-align: center; padding: 3rem; color: #666;">
+              <i class="fas fa-graduation-cap fa-3x"></i>
+              <h3>Nenhuma aula disponível.</h3>
+            </div>
+          `;
+          return;
+        }
+
+        document.getElementById("aulas-container").innerHTML = aulas.map(renderAula).join('');
+        renderLessonsList();
+        setupDynamicListeners();
+
+      } catch (error) {
+        console.error("Erro ao carregar curso:", error);
+        alert("Erro ao carregar o curso.");
+      }
+    }
+
+    function renderLessonsList() {
+      const list = document.getElementById("lessonsList");
+      list.innerHTML = '';
+
+      aulas.forEach(aula => {
+        const li = document.createElement('li');
+        li.className = 'lesson-item';
+        if (aula.numero > 1) li.classList.add('locked');
+        
+        li.innerHTML = `
+          <i class="lesson-icon far fa-circle"></i>
+          <div class="lesson-text">
+            <div class="lesson-title">${aula.numero}. ${aula.titulo}</div>
+            <div class="lesson-meta">
+              <span class="lesson-duration"><i class="far fa-clock"></i> ${aula.duracao || '?'} min</span>
+              <span class="lesson-status">
+                <i class="fas fa-${aula.numero > 1 ? 'lock' : 'play'}"></i> 
+                ${aula.numero > 1 ? 'Bloqueada' : 'Disponível'}
+              </span>
+            </div>
+          </div>
+        `;
+        li.addEventListener('click', () => showAula(aula.numero));
+        list.appendChild(li);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+          alert("Você precisa estar logado.");
+          window.location.href = "login.html";
+          return;
+        }
+
+        // ✅ LINHA NOVA:
+        cursoId = getCourseIdFromUrl(); // Garanta que cursoId já foi definido
+        const progressoId = `${user.uid}_${cursoId}`;
+        progressoRef = doc(db, "usuarios", user.uid, "progresso", cursoId);
+            
+        console.log("📍 progressoRef definido como:", progressoRef.path);
+        
+        await loadCourse();
+const podeContinuar = await initializeUserDocuments(user.uid);
+if (!podeContinuar) return; // Se não tem matrícula, para aqui
+await loadInitialProgress();
+      });
+    });
+
+    window.resetProgress = resetProgress;
+    window.debugFirestore = debugFirestore;
+  </script>
+
+  <script src="professor-explicacao-api.js"></script>
+  <script src="professor-Chat-IA-Mat.js"></script>
+</body>
+</html>

@@ -1,9 +1,9 @@
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
-const API_KEY = "mixCHZKl5LDQRRHyDmYUDnbgyM58Pd5q59dUteeK";
+const API_KEY = "83dC3LN5b8rnp5nFdVWm8z3osqJeuMg5r8qHfm6J";
 
 const body = {
-  model: "command-r-plus",
+  model: "command-xlarge-nightly",
   chat_history: [], // obrigatório mesmo que vazio
   message: "Explique o ciclo da água de forma simples." // campo correto para o prompt
 };

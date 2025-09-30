@@ -202,7 +202,7 @@
 <!-- Firebase + Lógica -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
   const firebaseConfig = {
@@ -220,94 +220,164 @@
 
   let user;
 
-  // Cursos disponíveis - ajustado para refletir o curso de Matemática Básica
-  const cursosDoUsuario = [
-    { id: "progresso", nome: "Matemática Básica" }
-  ];
-
-  function gerarCardsCursos() {
+  async function gerarCardsCursos() {
     const container = document.getElementById('courseCards');
-    container.innerHTML = '';
-    cursosDoUsuario.forEach(curso => {
-      const div = document.createElement('div');
-      div.classList.add('course-card', 'active'); // Já marca como ativo pois só temos um curso
-      div.dataset.id = curso.id;
-      div.innerHTML = `<h4>${curso.nome}</h4>`;
-      div.onclick = () => carregarRelatorio(curso.id);
-      container.appendChild(div);
-    });
-  }
+    container.innerHTML = '<div class="loading">Buscando seus cursos...</div>';
+    
+    if (!user) return;
 
-  async function carregarRelatorio() {
-    if(!user) return;
-
-    // Ajustado para usar a mesma estrutura da aula de matemática
-    const ref = doc(db, "progresso", user.uid);
-    const snapshot = await getDoc(ref);
-
-    if (snapshot.exists()) {
-      const data = snapshot.data();
-
-      // Ajustando para os nomes de campos usados na aula de matemática
-      const aulasConcluidas = data.aulasConcluidas?.length || 0;
-      const progresso = data.progresso || 0;
-      const ultimaAula = data.ultimaAula || '-';
-      const tempoSegundos = data.tempoGastoTotal || 0;
-
-      // Converter segundos para horas e minutos
-      const horas = Math.floor(tempoSegundos / 3600);
-      const minutos = Math.floor((tempoSegundos % 3600) / 60);
-
-      // Atualizar a UI
-      document.getElementById('aulasConcluidas').textContent = aulasConcluidas;
-      document.getElementById('progresso').textContent = `${progresso}%`;
-      document.getElementById('ultimaAula').textContent = `Aula ${ultimaAula}`;
-      document.getElementById('tempoTotal').textContent = `${horas}h ${minutos}min`;
-
-      // Processar quizzes - ajustado para a estrutura de respostasQuiz da aula de matemática
-      const quizContainer = document.getElementById('quizHistorico');
-      quizContainer.innerHTML = "";
+    try {
+      // Buscar TODOS os documentos da coleção progresso
+      const progressoCollectionRef = collection(db, "usuarios", user.uid, "progresso");
+      const progressoSnapshot = await getDocs(progressoCollectionRef);
       
-      const respostas = data.respostasQuiz || {};
-      const totalQuizzes = Object.keys(respostas).length;
-      let acertos = 0;
-
-      if (totalQuizzes > 0) {
-        Object.entries(respostas).forEach(([aulaId, resposta]) => {
-          const aulaNum = aulaId.replace('aula-', '');
-          const li = document.createElement('li');
-          
-          if (resposta.correta) acertos++;
-          
-          li.innerHTML = `
-            <span>Aula ${aulaNum}</span>
-            <span class="quiz-score">${resposta.correta ? '✅' : '❌'}</span>
-          `;
-          quizContainer.appendChild(li);
-        });
-
-        // Adicionar resumo de desempenho
-        const liResumo = document.createElement('li');
-        liResumo.style.fontWeight = 'bold';
-        liResumo.style.borderTop = '2px solid #eee';
-        liResumo.style.marginTop = '10px';
-        liResumo.style.paddingTop = '10px';
-        liResumo.innerHTML = `
-          <span>Desempenho geral</span>
-          <span class="quiz-score">${acertos}/${totalQuizzes} acertos</span>
-        `;
-        quizContainer.appendChild(liResumo);
-      } else {
-        quizContainer.innerHTML = "<li>Nenhum quiz respondido ainda.</li>";
+      if (progressoSnapshot.empty) {
+        container.innerHTML = '<div class="no-courses">Nenhum curso encontrado.</div>';
+        return;
       }
 
-    } else {
-      // Caso não encontre dados
+      const cursosFinalizados = [];
+
+      // Para cada documento na coleção progresso
+      for (const docSnap of progressoSnapshot.docs) {
+        const cursoId = docSnap.id;
+        const progressoData = docSnap.data();
+        
+        // Só mostra cursos finalizados (progresso >= 100)
+        if (progressoData.progresso >= 100) {
+          try {
+            // Buscar nome do curso
+            const cursoDoc = await getDoc(doc(db, "cursos", cursoId));
+            if (cursoDoc.exists()) {
+              cursosFinalizados.push({
+                id: cursoId,
+                nome: cursoDoc.data().titulo || `Curso ${cursoId}`,
+                progresso: progressoData.progresso
+              });
+            }
+          } catch (error) {
+            console.log(`Curso ${cursoId} não encontrado`);
+          }
+        }
+      }
+
+      // Gerar os cards (resto do código igual)
+      container.innerHTML = '';
+      if (cursosFinalizados.length === 0) {
+        container.innerHTML = '<div class="no-courses">Nenhum curso finalizado ainda.</div>';
+        return;
+      }
+
+      cursosFinalizados.forEach(curso => {
+        const div = document.createElement('div');
+        div.classList.add('course-card');
+        div.dataset.id = curso.id;
+        div.innerHTML = `
+          <h4>${curso.nome}</h4>
+          <div class="progress-badge">${curso.progresso}% concluído</div>
+        `;
+        div.onclick = () => carregarRelatorio(curso.id);
+        container.appendChild(div);
+      });
+
+      // Selecionar o primeiro curso automaticamente
+      if (cursosFinalizados.length > 0) {
+        const primeiroCard = container.querySelector('.course-card');
+        primeiroCard.classList.add('active');
+        await carregarRelatorio(cursosFinalizados[0].id);
+      }
+
+    } catch (error) {
+      console.error("Erro ao carregar cursos:", error);
+      container.innerHTML = '<div class="no-courses">Erro ao carregar cursos.</div>';
+    }
+  }
+
+  async function carregarRelatorio(cursoId) {
+    if (!user || !cursoId) return;
+
+    // Atualizar card ativo
+    document.querySelectorAll('.course-card').forEach(card => {
+      card.classList.remove('active');
+    });
+    document.querySelector(`[data-id="${cursoId}"]`).classList.add('active');
+
+    try {
+      // Buscar progresso do curso específico
+      const progressoRef = doc(db, "usuarios", user.uid, "progresso", cursoId);
+      const snapshot = await getDoc(progressoRef);
+
+      if (snapshot.exists()) {
+        const data = snapshot.data();
+
+        // Ajustando para os nomes de campos usados na aula de matemática
+        const aulasConcluidas = data.aulasConcluidas?.length || 0;
+        const progresso = data.progresso || 0;
+        const ultimaAula = data.ultimaAula || '-';
+        const tempoSegundos = data.tempoGastoTotal || 0;
+
+        // Converter segundos para horas e minutos
+        const horas = Math.floor(tempoSegundos / 3600);
+        const minutos = Math.floor((tempoSegundos % 3600) / 60);
+
+        // Atualizar a UI
+        document.getElementById('aulasConcluidas').textContent = aulasConcluidas;
+        document.getElementById('progresso').textContent = `${progresso}%`;
+        document.getElementById('ultimaAula').textContent = `Aula ${ultimaAula}`;
+        document.getElementById('tempoTotal').textContent = `${horas}h ${minutos}min`;
+
+        // Processar quizzes - ajustado para a estrutura de respostasQuiz da aula de matemática
+        const quizContainer = document.getElementById('quizHistorico');
+        quizContainer.innerHTML = "";
+        
+        const respostas = data.respostasQuiz || {};
+        const totalQuizzes = Object.keys(respostas).length;
+        let acertos = 0;
+
+        if (totalQuizzes > 0) {
+          Object.entries(respostas).forEach(([aulaId, resposta]) => {
+            const aulaNum = aulaId.replace('aula-', '');
+            const li = document.createElement('li');
+            
+            if (resposta.correta) acertos++;
+            
+            li.innerHTML = `
+              <span>Aula ${aulaNum}</span>
+              <span class="quiz-score">${resposta.correta ? '✅' : '❌'}</span>
+            `;
+            quizContainer.appendChild(li);
+          });
+
+          // Adicionar resumo de desempenho
+          const liResumo = document.createElement('li');
+          liResumo.style.fontWeight = 'bold';
+          liResumo.style.borderTop = '2px solid #eee';
+          liResumo.style.marginTop = '10px';
+          liResumo.style.paddingTop = '10px';
+          liResumo.innerHTML = `
+            <span>Desempenho geral</span>
+            <span class="quiz-score">${acertos}/${totalQuizzes} acertos</span>
+          `;
+          quizContainer.appendChild(liResumo);
+        } else {
+          quizContainer.innerHTML = "<li>Nenhum quiz respondido ainda.</li>";
+        }
+
+      } else {
+        // Caso não encontre dados
+        document.getElementById('aulasConcluidas').textContent = 0;
+        document.getElementById('progresso').textContent = '0%';
+        document.getElementById('ultimaAula').textContent = '-';
+        document.getElementById('tempoTotal').textContent = '0h 0min';
+        document.getElementById('quizHistorico').innerHTML = '<li>Nenhum dado encontrado.</li>';
+      }
+    } catch (error) {
+      console.error("Erro ao carregar relatório:", error);
       document.getElementById('aulasConcluidas').textContent = 0;
       document.getElementById('progresso').textContent = '0%';
       document.getElementById('ultimaAula').textContent = '-';
       document.getElementById('tempoTotal').textContent = '0h 0min';
-      document.getElementById('quizHistorico').innerHTML = '<li>Nenhum dado encontrado.</li>';
+      document.getElementById('quizHistorico').innerHTML = '<li>Erro ao carregar dados.</li>';
     }
   }
 
@@ -315,7 +385,7 @@
     if (u) {
       user = u;
       gerarCardsCursos();
-      carregarRelatorio(); // Carrega os dados automaticamente
+      // carregarRelatorio(); // Carrega os dados automaticamente
     } else {
       console.log("Usuário não autenticado.");
       alert("Faça login para ver seu progresso.");

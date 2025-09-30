@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Formulario Curso - EducaUP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Fredoka+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="formulario-matematica.css"> <!-- Reutilize seu CSS existente -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">EducaUP</div>
+        <nav>
+            <ul>
+                <li><a href="pagina-principal.html"><i class="fas fa-home"></i>Início</a></li>
+                <li><a href="pagina-de-cursos.html"><i class="fas fa-book"></i>Cursos</a></li>
+                <li><a href="#"><i class="fas fa-info-circle"></i> Sobre</a></li>
+                <li><a href="#"><i class="fas fa-envelope"></i> Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="course-hero">
+        <div class="course-hero-content">
+            <div class="course-icon" id="courseEmoji">📚</div>
+            <h1 id="courseTitle">Carregando curso...</h1>
+            <div class="course-meta">
+                <div class="meta-item">
+                    <span>⏱️</span>
+                    <span id="courseDuration">-- horas</span>
+                </div>
+                <div class="meta-item">
+                    <span>📊</span>
+                    <span id="courseLevel">--</span>
+                </div>
+                <div class="meta-item">
+                    <span>👨‍🏫</span>
+                    <span id="courseProfessor">Professor não informado</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="course-container">
+        <div class="course-details">
+            <h2>Sobre o Curso</h2>
+            <p id="courseAbout">Carregando descrição...</p>
+            
+            <h3>O que você vai aprender</h3>
+            <p id="courseOutcomes">Carregando objetivos...</p>
+            
+            <h3>Requisitos</h3>
+            <p id="coursePrerequisites">Não informado.</p>
+            
+            <h3>Metodologia</h3>
+            <p id="courseMethodology">Carregando metodologia...</p>
+        </div>
+        
+        <div class="enrollment-form">
+            <!-- Status de matrícula -->
+            <div id="enrollmentStatus" class="enrollment-status hidden">
+                <h3 id="statusMessage"></h3>
+                <button id="btnAcessarCurso" class="btn-success hidden">
+                    <i class="fas fa-book-open"></i> Acessar Curso
+                </button>
+                <button id="btnCancelarMatricula" class="btn-danger hidden">
+                    <i class="fas fa-user-minus"></i> Cancelar Matrícula
+                </button>
+            </div>
+            
+            <!-- Formulário de matrícula -->
+            <div id="formContainer">
+                <h2>Matricule-se Agora</h2>
+                <form id="enrollForm">
+                    <div class="form-group">
+                        <label for="name">Nome Completo</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Telefone</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>               
+                    <button type="submit" class="submit-btn">Confirmar Matrícula</button>
+                </form>
+                
+                <div class="features-box">
+                    <h3>O que você recebe</h3>
+                    <div class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        <span>Certificado de conclusão</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        <span>Materiais complementares</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
+            <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+            <a href="#"><i class="fab fa-youtube"></i> YouTube</a>
+            <a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a>
+        </div>
+        <p class="copyright">© 2025 EducaUP</p>
+    </footer>
+
+    <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import {
+    getFirestore,
+    doc,
+    setDoc,
+    getDoc,
+    collection,
+    query,
+    where,
+    getDocs,
+    deleteDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAQ0s0EpWm2kmPAC3z0bNphLyjcGieWIBM",
+    authDomain: "siteweb-ca3bc.firebaseapp.com",
+    projectId: "siteweb-ca3bc",
+    storageBucket: "siteweb-ca3bc.appspot.com",
+    messagingSenderId: "312050528441",
+    appId: "1:312050528441:web:70abee0173951c08402b68"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+function getCourseIdFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('id');
+}
+
+const nivelExibicao = {
+    iniciante: "Iniciante",
+    intermediario: "Intermediário",
+    avancado: "Avançado"
+};
+
+document.addEventListener("DOMContentLoaded", async () => {
+    const courseId = getCourseIdFromUrl();
+    if (!courseId) {
+        alert("❌ Nenhum curso especificado.");
+        window.location.href = "pagina-de-cursos.html";
+        return;
+    }
+
+    let curso;
+    try {
+        const cursoDoc = await getDoc(doc(db, "cursos", courseId));
+        if (!cursoDoc.exists()) {
+            alert("Curso não encontrado.");
+            window.location.href = "pagina-de-cursos.html";
+            return;
+        }
+        curso = cursoDoc.data();
+
+        document.getElementById("pageTitle").textContent = `${curso.titulo} - EducaUP`;
+        document.getElementById("courseTitle").textContent = curso.titulo;
+        document.getElementById("courseEmoji").textContent = curso.emoji || '📚';
+        document.querySelector(".course-hero").style.backgroundColor = curso.corDestaque || '#4a90e2';
+        document.getElementById("courseDuration").textContent = `${curso.cargaHoraria || '?'} horas`;
+        document.getElementById("courseLevel").textContent = nivelExibicao[curso.nivel] || curso.nivel;
+        document.getElementById("courseProfessor").textContent = curso.professor ? `Prof. ${curso.professor}` : "Professor não informado";
+        document.getElementById("courseAbout").textContent = curso.sobre || curso.descricaoCurta || "Descrição não disponível.";
+        document.getElementById("courseOutcomes").textContent = curso.aprender || "Conteúdo não informado.";
+        document.getElementById("coursePrerequisites").textContent = curso.requisitos || "Não há pré-requisitos.";
+        document.getElementById("courseMethodology").textContent = curso.metodologia || "Metodologia não informada.";
+    } catch (error) {
+        console.error("Erro ao carregar curso:", error);
+        alert("Erro ao carregar os dados do curso.");
+        window.location.href = "pagina-de-cursos.html";
+        return;
+    }
+
+    const enrollForm = document.getElementById("enrollForm");
+    const formContainer = document.getElementById("formContainer");
+    const enrollmentStatus = document.getElementById("enrollmentStatus");
+    const statusMessage = document.getElementById("statusMessage");
+    const btnAcessarCurso = document.getElementById("btnAcessarCurso");
+    const btnCancelarMatricula = document.getElementById("btnCancelarMatricula");
+
+    // Autenticação e matrícula
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+            alert("⚠️ Você precisa estar logado para se matricular.");
+            window.location.href = "login.html";
+            return;
+        }
+
+        const jaMatriculado = await verificarMatriculaExistente(user.uid, curso.titulo);
+        if (jaMatriculado) {
+            showEnrollmentStatus("Você já está matriculado neste curso!");
+        } else {
+            showEnrollmentForm();
+        }
+
+        if (user.displayName) document.getElementById("name").value = user.displayName;
+        if (user.email) document.getElementById("email").value = user.email;
+
+        btnCancelarMatricula.onclick = () => cancelarMatricula(user.uid, curso.titulo);
+        btnAcessarCurso.onclick = () => {
+            window.location.href = `professor-exibir-curso.html?id=${courseId}`;
+        };
+    });
+
+    enrollForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const user = auth.currentUser;
+        if (!user) return;
+        await realizarMatricula(user, curso.titulo);
+    };
+});
+
+// Verifica matrícula existente
+async function verificarMatriculaExistente(uid, cursoTitulo) {
+    const q = query(
+        collection(db, "matriculas"),
+        where("uid", "==", uid),
+        where("curso", "==", cursoTitulo)
+    );
+    const snapshot = await getDocs(q);
+    return !snapshot.empty;
+}
+
+// Captura segura dos campos do formulário
+function getFormValues() {
+    const nameInput = document.getElementById("name");
+    const emailInput = document.getElementById("email");
+    const phoneInput = document.getElementById("phone");
+
+    const name = nameInput ? nameInput.value.trim() : "";
+    const email = emailInput ? emailInput.value.trim() : "";
+    const phone = phoneInput ? phoneInput.value.trim() : "";
+
+    return { name, email, phone };
+}
+
+async function realizarMatricula(user, cursoTitulo) {
+    const jaMatriculado = await verificarMatriculaExistente(user.uid, cursoTitulo);
+    if (jaMatriculado) {
+        showEnrollmentStatus("Você já está matriculado neste curso!");
+        return;
+    }
+
+    let { name, email, phone } = getFormValues();
+
+    if (!name && user.displayName) name = user.displayName;
+    if (!email && user.email) email = user.email;
+
+    if (!name || !email || !phone) {
+        alert("⚠️ Preencha todos os campos corretamente.");
+        return;
+    }
+
+    const courseId = getCourseIdFromUrl();
+    const matriculaId = `${user.uid}_${cursoTitulo.replace(/\s+/g, '_').toLowerCase()}`;
+    const matriculaRef = doc(db, "matriculas", matriculaId);
+
+    const dadosMatricula = {
+        matriculaId,
+        uid: user.uid,
+        name,
+        email,
+        phone,
+        curso: cursoTitulo,
+        cursoId: courseId,
+        dataMatricula: new Date().toISOString(),
+        status: "ativo"
+    };
+
+    try {
+        await setDoc(matriculaRef, {
+            ...dadosMatricula,
+            dataMatricula: serverTimestamp()
+        });
+
+        // Mostra o alerta
+        alert("✅ Matrícula realizada com sucesso!");
+
+        // Atualiza o status no formulário
+        showEnrollmentStatus("Matrícula confirmada com sucesso!");
+
+        // Agora sim: mostra os dados no console **após tudo**
+        console.log("✅ Dados da matrícula salvos:", dadosMatricula);
+
+    } catch (error) {
+        console.error("Erro ao salvar matrícula:", error);
+        alert("❌ Erro ao salvar matrícula. Tente novamente.");
+    }
+}
+
+// Cancela matrícula
+async function cancelarMatricula(uid, cursoTitulo) {
+    if (!confirm("Tem certeza que deseja cancelar sua matrícula?")) return;
+
+    const q = query(
+        collection(db, "matriculas"),
+        where("uid", "==", uid),
+        where("curso", "==", cursoTitulo)
+    );
+    const snapshot = await getDocs(q);
+
+    const deletes = snapshot.docs.map(doc => deleteDoc(doc.ref));
+    await Promise.all(deletes);
+
+    alert("Matrícula cancelada com sucesso!");
+    showEnrollmentForm();
+}
+
+// Exibição
+function showEnrollmentStatus(message) {
+    document.getElementById("statusMessage").textContent = message;
+    document.getElementById("enrollmentStatus").classList.remove("hidden");
+    document.getElementById("formContainer").classList.add("hidden");
+    document.getElementById("btnAcessarCurso").classList.remove("hidden");
+    document.getElementById("btnCancelarMatricula").classList.remove("hidden");
+}
+
+function showEnrollmentForm() {
+    document.getElementById("enrollmentStatus").classList.add("hidden");
+    document.getElementById("formContainer").classList.remove("hidden");
+    document.getElementById("btnAcessarCurso").classList.add("hidden");
+    document.getElementById("btnCancelarMatricula").classList.add("hidden");
+}
+</script>
+
+</body>
+</html>

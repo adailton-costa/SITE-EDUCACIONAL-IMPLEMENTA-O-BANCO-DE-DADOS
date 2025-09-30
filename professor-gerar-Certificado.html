@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Gerar Certificado — Automático</title>
+
+    <!-- Fontes Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Bibliotecas PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        /* ====== RESET E ESTILOS GERAIS ====== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #f5f7fa;
+            text-align: center;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* ====== CONTAINER PRINCIPAL ====== */
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ====== ESTILOS DO CERTIFICADO ====== */
+        #certificado-template {
+            width: 297mm;
+            height: 210mm;
+            padding: 15mm;
+            background: white;
+            position: relative;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+            font-family: 'Roboto', sans-serif;
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .fundo-curvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(0,68,148,0.1) 0%, transparent 20%),
+                radial-gradient(circle at 80% 80%, rgba(255,204,0,0.1) 0%, transparent 20%),
+                linear-gradient(135deg, rgba(0,68,148,0.05) 0%, transparent 50%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Logos */
+        .logo-instituicao {
+            position: absolute;
+            top: 15mm;
+            z-index: 2;
+            width: 150px;
+            height: auto;
+        }
+
+        .logo-esquerda {
+            left: 15mm;
+        }
+
+        .logo-direita {
+            right: 15mm;
+        }
+
+        .logo-instituicao img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Textos do certificado - CENTRALIZADOS */
+        #nome-instituicao {
+            font-family: 'Playfair Display', serif;
+            font-size: 30px;
+            color: #004494;
+            margin: 5mm 0 8mm;
+            font-weight: 700;
+            text-align: center;
+            width: 100%;
+        }
+
+        .titulo-principal {
+            font-family: 'Great Vibes', cursive;
+            font-size: 48px;
+            color: #004494;
+            margin: 0;
+            font-weight: 700;
+            text-align: center;
+            width: 100%;
+        }
+
+        .texto-certificado {
+            font-size: 16px;
+            color: #333;
+            text-align: center;
+            margin: 0 auto;
+            line-height: 1.8;
+            max-width: 200mm;
+            width: 100%;
+            padding: 0;
+        }
+
+        #nome-aluno {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            color: #004494;
+            margin: 10mm 0;
+            font-style: italic;
+            font-weight: 700;
+            padding: 5px 50px;
+            border-top: 2px solid #ffcc00;
+            border-bottom: 2px solid #ffcc00;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .detalhes-curso {
+            font-size: 16px;
+            color: #333;
+            text-align: center;
+            margin: 5mm auto;
+            line-height: 1.6;
+            max-width: 200mm;
+            width: 100%;
+        }
+
+        .local-data {
+            font-size: 16px;
+            color: #333;
+            text-align: center;
+            margin: 5mm 0 5mm;
+            font-weight: 500;
+            width: 100%;
+        }
+
+        /* Assinaturas - CORRIGIDAS E CENTRALIZADAS */
+        .assinaturas-container {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        max-width: 200mm;
+        margin: 10mm 0 5mm;
+        gap: 50px;
+        }
+
+        .assinatura-item {
+        text-align: center;
+        flex: 1;
+        padding: 0 25mm;
+        }
+
+        .linha-assinatura {
+        width: 150%;
+        height: 1px;
+        background: #004494;
+        margin: 15px auto 8px;
+        transform: translateX(-16.67%);
+        }
+
+        .assinatura-imagem {
+            position: absolute;
+            left: 50%;
+            top: -30px;
+            transform: translateX(-50%);
+            width: 220px;
+            height: auto;
+            pointer-events: none;
+            filter: contrast(1.2);
+        }
+
+        .assinatura-container {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            margin-bottom: -10px;
+        }
+
+        #nome-assinatura, #cargo-assinatura {
+            font-size: 14px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 0px;
+            font-weight: 600;
+        }
+
+        #cargo-assinatura {
+            font-style: italic;
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Rodapé */
+        .rodape {
+            position: absolute;
+            bottom: 5mm;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 10px;
+            color: #777;
+            padding: 0 20mm;
+            line-height: 1.6;
+        }
+
+        #numero-certificado {
+            position: static;
+            bottom: 8mm;
+            right: 15mm;
+            font-size: 10px;
+            color: #999;
+        }
+
+        /* Botão de download */
+        .btn-download {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Roboto', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .btn-download i {
+            font-size: 18px;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(30, 60, 114, 0.4);
+        }
+
+        /* ====== RESPONSIVIDADE ====== */
+        @media (max-width: 1200px) {
+            #certificado-template {
+                width: 100%;
+                height: auto;
+                max-width: 297mm;
+            }
+            
+            .assinaturas-container {
+                flex-direction: column;
+                gap: 40px;
+                align-items: center;
+            }
+            
+            .assinatura-item {
+                min-width: 150px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            #certificado-template {
+                padding: 10mm;
+            }
+            
+            .logo-instituicao {
+                width: 100px;
+            }
+            
+            .titulo-principal {
+                font-size: 36px;
+            }
+            
+            #nome-aluno {
+                font-size: 24px;
+                padding: 5px 20px;
+            }
+            
+            .assinaturas-container {
+                gap: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="certificado-template">
+            <div class="fundo-curvas"></div>
+            <div class="logo-instituicao logo-esquerda">
+                <img src="Logo-EducaUP.png" alt="Logo EducaUP" onerror="this.style.display='none'">
+            </div>
+            <div class="logo-instituicao logo-direita">
+                <img src="Logo-EducaUP.png" alt="Logo EducaUP" onerror="this.style.display='none'">
+            </div>
+            
+            <div id="nome-instituicao">EducaUP</div>
+            <div class="titulo-principal">Certificado de Conclusão</div>
+            <div class="texto-certificado">Certificamos, para os devidos fins, que</div>
+            <div id="nome-aluno">[Nome do Aluno]</div>
+            
+            <div class="detalhes-curso">
+                Concluiu com êxito o curso de <strong id="nome-curso">[Nome do Curso]</strong>,
+                realizado no período de <strong id="periodo-curso">[Período]</strong>,
+                na modalidade <strong id="modalidade-curso">[Modalidade]</strong>,
+                com carga horária de <strong id="carga-horaria">[Carga Horária]</strong>.
+            </div>
+            
+            <div class="detalhes-curso">Local de realização: <strong id="local-realizacao">[Local]</strong></div>
+            <div class="local-data">
+                <strong id="cidade-estado">Manaus, AM</strong>, <span id="data-emissao">[Data]</span>
+            </div>
+
+            <div class="assinaturas-container">
+                <div class="assinatura-item">
+                    <div class="assinatura-container">
+                        <div class="linha-assinatura"></div>
+                        <img src="ASSINATURA ADAILTON.png" alt="Assinatura de Adailton" class="assinatura-imagem" onerror="this.style.display='none'">
+                    </div>
+                    <div id="nome-assinatura">Adailton Coelho Costa</div>
+                    <div id="cargo-assinatura">Fundador e Diretor do EducaUP</div>
+                </div>
+                <div class="assinatura-item">
+                    <div class="assinatura-container">
+                        <div class="linha-assinatura"></div>
+                    </div>
+                    <div id="nome-assinatura">Aluno(a)</div>
+                    <div id="cargo-assinatura">Assinatura</div>
+                </div>
+            </div>
+
+            <div class="rodape">
+                Código de verificação: <span id="codigo-verificacao">[Código]</span> | Emitido em: <span id="data-emissao-rodape">[Data]</span><br>
+                Autenticidade verificável em: www.educaup.com.br/verificar
+                <div id="numero-certificado">ID: [Número]</div>
+            </div>
+        </div>
+
+        <div style="margin: 30px 0;">
+            <button onclick="gerarCertificadoPDF()" class="btn-download">
+                <i class="fas fa-download"></i> Baixar Certificado em PDF
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ====== FUNÇÕES UTILITÁRIAS ======
+        function formatarNomeCorreto(nome) {
+            if (!nome || typeof nome !== 'string') return 'Participante';
+            return nome.split(' ').map(p => 
+                p.charAt(0).toLocaleUpperCase('pt-BR') + p.slice(1).toLocaleLowerCase('pt-BR')
+            ).join(' ');
+        }
+
+        function generateRandomCode(length = 6) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        function preencherCertificadoCompleto(
+            nomeAluno, nomeCurso, periodo, modalidade, cargaHoraria, 
+            localRealizacao, nomeInstituicao, nomeAssinatura, cargoAssinatura, 
+            cidadeEstado, idCert, codigoVerif
+        ) {
+            document.getElementById('nome-aluno').textContent = formatarNomeCorreto(nomeAluno);
+            document.getElementById('nome-curso').textContent = nomeCurso;
+            document.getElementById('periodo-curso').textContent = periodo;
+            document.getElementById('modalidade-curso').textContent = modalidade;
+            document.getElementById('carga-horaria').textContent = cargaHoraria;
+            document.getElementById('local-realizacao').textContent = localRealizacao;
+            document.getElementById('nome-instituicao').textContent = nomeInstituicao;
+            document.getElementById('nome-assinatura').textContent = nomeAssinatura;
+            document.getElementById('cargo-assinatura').textContent = cargoAssinatura;
+            document.getElementById('cidade-estado').textContent = cidadeEstado;
+            
+            const today = new Date();
+            const dataFormatada = today.toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            });
+            
+            document.getElementById('data-emissao').textContent = dataFormatada;
+            document.getElementById('data-emissao-rodape').textContent = dataFormatada;
+            document.getElementById('numero-certificado').textContent = `ID: ${idCert}`;
+            document.getElementById('codigo-verificacao').textContent = codigoVerif;
+        }
+
+        async function gerarCertificadoPDF() {
+            const { jsPDF } = window.jspdf;
+            const certificado = document.getElementById("certificado-template");
+            
+            // Aguardar o carregamento das fontes
+            if (document.fonts && document.fonts.ready) {
+                await document.fonts.ready;
+            }
+            
+            try {
+                const canvas = await html2canvas(certificado, {
+                    scale: 3,
+                    useCORS: true,
+                    logging: false
+                });
+                
+                const imgData = canvas.toDataURL("image/png");
+                const pdf = new jsPDF("landscape", "mm", "a4");
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                const ratio = Math.min(pdfWidth / canvas.width, pdfHeight / canvas.height);
+                const imgX = (pdfWidth - canvas.width * ratio) / 2;
+                const imgY = (pdfHeight - canvas.height * ratio) / 2;
+                
+                pdf.addImage(imgData, "PNG", imgX, imgY, canvas.width * ratio, canvas.height * ratio);
+                
+                const nomeAluno = document.getElementById("nome-aluno").textContent || "certificado";
+                const safeName = nomeAluno.replace(/[^a-z0-9_\-]/gi, "_");
+                
+                pdf.save(`${safeName}_certificado.pdf`);
+            } catch (error) {
+                console.error("Erro ao gerar PDF:", error);
+                alert("Erro ao gerar o certificado. Tente novamente.");
+            }
+        }
+    </script>
+    <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc, serverTimestamp, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAQ0s0EpWm2kmPAC3z0bNphLyjcGieWIBM",
+    authDomain: "siteweb-ca3bc.firebaseapp.com",
+    projectId: "siteweb-ca3bc",
+    storageBucket: "siteweb-ca3bc.appspot.com",
+    messagingSenderId: "312050528441",
+    appId: "1:312050528441:web:70abee0173951c08402b68"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  function gerarIdSeguro(texto) {
+    return texto
+        .normalize('NFD') // separa acentos
+        .replace(/[\u0300-\u036f]/g, '') // remove acentos
+        .replace(/\s+/g, '_') // espaços viram underline
+        .replace(/[^a-zA-Z0-9_]/g, '') // remove caracteres inválidos
+        .toLowerCase(); // tudo minúsculo
+    }
+
+  // Função para obter cursoId da URL
+  function getCursoIdFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('cursoId');
+  }
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      alert('Faça login para gerar o certificado.');
+      return;
+    }
+
+    const cursoId = getCursoIdFromUrl();
+  if (!cursoId) {
+    alert('Curso não especificado.');
+    return;
+  }
+
+  try {
+    // ✅ 1. Buscar matrícula com QUERY (não por ID composto)
+    const q = query(
+      collection(db, "matriculas"),
+      where("uid", "==", user.uid),
+      where("cursoId", "==", cursoId)
+    );
+    const matriculaSnapshot = await getDocs(q);
+    const matriculaData = !matriculaSnapshot.empty ? matriculaSnapshot.docs[0].data() : null;
+
+    if (!matriculaData) {
+      alert("Matrícula não encontrada.");
+      return;
+    }
+
+    // ✅ 2. Buscar progresso
+    const progressoRef = doc(db, "usuarios", user.uid, "progresso", cursoId);
+    const pSnap = await getDoc(progressoRef);
+    const progressoData = pSnap.exists() ? pSnap.data() : null;
+
+    const progressoPercent = progressoData?.progresso || 0;
+    if (progressoPercent < 100) {
+      alert(`Você ainda não concluiu o curso. Progresso: ${progressoPercent}%`);
+      return;
+    }
+
+    // ✅ 3. Buscar curso
+    const cursoDoc = await getDoc(doc(db, "cursos", cursoId));
+    const cursoData = cursoDoc.exists() ? cursoDoc.data() : { titulo: "Curso" };
+
+      // 4. Preparar dados
+      const nomeAluno = matriculaData?.name || user.displayName || 'Participante';
+      const nomeCurso = cursoData.titulo;
+    
+    // Pegar a carga horária diretamente do curso (em horas)
+const cargaHoraria = cursoData?.cargaHoraria ? `${cursoData.cargaHoraria}h` : 'N/A';
+
+      const dataInicio = matriculaData?.dataMatricula?.toDate?.() || new Date();
+      const dataFim = progressoData?.dataUltimaAtualizacao?.toDate?.() || new Date();
+      const periodo = `${dataInicio.toLocaleDateString('pt-BR')} a ${dataFim.toLocaleDateString('pt-BR')}`;
+
+      const timestamp = Date.now();
+      const nomeCursoSeguro = gerarIdSeguro(nomeCurso);
+      const idCert = `cert_${user.uid}_${nomeCursoSeguro}_${timestamp}`;
+      const ano = new Date().getFullYear();
+      const codigoVerif = `CERT-${ano}-${generateRandomCode(6)}`;
+
+      // 5. Preencher certificado
+      preencherCertificadoCompleto(
+        nomeAluno,
+        nomeCurso,
+        periodo,
+        'Online',
+        cargaHoraria,
+        'Plataforma EducaUP',
+        'EducaUP',
+        'Adailton Coelho Costa',
+        'Fundador e Diretor do EducaUP',
+        'Manaus, AM',
+        idCert,
+        codigoVerif
+      );
+
+      // 6. Salvar certificado
+      await setDoc(doc(db, 'certificados', idCert), {
+        uid: user.uid,
+        cursoId: cursoId,
+        nome: nomeAluno,
+        curso: nomeCurso,
+        emitidoEm: serverTimestamp(),
+        cargaHoraria: cargaHoraria,
+        codigoVerificacao: codigoVerif,
+        certificadoId: idCert,
+        periodo: { inicio: dataInicio, fim: dataFim }
+      });
+
+      console.log('Certificado registrado com sucesso.');
+    } catch (error) {
+      console.error('Erro ao processar certificado:', error);
+      alert('Erro ao processar o certificado. Tente novamente.');
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -36,18 +36,11 @@
     }
 
     .btn-logout {
-      background-color: #e74c3c;
       color: white;
       padding: 8px 16px;
-      border-radius: 20px;
       font-weight: bold;
       text-decoration: none;
       transition: all 0.3s ease;
-    }
-
-    .btn-logout:hover {
-      background-color: #c0392b;
-      transform: scale(1.05);
     }
 
     .container-main {
@@ -252,6 +245,10 @@
       <h3 class="section-title">Criar Novo Curso</h3>
       <form id="courseForm">
         <div class="mb-3">
+          <label class="form-label">Nome do Professor *</label>
+          <input type="text" id="teacherName" class="form-control" required placeholder="Ex: João da Silva">
+        </div>
+        <div class="mb-3">
           <label class="form-label">Título do Curso *</label>
           <input type="text" id="courseTitle" class="form-control" required placeholder="Ex: Matemática Básica">
         </div>
@@ -318,7 +315,7 @@
         </div>
 
         <!-- Seção de Estilo Visual -->
-        <div class="row">
+        <!-- <div class="row">
           <div class="col">
             <label>Cor de Destaque</label>
             <div class="color-picker">
@@ -338,6 +335,27 @@
               <span class="emoji-option" data-emoji="🌍">🌍</span>
             </div>
             <input type="hidden" id="courseEmoji" value="🧮">
+          </div>
+        </div> -->
+
+        <!-- Seção de Estilo Visual -->
+        <div class="row">
+          <div class="col">
+            <label>Cor de Destaque</label>
+            <div style="display: flex; align-items: center; gap: 10px; margin: 0.5rem 0 1rem;">
+              <input type="color" id="courseColorPicker" value="#4a90e2" style="width: 50px; height: 40px; border: none; border-radius: 8px;">
+              <span id="selectedColorPreview" style="display: inline-block; width: 30px; height: 30px; border-radius: 6px; background: #4a90e2;"></span>
+              <span id="selectedColorHex" style="font-family: 'Nunito', sans-serif; color: var(--primary-dark);">#4a90e2</span>
+            </div>
+            <input type="hidden" id="courseColor" value="#4a90e2">
+          </div>
+          
+          <div class="col">
+            <label>Emoji/Ícone</label>
+            <div class="emoji-picker" id="emojiPickerContainer" style="max-height: 120px; overflow-y: auto; padding: 5px; border: 1px solid #eee; border-radius: 8px;">
+              <!-- Emojis serão carregados por JavaScript -->
+            </div>
+            <input type="hidden" id="courseEmoji" value="📚">
           </div>
         </div>
 
@@ -373,9 +391,9 @@
         <!-- NOVO CAMPO: MATERIAL DE APOIO -->
         <div class="mb-3">
           <label class="form-label">Material de Apoio</label>
-          <input type="file" class="form-control" id="materialApoio" multiple accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.mp4,.zip" style="margin-bottom: 0.25rem;">
+          <input type="url" class="form-control" id="linkMaterialApoio" placeholder="Cole o link do Drive aqui">
           <small class="form-text" style="color: #666; font-size: 0.9rem; display: block; margin-bottom: 15px;">
-            Aceito: PDF, DOC, imagens, vídeos, ZIP (máx. 50MB por arquivo)
+            Certifique-se de que o link esteja com compartilhamento “Qualquer pessoa com o link”.
           </small>
         </div>
 
@@ -478,18 +496,9 @@
               <th>Ações</th>
             </tr>
           </thead>
-          <tbody id="tabelaAulas">
-            <tr>
-              <td>1</td>
-              <td>Introdução ao Curso</td>
-              <td>
-                <button class="btn-warning">Editar</button>
-                <button class="btn-danger">Excluir</button>
-              </td>
-            </tr>
-          </tbody>
+          <tbody id="tabelaAulas"></tbody>
         </table>
-        <button class="btn-success">Publicar Curso</button>
+        <!-- <button class="btn-success">Publicar Curso</button> -->
       </div>
 
     </div>
@@ -513,7 +522,283 @@
         document.getElementById('courseEmoji').value = o.dataset.emoji;
       });
     });
+
+
+    // Lista ampla de emojis por categoria (você pode expandir)
+    const emojisDisciplinas = [
+    // 📚 Educação Geral
+    '📚', '📖', '📘', '📗', '📕', '📓', '📒', '📃', '📜', '📝', '✏️', '📅', '⏳',
+
+    // 🧮 Matemática e Estatística
+    '🧮', '➕', '➖', '✖️', '➗', '🔢', '💯', '📏', '📐',
+
+    // 🔬 Ciências e Biologia
+    '🔬', '🧪', '⚗️', '🧫', '🧬', '🌍', '🌎', '🌏',
+
+    // 🎨 Artes e Música
+    '🎨', '🎭', '🎬', '🎤', '🎧', '🎼', '🎹', '🖌️',
+
+    // 💻 Tecnologia e Computação
+    '💻', '🖥️', '📱', '⌨️', '🖱️', '💾', '💿', '🧩', '🤖',
+
+    // 🗣️ Linguagens e Comunicação
+    '🗣️', '🔤', '🔠', '🔡', '💬', '🗨️', '📢', '📣',
+
+    // 🏛️ História, Geografia e Filosofia
+    '🏛️', '🏺', '⚔️', '🛡️', '📜', '🗺️', '🧭',
+
+    // 🧠 Desenvolvimento Pessoal e Soft Skills
+    '🧠', '💡', '🔍', '📌', '🎯', '✅', '✔️',
+
+    // 📊 Administração, Negócios e Economia
+    '📊', '📈', '📉', '💼', '🗂️', '🧾', '💰', '🧮',
+
+    // 🧑‍🔬 Engenharia e Projetos
+    '🛠️', '⚙️', '🏗️', '📐', '📏', '🔧', '🔩', '🧱',
+
+    // 🧘 Saúde e Bem-estar
+    '🧘', '🏃', '🩺', '💊', '🧴', '🧠', '🫀', '🫁'
+  ];
+
+    // Renderiza os emojis
+    const container = document.getElementById('emojiPickerContainer');
+    emojisDisciplinas.forEach(emoji => {
+      const span = document.createElement('span');
+      span.textContent = emoji;
+      span.style.cursor = 'pointer';
+      span.style.fontSize = '1.4rem';
+      span.style.padding = '4px';
+      span.style.borderRadius = '6px';
+      span.style.transition = 'all 0.2s';
+      span.addEventListener('click', () => {
+        document.querySelectorAll('#emojiPickerContainer span').forEach(el => {
+          el.style.backgroundColor = 'transparent';
+          el.style.transform = 'scale(1)';
+        });
+        span.style.backgroundColor = 'var(--gray-light)';
+        span.style.transform = 'scale(1.2)';
+        document.getElementById('courseEmoji').value = emoji;
+      });
+      container.appendChild(span);
+    });
+
+    // Configura o seletor de cor
+    const colorPicker = document.getElementById('courseColorPicker');
+    const colorPreview = document.getElementById('selectedColorPreview');
+    const colorHex = document.getElementById('selectedColorHex');
+    const hiddenColorInput = document.getElementById('courseColor');
+
+    colorPicker.addEventListener('input', () => {
+      const color = colorPicker.value;
+      colorPreview.style.backgroundColor = color;
+      colorHex.textContent = color;
+      hiddenColorInput.value = color;
+    });
+
   </script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+// Config Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyAQ0s0EpWm2kmPAC3z0bNphLyjcGieWIBM",
+  authDomain: "siteweb-ca3bc.firebaseapp.com",
+  projectId: "siteweb-ca3bc",
+  storageBucket: "siteweb-ca3bc.firebasestorage.app",
+  messagingSenderId: "312050528441",
+  appId: "1:312050528441:web:70abee0173951c08402b68"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+const form = document.getElementById("courseForm");
+
+// Espera até o usuário estar logado
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    alert("Você precisa estar logado para criar um curso!");
+    window.location.href = "login.html"; // redireciona se não estiver logado
+    return;
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    
+    const titulo = document.getElementById("courseTitle").value;
+    const categoria = document.getElementById("courseCategory").value;
+    const nivel = document.getElementById("courseLevel").value;
+    const descricaoCurta = document.getElementById("shortDescription").value;
+    const cargaHoraria = parseInt(document.getElementById("courseHours").value);
+    const sobre = document.getElementById("aboutCourse").value;
+    const aprender = document.getElementById("learningOutcomes").value;
+    const requisitos = document.getElementById("prerequisites").value;
+    const metodologia = document.getElementById("methodology").value;
+    const corDestaque = document.getElementById("courseColor").value;
+    const emoji = document.getElementById("courseEmoji").value;
+    const professor = document.getElementById("teacherName").value;
+    // try {
+    //   await addDoc(collection(db, "cursos"), {
+    //     uid: user.uid,       // ✅ agora user está definido
+    //     titulo,
+    //     categoria,
+    //     nivel,
+    //     descricaoCurta,
+    //     cargaHoraria,
+    //     sobre,
+    //     aprender,
+    //     requisitos,
+    //     metodologia,
+    //     corDestaque,
+    //     emoji
+    //   });
+
+    //   alert("✅ Curso criado com sucesso!");
+    //   form.reset();
+    //   // window.location.href = "pagina-de-cursos.html"; // redireciona para alunos
+    // } catch (error) {
+    //   console.error("Erro ao salvar curso:", error);
+    //   alert("❌ Erro ao salvar curso. Veja o console.");
+    // }
+    // Dentro do submit do courseForm
+    try {
+      const docRef = await addDoc(collection(db, "cursos"), {
+        uid: user.uid,
+        professor: professor,
+        titulo,
+        categoria,
+        nivel,
+        descricaoCurta,
+        cargaHoraria,
+        sobre,
+        aprender,
+        requisitos,
+        metodologia,
+        corDestaque,
+        emoji,
+        createdAt: serverTimestamp()
+      });
+
+      // ✅ Armazena o ID do curso
+      localStorage.setItem('cursoIdTemp', docRef.id);
+      alert("✅ Curso criado! Agora adicione as aulas.");
+
+    } catch (error) {
+      console.error("Erro ao salvar curso:", error);
+      alert("❌ Erro ao salvar curso.");
+    }
+  });
+});
+
+
+// ✅ Função para adicionar aula à tabela
+function adicionarAulaNaTabela(aula) {
+  const tbody = document.getElementById('tabelaAulas');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td>${aula.numero}</td>
+    <td>${aula.titulo}</td>
+    <td>
+      <button class="btn-warning" onclick="editarAula(${aula.numero})">Editar</button>
+      <button class="btn-danger" onclick="excluirAula('${aula.id}', ${aula.numero})">Excluir</button>
+    </td>
+  `;
+  tbody.appendChild(tr);
+}
+
+// Funções de ação (você pode implementar depois)
+function editarAula(numero) {
+  alert(`Editar aula ${numero} (não implementado)`);
+}
+
+async function excluirAula(aulaId, numero) {
+  if (!confirm(`Tem certeza que deseja excluir a Aula ${numero}?`)) return;
+  
+  const cursoId = localStorage.getItem('cursoIdTemp');
+  if (!cursoId) return;
+
+  try {
+    // Importar deleteDoc
+    const { deleteDoc, doc } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
+    await deleteDoc(doc(db, "cursos", cursoId, "aulas", aulaId));
+    
+    // Remover da tabela
+    const row = event.target.closest('tr');
+    if (row) row.remove();
+    
+    alert("Aula excluída com sucesso!");
+  } catch (error) {
+    console.error("Erro ao excluir aula:", error);
+    alert("Erro ao excluir aula.");
+  }
+}
+//fim do codigo adicionar aula a tabela
+
+document.getElementById('form-aula').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const cursoId = localStorage.getItem('cursoIdTemp');
+  if (!cursoId) {
+    alert("⚠️ Crie o curso primeiro!");
+    return;
+  }
+
+  // Coletar dados da aula
+  const aulaData = {
+    numero: parseInt(document.getElementById('numeroAula').value),
+    titulo: document.getElementById('tituloAula').value,
+    descricao: document.getElementById('descricaoAula').value,
+    duracao: parseInt(document.getElementById('duracaoAula').value),
+    linkVideo: document.getElementById('linkVideo').value,
+    materialApoio: document.getElementById('linkMaterialApoio').value,
+    createdAt: serverTimestamp()
+  };
+
+  // Quiz (opcional)
+  if (document.getElementById('ativarQuiz').checked) {
+    const quiz = {
+      numero: parseInt(document.getElementById('numeroQuiz').value),
+      pergunta: document.getElementById('perguntaQuiz').value,
+      alternativas: [
+        { texto: document.getElementById('altA').value, correta: document.getElementById('corretaA').checked },
+        { texto: document.getElementById('altB').value, correta: document.getElementById('corretaB').checked },
+        { texto: document.getElementById('altC').value, correta: document.getElementById('corretaC').checked },
+        { texto: document.getElementById('altD').value, correta: document.getElementById('corretaD').checked }
+      ]
+    };
+    aulaData.quiz = quiz;
+  }
+
+//   try {
+//     // Salva na subcoleção 'aulas' do curso
+//     await addDoc(collection(db, "cursos", cursoId, "aulas"), aulaData);
+//     alert("✅ Aula adicionada com sucesso!");
+//     document.getElementById('form-aula').reset();
+//     document.getElementById('ativarQuiz').checked = false;
+//   } catch (error) {
+//     console.error("Erro ao salvar aula:", error);
+//     alert("❌ Erro ao salvar aula.");
+//   }
+// });
+try {
+    const docRef = await addDoc(collection(db, "cursos", cursoId, "aulas"), aulaData);
+    
+    // ✅ ADICIONA À TABELA
+    adicionarAulaNaTabela({ ...aulaData, id: docRef.id });
+    
+    alert("✅ Aula adicionada com sucesso!");
+    document.getElementById('form-aula').reset();
+    document.getElementById('ativarQuiz').checked = false;
+  } catch (error) {
+    console.error("Erro ao salvar aula:", error);
+    alert("❌ Erro ao salvar aula.");
+  }
+});
+</script>
 
 </body>
 </html>

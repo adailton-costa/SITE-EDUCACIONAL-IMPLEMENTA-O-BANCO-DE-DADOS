@@ -78,92 +78,6 @@
                     <a href="formulario-matematica.html" class="enroll-btn">Matricular-se</a>
                 </div>
             </div>
-
-            <!-- Curso 2 -->
-            <div class="course-card">
-                <div class="course-image" style="background-color: #90be6d;">
-                    🔬
-                </div>
-                <div class="course-content">
-                    <span class="course-category">Ciências</span>
-                    <h3 class="course-title">Introdução à Biologia</h3>
-                    <p class="course-description">Explore o mundo vivo e compreenda os princípios básicos da vida.</p>
-                    <div class="course-meta">
-                        <span class="course-duration">15 horas</span>
-                        <span class="course-level">Intermediário</span>
-                    </div>
-                    <a href="#" class="enroll-btn">Matricular-se</a>
-                </div>
-            </div>
-
-            <!-- Curso 3 -->
-            <div class="course-card">
-                <div class="course-image" style="background-color: #4a90e2;">
-                    🗣️
-                </div>
-                <div class="course-content">
-                    <span class="course-category">Línguas</span>
-                    <h3 class="course-title">Inglês para Iniciantes</h3>
-                    <p class="course-description">Aprenda inglês de forma divertida com situações do dia a dia.</p>
-                    <div class="course-meta">
-                        <span class="course-duration">20 horas</span>
-                        <span class="course-level">Iniciante</span>
-                    </div>
-                    <a href="#" class="enroll-btn">Matricular-se</a>
-                </div>
-            </div>
-
-            <!-- Curso 4 -->
-            <div class="course-card">
-                <div class="course-image" style="background-color: #f9c74f;">
-                    🎨
-                </div>
-                <div class="course-content">
-                    <span class="course-category">Artes</span>
-                    <h3 class="course-title">Desenho Criativo</h3>
-                    <p class="course-description">Desenvolva suas habilidades artísticas e expresse sua criatividade.</p>
-                    <div class="course-meta">
-                        <span class="course-duration">8 horas</span>
-                        <span class="course-level">Todos os níveis</span>
-                    </div>
-                    <a href="#" class="enroll-btn">Matricular-se</a>
-                </div>
-            </div>
-
-            <!-- Curso 5 -->
-            <div class="course-card">
-                <div class="course-image" style="background-color: #577590;">
-                    ⏳
-                </div>
-                <div class="course-content">
-                    <span class="course-category">História</span>
-                    <h3 class="course-title">História do Brasil</h3>
-                    <p class="course-description">Conheça os principais eventos que moldaram nosso país.</p>
-                    <div class="course-meta">
-                        <span class="course-duration">12 horas</span>
-                        <span class="course-level">Intermediário</span>
-                    </div>
-                    <a href="#" class="enroll-btn">Matricular-se</a>
-                </div>
-            </div>
-
-            <!-- Curso 6 -->
-            <div class="course-card">
-                <div class="course-image" style="background-color: #43aa8b;">
-                    ➗
-                </div>
-                <div class="course-content">
-                    <span class="course-category">Matemática</span>
-                    <h3 class="course-title">Álgebra Avançada</h3>
-                    <p class="course-description">Aprofunde seus conhecimentos em álgebra com problemas desafiadores.</p>
-                    <div class="course-meta">
-                        <span class="course-duration">25 horas</span>
-                        <span class="course-level">Avançado</span>
-                    </div>
-                    <a href="#" class="enroll-btn">Matricular-se</a>
-                </div>
-            </div>
-        </div>
     </section>
 
     <footer>
@@ -202,6 +116,13 @@
                                         (categoryValue === 'history' && cardCategory.includes('história')) ||
                                         (categoryValue === 'art' && cardCategory.includes('artes'));
 
+                                        // Inclui qualquer categoria personalizada que não seja das pré-definidas
+                                                     (!cardCategory.includes('matemática') && 
+                                                      !cardCategory.includes('ciências') && 
+                                                      !cardCategory.includes('línguas') && 
+                                                      !cardCategory.includes('história') && 
+                                                      !cardCategory.includes('programação'));
+
                     const levelMatch = levelValue === 'all' || 
                                      (levelValue === 'beginner' && cardLevel.includes('iniciante')) ||
                                      (levelValue === 'intermediate' && cardLevel.includes('intermediário')) ||
@@ -232,5 +153,85 @@
             durationFilter.addEventListener('change', filterCourses);
         });
     </script>
+
+    <!-- Script do Firebase — FORA do script acima -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAQ0s0EpWm2kmPAC3z0bNphLyjcGieWIBM",
+    authDomain: "siteweb-ca3bc.firebaseapp.com",
+    projectId: "siteweb-ca3bc",
+    storageBucket: "siteweb-ca3bc.firebasestorage.app",
+    messagingSenderId: "312050528441",
+    appId: "1:312050528441:web:70abee0173951c08402b68"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const coursesGrid = document.querySelector('.courses-grid');
+
+  const categoriaExibicao = {
+    matematica: "Matemática",
+    ciencias: "Ciências",
+    ingles: "Línguas",
+    historia: "História",
+    artes: "Artes",
+    portugues: "Línguas",
+    programacao: "Ciências",
+  };
+
+  const nivelExibicao = {
+    iniciante: "Iniciante",
+    intermediario: "Intermediário",
+    avancado: "Avançado"
+  };
+
+  async function carregarCursosDinamicos() {
+    try {
+      const snapshot = await getDocs(collection(db, "cursos"));
+      snapshot.forEach(doc => {
+        const c = doc.data();
+         
+        // Se for "outros", mostra o nome da disciplina
+        const categoriaTexto = c.categoria === 'outros' 
+            ? (c.nomeDisciplina || c.titulo || "Outros")  // Pega nomeDisciplina ou título
+            : (categoriaExibicao[c.categoria] || "Outros");
+
+        const nivelTexto = nivelExibicao[c.nivel] || "Iniciante";
+        const duracaoTexto = `${c.cargaHoraria || 10} horas`;
+
+        const card = document.createElement('div');
+        card.className = 'course-card';
+        card.innerHTML = `
+          <div class="course-image" style="background-color: ${c.corDestaque || '#4a90e2'}; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+            ${c.emoji || '📚'}
+          </div>
+          <div class="course-content">
+            <span class="course-category">${categoriaTexto}</span>
+            <h3 class="course-title">${c.titulo}</h3>
+            <p class="course-description">${c.descricaoCurta || 'Novo curso disponível!'}</p>
+            <div class="course-meta">
+              <span class="course-duration">${duracaoTexto}</span>
+              <span class="course-level">${nivelTexto}</span>
+            </div>
+            <a href="professor-formulario-curso.html?id=${doc.id}" class="enroll-btn">Matricular-se</a>
+          </div>
+        `;
+        coursesGrid.appendChild(card);
+      });
+
+      // Reaplicar filtros após carregar
+      if (typeof window.filterCourses === 'function') {
+        window.filterCourses();
+      }
+    } catch (error) {
+      console.error("Erro ao carregar cursos do Firebase:", error);
+    }
+  }
+
+  carregarCursosDinamicos();
+</script>
 </body>
 </html>
