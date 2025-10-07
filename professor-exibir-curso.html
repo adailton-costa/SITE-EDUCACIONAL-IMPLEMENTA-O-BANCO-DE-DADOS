@@ -443,7 +443,8 @@ async function initializeUserDocuments(uid) {
     // Mostrar erro + resposta correta
     feedback.innerHTML = `
       ❌ <strong>Você respondeu:</strong> "${respostaAluno}"<br>
-      ✅ <strong>Resposta correta:</strong> "${respostaCorreta}"
+      ✅ <strong>Resposta correta:</strong> "${respostaCorreta}"<br>
+      ⏳ <strong>Aguarde: gerando explicação personalizada da IA...
     `;
     feedback.className = "quiz-feedback error";
     feedback.style.display = "block";

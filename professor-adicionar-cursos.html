@@ -6,7 +6,7 @@
   <title>EducaUP - Criar Curso</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Fredoka+One&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="pagina-principal.css"> <!-- SEU CSS ORIGINAL -->
+  <link rel="stylesheet" href="pagina-principal.css">
   <style>
     /* Estilos específicos para esta página — alinhados com seu design */
 
@@ -91,31 +91,6 @@
       flex: 1;
     }
 
-    .color-picker, .emoji-picker {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin: 0.5rem 0 1rem;
-    }
-
-    .color-option, .emoji-option {
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1.2rem;
-      transition: all 0.2s ease;
-      border: 2px solid transparent;
-    }
-
-    .color-option.selected, .emoji-option.selected {
-      border-color: var(--primary-dark);
-      transform: scale(1.1);
-    }
-
     .btn-primary {
       background-color: var(--primary-dark);
       color: white;
@@ -138,8 +113,8 @@
       transform: translateY(-2px);
     }
 
-    .btn-success {
-      background-color: var(--accent-green);
+    .btn-warning {
+      background-color: #f39c12;
       color: white;
       padding: 12px 24px;
       border: none;
@@ -148,12 +123,36 @@
       font-family: 'Fredoka One', cursive;
       cursor: pointer;
       transition: all 0.3s ease;
-      width: 100%;
-      margin-top: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      margin-top: 5px;
+      margin-bottom: 15px;
     }
 
-    .btn-success:hover {
-      background-color: #7cb342;
+    .btn-warning:hover {
+      background-color: #d68910;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 50px;
+      font-weight: bold;
+      font-family: 'Nunito', sans-serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-block;
+      text-decoration: none;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      margin-right: 10px;
+    }
+
+    .btn-secondary:hover {
+      background-color: #5a6268;
       transform: translateY(-2px);
     }
 
@@ -178,29 +177,47 @@
       background-color: #f9f9f9;
     }
 
-    .btn-warning, .btn-danger {
+    .btn-warning-sm, .btn-danger-sm {
       padding: 6px 12px;
       border-radius: 6px;
       font-size: 0.9rem;
       margin: 0 2px;
-    }
-
-    .btn-warning {
-      background-color: #f39c12;
+      border: none;
+      cursor: pointer;
       color: white;
     }
 
-    .btn-warning:hover {
+    .btn-warning-sm {
+      background-color: #f39c12;
+    }
+
+    .btn-warning-sm:hover {
       background-color: #d68910;
     }
 
-    .btn-danger {
+    .btn-danger-sm {
       background-color: #e74c3c;
-      color: white;
     }
 
-    .btn-danger:hover {
+    .btn-danger-sm:hover {
       background-color: #c0392b;
+    }
+
+    .no-aulas {
+      text-align: center;
+      padding: 2rem;
+      color: #666;
+      font-style: italic;
+    }
+
+    .edit-mode-banner {
+      background-color: var(--accent-yellow);
+      color: var(--primary-dark);
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-weight: bold;
+      text-align: center;
     }
 
     /* Responsivo */
@@ -239,7 +256,6 @@
   <!-- CONTEÚDO PRINCIPAL -->
   <div class="container-main">
 
-    <!-- Formulário de Criação de Curso -->
     <!-- Formulário de Criação de Curso -->
     <div class="card">
       <h3 class="section-title">Criar Novo Curso</h3>
@@ -281,7 +297,6 @@
           <textarea id="shortDescription" class="form-control" required maxlength="150" rows="3" placeholder="Resumo atrativo para a capa do curso"></textarea>
         </div>
 
-        <!-- NOVO CAMPO: QUANTIDADE DE HORAS -->
         <div class="mb-3">
           <label class="form-label">Carga Horária (em horas) *</label>
           <input type="number" id="courseHours" class="form-control" required min="1" max="500" placeholder="Ex: 40">
@@ -315,33 +330,9 @@
         </div>
 
         <!-- Seção de Estilo Visual -->
-        <!-- <div class="row">
-          <div class="col">
-            <label>Cor de Destaque</label>
-            <div class="color-picker">
-              <div class="color-option selected" style="background:#f9c74f" data-color="#f9c74f"></div>
-              <div class="color-option" style="background:#f28482" data-color="#f28482"></div>
-              <div class="color-option" style="background:#90be6d" data-color="#90be6d"></div>
-              <div class="color-option" style="background:#4361ee" data-color="#4361ee"></div>
-            </div>
-            <input type="hidden" id="courseColor" value="#f9c74f">
-          </div>
-          <div class="col">
-            <label>Emoji/Ícone</label>
-            <div class="emoji-picker">
-              <span class="emoji-option selected" data-emoji="🧮">🧮</span>
-              <span class="emoji-option" data-emoji="📚">📚</span>
-              <span class="emoji-option" data-emoji="🔬">🔬</span>
-              <span class="emoji-option" data-emoji="🌍">🌍</span>
-            </div>
-            <input type="hidden" id="courseEmoji" value="🧮">
-          </div>
-        </div> -->
-
-        <!-- Seção de Estilo Visual -->
         <div class="row">
           <div class="col">
-            <label>Cor de Destaque</label>
+            <label class="form-label">Cor de Destaque</label>
             <div style="display: flex; align-items: center; gap: 10px; margin: 0.5rem 0 1rem;">
               <input type="color" id="courseColorPicker" value="#4a90e2" style="width: 50px; height: 40px; border: none; border-radius: 8px;">
               <span id="selectedColorPreview" style="display: inline-block; width: 30px; height: 30px; border-radius: 6px; background: #4a90e2;"></span>
@@ -351,7 +342,7 @@
           </div>
           
           <div class="col">
-            <label>Emoji/Ícone</label>
+            <label class="form-label">Emoji/Ícone</label>
             <div class="emoji-picker" id="emojiPickerContainer" style="max-height: 120px; overflow-y: auto; padding: 5px; border: 1px solid #eee; border-radius: 8px;">
               <!-- Emojis serão carregados por JavaScript -->
             </div>
@@ -362,12 +353,16 @@
         <button type="submit" class="btn-primary">Criar Curso</button>
       </form>
     </div>
-    <!-- Adicionar Aula e Lista de Aulas -->
+
+    <!-- Adicionar/Editar Aula e Lista de Aulas -->
     <div class="d-flex gap-4 flex-wrap">
 
-     <!-- Adicionar Aula -->
+     <!-- Adicionar/Editar Aula -->
     <div class="card" style="flex: 1; min-width: 300px;">
-      <h3 class="section-title">Adicionar Aula</h3>
+      <h3 class="section-title" id="formAulaTitle">Adicionar Aula</h3>
+      <div id="editModeBanner" class="edit-mode-banner" style="display: none;">
+        <i class="fas fa-edit"></i> Modo Edição - Editando Aula <span id="aulaNumeroEditando"></span>
+      </div>
       <form id="form-aula">
         <div class="mb-3">
           <label class="form-label">Número da Aula</label>
@@ -382,18 +377,16 @@
           <textarea class="form-control" id="descricaoAula" rows="3"></textarea>
         </div>
 
-        <!-- NOVO CAMPO: DURAÇÃO DA AULA -->
         <div class="mb-3">
           <label class="form-label">Duração da Aula (minutos)</label>
           <input type="number" class="form-control" id="duracaoAula" required min="1" max="300" placeholder="Ex: 15">
         </div>
 
-        <!-- NOVO CAMPO: MATERIAL DE APOIO -->
         <div class="mb-3">
           <label class="form-label">Material de Apoio</label>
           <input type="url" class="form-control" id="linkMaterialApoio" placeholder="Cole o link do Drive aqui">
           <small class="form-text" style="color: #666; font-size: 0.9rem; display: block; margin-bottom: 15px;">
-            Certifique-se de que o link esteja com compartilhamento “Qualquer pessoa com o link”.
+            Certifique-se de que o link esteja com compartilhamento "Qualquer pessoa com o link".
           </small>
         </div>
 
@@ -405,32 +398,21 @@
         <!-- SUBSEÇÃO: ADICIONAR QUIZ -->
         <div class="mb-4" style="border-top: 2px dashed #eee; padding-top: 1.5rem; margin-top: 1.5rem;">
           <h4 style="color: var(--primary-dark); font-family: 'Fredoka One', cursive; margin-bottom: 1.5rem;">
-            Adicionar Quiz a aula
+            Quiz da Aula
           </h4>
 
           <div class="mb-3 form-check">
             <input type="checkbox" class="form-check-input" id="ativarQuiz">
-            <label class="form-check-label" for="ativarQuiz">Adicionar quiz ao final desta aula</label>
+            <label class="form-check-label" for="ativarQuiz">Esta aula possui quiz</label>
           </div>
 
-          <!-- SUBSEÇÃO: ADICIONAR QUIZ -->
-          <div class="mb-4" style="border-top: 2px dashed #eee; padding-top: 1.5rem; margin-top: 1.5rem;">
-            <h4 style="color: var(--primary-dark); font-family: 'Fredoka One', cursive; margin-bottom: 1.5rem;">
-              Adicionar Quiz a aula
-            </h4>
-
-            <!-- NOVO CAMPO: NÚMERO DO QUIZ -->
+          <div id="quizFields" style="display: none;">
             <div class="mb-3">
               <label class="form-label">Número do Quiz *</label>
-              <input type="number" class="form-control" id="numeroQuiz" required min="1" placeholder="Ex: 1" style="margin-bottom: 0rem;">
-              <small class="form-text" style="color: #666; font-size: 0.9rem; display: block; margin-bottom: 15px;">
-                Identificador único para este quiz (ex: Quiz 1 da Aula 1)
-              </small>
+              <input type="number" class="form-control" id="numeroQuiz" required min="1" placeholder="Ex: 1">
             </div>
 
-            <!-- CAMPOS DO QUIZ SEMPRE VISÍVEIS -->
             <div style="padding: 1rem; background-color: #f9f9f9; border-radius: 8px;">
-
               <div class="mb-3">
                 <label class="form-label">Pergunta *</label>
                 <textarea class="form-control" id="perguntaQuiz" rows="2" placeholder="Ex: Qual é o resultado de 2 + 2?"></textarea>
@@ -477,11 +459,13 @@
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
+        </div>
         
-        <button type="submit" class="btn-primary w-100">Adicionar Aula</button>
+        <div id="botoesAula">
+          <button type="submit" class="btn-primary w-100" id="btnSubmitAula">Adicionar Aula</button>
+        </div>
       </form>
     </div>
 
@@ -496,9 +480,12 @@
               <th>Ações</th>
             </tr>
           </thead>
-          <tbody id="tabelaAulas"></tbody>
+          <tbody id="tabelaAulas">
+            <tr>
+              <td colspan="3" class="no-aulas">Nenhuma aula cadastrada</td>
+            </tr>
+          </tbody>
         </table>
-        <!-- <button class="btn-success">Publicar Curso</button> -->
       </div>
 
     </div>
@@ -523,42 +510,20 @@
       });
     });
 
-
-    // Lista ampla de emojis por categoria (você pode expandir)
+    // Lista ampla de emojis por categoria
     const emojisDisciplinas = [
-    // 📚 Educação Geral
-    '📚', '📖', '📘', '📗', '📕', '📓', '📒', '📃', '📜', '📝', '✏️', '📅', '⏳',
-
-    // 🧮 Matemática e Estatística
-    '🧮', '➕', '➖', '✖️', '➗', '🔢', '💯', '📏', '📐',
-
-    // 🔬 Ciências e Biologia
-    '🔬', '🧪', '⚗️', '🧫', '🧬', '🌍', '🌎', '🌏',
-
-    // 🎨 Artes e Música
-    '🎨', '🎭', '🎬', '🎤', '🎧', '🎼', '🎹', '🖌️',
-
-    // 💻 Tecnologia e Computação
-    '💻', '🖥️', '📱', '⌨️', '🖱️', '💾', '💿', '🧩', '🤖',
-
-    // 🗣️ Linguagens e Comunicação
-    '🗣️', '🔤', '🔠', '🔡', '💬', '🗨️', '📢', '📣',
-
-    // 🏛️ História, Geografia e Filosofia
-    '🏛️', '🏺', '⚔️', '🛡️', '📜', '🗺️', '🧭',
-
-    // 🧠 Desenvolvimento Pessoal e Soft Skills
-    '🧠', '💡', '🔍', '📌', '🎯', '✅', '✔️',
-
-    // 📊 Administração, Negócios e Economia
-    '📊', '📈', '📉', '💼', '🗂️', '🧾', '💰', '🧮',
-
-    // 🧑‍🔬 Engenharia e Projetos
-    '🛠️', '⚙️', '🏗️', '📐', '📏', '🔧', '🔩', '🧱',
-
-    // 🧘 Saúde e Bem-estar
-    '🧘', '🏃', '🩺', '💊', '🧴', '🧠', '🫀', '🫁'
-  ];
+      '📚', '📖', '📘', '📗', '📕', '📓', '📒', '📃', '📜', '📝', '✏️', '📅', '⏳',
+      '🧮', '➕', '➖', '✖️', '➗', '🔢', '💯', '📏', '📐',
+      '🔬', '🧪', '⚗️', '🧫', '🧬', '🌍', '🌎', '🌏',
+      '🎨', '🎭', '🎬', '🎤', '🎧', '🎼', '🎹', '🖌️',
+      '💻', '🖥️', '📱', '⌨️', '🖱️', '💾', '💿', '🧩', '🤖',
+      '🗣️', '🔤', '🔠', '🔡', '💬', '🗨️', '📢', '📣',
+      '🏛️', '🏺', '⚔️', '🛡️', '📜', '🗺️', '🧭',
+      '🧠', '💡', '🔍', '📌', '🎯', '✅', '✔️',
+      '📊', '📈', '📉', '💼', '🗂️', '🧾', '💰', '🧮',
+      '🛠️', '⚙️', '🏗️', '📐', '📏', '🔧', '🔩', '🧱',
+      '🧘', '🏃', '🩺', '💊', '🧴', '🧠', '🫀', '🫁'
+    ];
 
     // Renderiza os emojis
     const container = document.getElementById('emojiPickerContainer');
@@ -595,11 +560,25 @@
       hiddenColorInput.value = color;
     });
 
+    // Configurar toggle do quiz
+    document.getElementById('ativarQuiz').addEventListener('change', function() {
+      document.getElementById('quizFields').style.display = this.checked ? 'block' : 'none';
+    });
+
   </script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { 
+  getFirestore, 
+  collection, 
+  doc, 
+  addDoc, 
+  updateDoc,
+  deleteDoc,
+  getDoc,
+  serverTimestamp 
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
 // Config Firebase
@@ -616,13 +595,18 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
+// Variáveis globais para edição de aulas
+let aulaEditandoId = null;
+let modoEdicaoAula = false;
+let cursoId = null;
+
 const form = document.getElementById("courseForm");
 
 // Espera até o usuário estar logado
 onAuthStateChanged(auth, (user) => {
   if (!user) {
     alert("Você precisa estar logado para criar um curso!");
-    window.location.href = "login.html"; // redireciona se não estiver logado
+    window.location.href = "login.html";
     return;
   }
 
@@ -641,30 +625,7 @@ onAuthStateChanged(auth, (user) => {
     const corDestaque = document.getElementById("courseColor").value;
     const emoji = document.getElementById("courseEmoji").value;
     const professor = document.getElementById("teacherName").value;
-    // try {
-    //   await addDoc(collection(db, "cursos"), {
-    //     uid: user.uid,       // ✅ agora user está definido
-    //     titulo,
-    //     categoria,
-    //     nivel,
-    //     descricaoCurta,
-    //     cargaHoraria,
-    //     sobre,
-    //     aprender,
-    //     requisitos,
-    //     metodologia,
-    //     corDestaque,
-    //     emoji
-    //   });
-
-    //   alert("✅ Curso criado com sucesso!");
-    //   form.reset();
-    //   // window.location.href = "pagina-de-cursos.html"; // redireciona para alunos
-    // } catch (error) {
-    //   console.error("Erro ao salvar curso:", error);
-    //   alert("❌ Erro ao salvar curso. Veja o console.");
-    // }
-    // Dentro do submit do courseForm
+    
     try {
       const docRef = await addDoc(collection(db, "cursos"), {
         uid: user.uid,
@@ -684,7 +645,8 @@ onAuthStateChanged(auth, (user) => {
       });
 
       // ✅ Armazena o ID do curso
-      localStorage.setItem('cursoIdTemp', docRef.id);
+      cursoId = docRef.id;
+      localStorage.setItem('cursoIdTemp', cursoId);
       alert("✅ Curso criado! Agora adicione as aulas.");
 
     } catch (error) {
@@ -694,60 +656,232 @@ onAuthStateChanged(auth, (user) => {
   });
 });
 
-
 // ✅ Função para adicionar aula à tabela
 function adicionarAulaNaTabela(aula) {
   const tbody = document.getElementById('tabelaAulas');
+  
+  // Se for a primeira aula, remove a mensagem "Nenhuma aula"
+  if (tbody.querySelector('.no-aulas')) {
+    tbody.innerHTML = '';
+  }
+
   const tr = document.createElement('tr');
   tr.innerHTML = `
     <td>${aula.numero}</td>
     <td>${aula.titulo}</td>
     <td>
-      <button class="btn-warning" onclick="editarAula(${aula.numero})">Editar</button>
-      <button class="btn-danger" onclick="excluirAula('${aula.id}', ${aula.numero})">Excluir</button>
+      <button class="btn-warning-sm" onclick="editarAula('${aula.id}')">Editar</button>
+      <button class="btn-danger-sm" onclick="excluirAula('${aula.id}', ${aula.numero})">Excluir</button>
     </td>
   `;
   tbody.appendChild(tr);
 }
 
-// Funções de ação (você pode implementar depois)
-function editarAula(numero) {
-  alert(`Editar aula ${numero} (não implementado)`);
-}
-
-async function excluirAula(aulaId, numero) {
-  if (!confirm(`Tem certeza que deseja excluir a Aula ${numero}?`)) return;
-  
-  const cursoId = localStorage.getItem('cursoIdTemp');
-  if (!cursoId) return;
-
-  try {
-    // Importar deleteDoc
-    const { deleteDoc, doc } = await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js");
-    await deleteDoc(doc(db, "cursos", cursoId, "aulas", aulaId));
-    
-    // Remover da tabela
-    const row = event.target.closest('tr');
-    if (row) row.remove();
-    
-    alert("Aula excluída com sucesso!");
-  } catch (error) {
-    console.error("Erro ao excluir aula:", error);
-    alert("Erro ao excluir aula.");
-  }
-}
-//fim do codigo adicionar aula a tabela
-
-document.getElementById('form-aula').addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  const cursoId = localStorage.getItem('cursoIdTemp');
+// Função para carregar dados da aula no formulário (MODO EDIÇÃO)
+async function carregarAulaParaEdicao(aulaId) {
+  cursoId = localStorage.getItem('cursoIdTemp');
   if (!cursoId) {
     alert("⚠️ Crie o curso primeiro!");
     return;
   }
 
-  // Coletar dados da aula
+  try {
+    const docRef = doc(db, "cursos", cursoId, "aulas", aulaId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const aula = docSnap.data();
+      aulaEditandoId = aulaId;
+      modoEdicaoAula = true;
+
+      // Preencher formulário com dados da aula
+      document.getElementById('numeroAula').value = aula.numero || '';
+      document.getElementById('tituloAula').value = aula.titulo || '';
+      document.getElementById('descricaoAula').value = aula.descricao || '';
+      document.getElementById('duracaoAula').value = aula.duracao || '';
+      document.getElementById('linkMaterialApoio').value = aula.materialApoio || '';
+      document.getElementById('linkVideo').value = aula.linkVideo || '';
+
+      // Configurar quiz se existir
+      if (aula.quiz) {
+        document.getElementById('ativarQuiz').checked = true;
+        document.getElementById('quizFields').style.display = 'block';
+        document.getElementById('numeroQuiz').value = aula.quiz.numero || '';
+        document.getElementById('perguntaQuiz').value = aula.quiz.pergunta || '';
+        document.getElementById('altA').value = aula.quiz.alternativas[0]?.texto || '';
+        document.getElementById('altB').value = aula.quiz.alternativas[1]?.texto || '';
+        document.getElementById('altC').value = aula.quiz.alternativas[2]?.texto || '';
+        document.getElementById('altD').value = aula.quiz.alternativas[3]?.texto || '';
+
+        // Marcar alternativa correta
+        aula.quiz.alternativas.forEach((alt, index) => {
+          if (alt.correta) {
+            const letra = ['A', 'B', 'C', 'D'][index];
+            document.getElementById(`correta${letra}`).checked = true;
+          }
+        });
+      } else {
+        document.getElementById('ativarQuiz').checked = false;
+        document.getElementById('quizFields').style.display = 'none';
+      }
+
+      // Atualizar interface para modo edição
+      entrarModoEdicaoAula(aula.numero);
+    }
+  } catch (error) {
+    console.error("Erro ao carregar aula para edição:", error);
+    alert("Erro ao carregar dados da aula.");
+  }
+}
+
+// Função para entrar no modo edição de aula
+function entrarModoEdicaoAula(numeroAula) {
+  document.getElementById('formAulaTitle').textContent = 'Editar Aula';
+  document.getElementById('editModeBanner').style.display = 'block';
+  document.getElementById('aulaNumeroEditando').textContent = numeroAula;
+  document.getElementById('btnSubmitAula').textContent = 'Atualizar Aula';
+  document.getElementById('btnSubmitAula').className = 'btn-warning w-100';
+
+  // Adicionar botão cancelar
+  const botoesAula = document.getElementById('botoesAula');
+  if (!document.getElementById('btnCancelarEdicao')) {
+    const btnCancelar = document.createElement('button');
+    btnCancelar.type = 'button';
+    btnCancelar.id = 'btnCancelarEdicao';
+    btnCancelar.className = 'btn-secondary w-100';
+    btnCancelar.textContent = 'Cancelar Edição';
+    btnCancelar.onclick = cancelarEdicaoAula;
+    botoesAula.appendChild(btnCancelar);
+  }
+}
+
+// Função para sair do modo edição de aula
+function sairModoEdicaoAula() {
+  modoEdicaoAula = false;
+  aulaEditandoId = null;
+
+  document.getElementById('formAulaTitle').textContent = 'Adicionar Aula';
+  document.getElementById('editModeBanner').style.display = 'none';
+  document.getElementById('btnSubmitAula').textContent = 'Adicionar Aula';
+  document.getElementById('btnSubmitAula').className = 'btn-primary w-100';
+
+  // Remover botão cancelar
+  const btnCancelar = document.getElementById('btnCancelarEdicao');
+  if (btnCancelar) {
+    btnCancelar.remove();
+  }
+
+  // Limpar formulário
+  document.getElementById('form-aula').reset();
+  document.getElementById('ativarQuiz').checked = false;
+  document.getElementById('quizFields').style.display = 'none';
+}
+
+// Função para atualizar aula (MODO EDIÇÃO)
+async function atualizarAula() {
+  const aulaData = {
+    numero: parseInt(document.getElementById('numeroAula').value),
+    titulo: document.getElementById('tituloAula').value,
+    descricao: document.getElementById('descricaoAula').value,
+    duracao: parseInt(document.getElementById('duracaoAula').value),
+    linkVideo: document.getElementById('linkVideo').value,
+    materialApoio: document.getElementById('linkMaterialApoio').value,
+    updatedAt: serverTimestamp()
+  };
+
+  if (document.getElementById('ativarQuiz').checked) {
+    const quiz = {
+      numero: parseInt(document.getElementById('numeroQuiz').value),
+      pergunta: document.getElementById('perguntaQuiz').value,
+      alternativas: [
+        { texto: document.getElementById('altA').value, correta: document.getElementById('corretaA').checked },
+        { texto: document.getElementById('altB').value, correta: document.getElementById('corretaB').checked },
+        { texto: document.getElementById('altC').value, correta: document.getElementById('corretaC').checked },
+        { texto: document.getElementById('altD').value, correta: document.getElementById('corretaD').checked }
+      ]
+    };
+    aulaData.quiz = quiz;
+  } else {
+    aulaData.quiz = null; // Remove o quiz se foi desmarcado
+  }
+
+  try {
+    await updateDoc(doc(db, "cursos", cursoId, "aulas", aulaEditandoId), aulaData);
+    alert("✅ Aula atualizada com sucesso!");
+    
+    // Recarregar a lista de aulas e sair do modo edição
+    await carregarAulas();
+    sairModoEdicaoAula();
+  } catch (error) {
+    console.error("Erro ao atualizar aula:", error);
+    alert("❌ Erro ao atualizar aula.");
+  }
+}
+
+// Função para carregar as aulas do curso
+async function carregarAulas() {
+  const tbody = document.getElementById('tabelaAulas');
+  
+  if (!cursoId) {
+    cursoId = localStorage.getItem('cursoIdTemp');
+    if (!cursoId) return;
+  }
+
+  try {
+    const aulasQuery = collection(db, "cursos", cursoId, "aulas");
+    const querySnapshot = await getDocs(aulasQuery);
+    
+    tbody.innerHTML = '';
+
+    if (querySnapshot.empty) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="3" class="no-aulas">Nenhuma aula cadastrada</td>
+        </tr>
+      `;
+      return;
+    }
+
+    const aulas = [];
+    querySnapshot.forEach((doc) => {
+      aulas.push({ ...doc.data(), id: doc.id });
+    });
+    
+    aulas.sort((a, b) => a.numero - b.numero);
+
+    aulas.forEach(aula => {
+      adicionarAulaNaTabela(aula);
+    });
+
+  } catch (error) {
+    console.error("Erro ao carregar aulas:", error);
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="3" class="no-aulas">Erro ao carregar aulas</td>
+      </tr>
+    `;
+  }
+}
+
+// Configurar submit do formulário de aula
+document.getElementById('form-aula').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  cursoId = localStorage.getItem('cursoIdTemp');
+  if (!cursoId) {
+    alert("⚠️ Crie o curso primeiro!");
+    return;
+  }
+
+  if (modoEdicaoAula) {
+    await atualizarAula();
+  } else {
+    await adicionarAula();
+  }
+});
+
+// Função para adicionar aula (MODO NORMAL)
+async function adicionarAula() {
   const aulaData = {
     numero: parseInt(document.getElementById('numeroAula').value),
     titulo: document.getElementById('tituloAula').value,
@@ -758,7 +892,6 @@ document.getElementById('form-aula').addEventListener('submit', async (e) => {
     createdAt: serverTimestamp()
   };
 
-  // Quiz (opcional)
   if (document.getElementById('ativarQuiz').checked) {
     const quiz = {
       numero: parseInt(document.getElementById('numeroQuiz').value),
@@ -773,31 +906,55 @@ document.getElementById('form-aula').addEventListener('submit', async (e) => {
     aulaData.quiz = quiz;
   }
 
-//   try {
-//     // Salva na subcoleção 'aulas' do curso
-//     await addDoc(collection(db, "cursos", cursoId, "aulas"), aulaData);
-//     alert("✅ Aula adicionada com sucesso!");
-//     document.getElementById('form-aula').reset();
-//     document.getElementById('ativarQuiz').checked = false;
-//   } catch (error) {
-//     console.error("Erro ao salvar aula:", error);
-//     alert("❌ Erro ao salvar aula.");
-//   }
-// });
-try {
+  try {
     const docRef = await addDoc(collection(db, "cursos", cursoId, "aulas"), aulaData);
-    
-    // ✅ ADICIONA À TABELA
     adicionarAulaNaTabela({ ...aulaData, id: docRef.id });
-    
     alert("✅ Aula adicionada com sucesso!");
     document.getElementById('form-aula').reset();
     document.getElementById('ativarQuiz').checked = false;
+    document.getElementById('quizFields').style.display = 'none';
   } catch (error) {
     console.error("Erro ao salvar aula:", error);
     alert("❌ Erro ao salvar aula.");
   }
-});
+}
+
+// Funções globais para ações das aulas
+window.editarAula = function(aulaId) {
+  carregarAulaParaEdicao(aulaId);
+};
+
+window.excluirAula = async function(aulaId, numero) {
+  if (!confirm(`Tem certeza que deseja excluir a Aula ${numero}?`)) return;
+
+  cursoId = localStorage.getItem('cursoIdTemp');
+  if (!cursoId) return;
+
+  try {
+    await deleteDoc(doc(db, "cursos", cursoId, "aulas", aulaId));
+    
+    // Recarregar a lista de aulas
+    await carregarAulas();
+    alert("Aula excluída com sucesso!");
+    
+    // Se estava editando a aula excluída, sair do modo edição
+    if (aulaEditandoId === aulaId) {
+      sairModoEdicaoAula();
+    }
+  } catch (error) {
+    console.error("Erro ao excluir aula:", error);
+    alert("Erro ao excluir aula.");
+  }
+};
+
+window.cancelarEdicaoAula = function() {
+  sairModoEdicaoAula();
+};
+
+// Função para carregar aulas quando o curso for criado
+// Esta função será chamada após a criação do curso
+window.carregarAulas = carregarAulas;
+
 </script>
 
 </body>

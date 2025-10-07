@@ -6,7 +6,7 @@
   <title>Professor - EducaUP</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Fredoka+One&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="pagina-principal.css"> <!-- SEU CSS ORIGINAL -->
+  <link rel="stylesheet" href="pagina-principal.css">
   <style>
     /* Estilos extras específicos para esta página */
     .hero {
@@ -18,7 +18,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 2rem;
-      margin: 4rem auto 2rem; /* Aumentei a margem superior para separar do botão */
+      margin: 4rem auto 2rem;
       max-width: 1200px;
       padding: 0 2rem;
     }
@@ -44,6 +44,19 @@
       font-size: 1.5rem;
       margin-bottom: 1rem;
       color: var(--primary-dark);
+    }
+
+    .card .stat-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: var(--primary);
+      margin: 1rem 0;
+    }
+
+    .card .stat-label {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 1.5rem;
     }
 
     .btn-add-course {
@@ -96,6 +109,27 @@
       font-size: 1.1rem;
       color: #555;
     }
+
+    .loading {
+      text-align: center;
+      padding: 1rem;
+      color: var(--primary-dark);
+    }
+
+    .stat-loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -116,35 +150,47 @@
     <p>Gerencie suas turmas, crie conteúdos incríveis e acompanhe o progresso dos seus alunos.</p>
   </section>
 
-  <!-- AÇÃO PRINCIPAL: ADICIONAR CURSO (AGORA EM PRIMEIRO LUGAR!) -->
+  <!-- AÇÃO PRINCIPAL: ADICIONAR CURSO -->
   <section class="action-section">
     <h2>🚀 Adicione seu curso à plataforma</h2>
     <p>Compartilhe seu conhecimento com alunos de todo o Brasil. Crie aulas interativas, quizzes gamificados e acompanhe o aprendizado em tempo real.</p>
-    <a href="professor-cursos.html.html" class="btn-add-course">
+    <a href="professor-adicionar-cursos.html" class="btn-add-course">
       <i class="fas fa-plus"></i> Adicionar Novo Curso
     </a>
   </section>
 
-  <!-- DASHBOARD CARDS (AGORA DEPOIS DO BOTÃO PRINCIPAL) -->
+  <!-- DASHBOARD CARDS -->
   <section class="dashboard-cards">
     <div class="card">
       <h3>👥 Minhas Turmas</h3>
-      <p>3 turmas ativas</p>
+      <div class="stat-number" id="quantidadeTurmas">
+        <span class="stat-loading"></span>
+      </div>
+      <div class="stat-label">turmas ativas</div>
       <a href="professor-meus-cursos.html" class="btn-submit">Gerenciar</a>
     </div>
     <div class="card">
       <h3>📝 Atividades Pendentes</h3>
-      <p>5 quizzes para revisar</p>
+      <div class="stat-number" id="quantidadeAtividades">
+        <span class="stat-loading"></span>
+      </div>
+      <div class="stat-label">quizzes para revisar</div>
       <a href="#" class="btn-submit">Corrigir</a>
     </div>
     <div class="card">
       <h3>📈 Desempenho Geral</h3>
-      <p>Média da turma: 82%</p>
+      <div class="stat-number" id="mediaDesempenho">
+        <span class="stat-loading"></span>
+      </div>
+      <div class="stat-label">média da turma</div>
       <a href="#" class="btn-submit">Ver Relatório</a>
     </div>
     <div class="card">
       <h3>🤖 Perguntas da IA</h3>
-      <p>8 novas dúvidas dos alunos</p>
+      <div class="stat-number" id="quantidadePerguntas">
+        <span class="stat-loading"></span>
+      </div>
+      <div class="stat-label">novas dúvidas dos alunos</div>
       <a href="#" class="btn-submit">Responder</a>
     </div>
   </section>
@@ -160,9 +206,109 @@
     <p class="copyright">© 2025 EducaUP - Área do Professor</p>
   </footer>
 
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+    // Config Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAQ0s0EpWm2kmPAC3z0bNphLyjcGieWIBM",
+      authDomain: "siteweb-ca3bc.firebaseapp.com",
+      projectId: "siteweb-ca3bc",
+      storageBucket: "siteweb-ca3bc.firebasestorage.app",
+      messagingSenderId: "312050528441",
+      appId: "1:312050528441:web:70abee0173951c08402b68"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    // Função para carregar estatísticas do professor
+    async function carregarEstatisticasProfessor(uid) {
+      try {
+        // Buscar quantidade de cursos/turmas do professor
+        const cursosQuery = query(
+          collection(db, "cursos"), 
+          where("uid", "==", uid)
+        );
+        
+        const cursosSnapshot = await getDocs(cursosQuery);
+        const quantidadeTurmas = cursosSnapshot.size;
+        
+        // Atualizar a interface com a quantidade real
+        document.getElementById('quantidadeTurmas').innerHTML = quantidadeTurmas;
+        
+        // Buscar outras estatísticas (você pode implementar depois)
+        await carregarOutrasEstatisticas(uid, quantidadeTurmas);
+        
+      } catch (error) {
+        console.error("Erro ao carregar estatísticas:", error);
+        // Em caso de erro, mostrar valores padrão
+        document.getElementById('quantidadeTurmas').innerHTML = '0';
+        document.getElementById('quantidadeAtividades').innerHTML = '0';
+        document.getElementById('mediaDesempenho').innerHTML = '0%';
+        document.getElementById('quantidadePerguntas').innerHTML = '0';
+      }
+    }
+
+    // Função para carregar outras estatísticas (placeholder para futuras implementações)
+    async function carregarOutrasEstatisticas(uid, quantidadeTurmas) {
+      // Por enquanto, vamos usar valores simulados
+      // Você pode implementar a lógica real posteriormente
+      
+      // Atividades pendentes (simulado)
+      const atividadesPendentes = Math.min(quantidadeTurmas * 2, 10); // Máximo 10
+      document.getElementById('quantidadeAtividades').innerHTML = atividadesPendentes;
+      
+      // Média de desempenho (simulado)
+      const mediaDesempenho = Math.floor(Math.random() * 30) + 70; // Entre 70% e 100%
+      document.getElementById('mediaDesempenho').innerHTML = `${mediaDesempenho}%`;
+      
+      // Perguntas da IA (simulado)
+      const perguntasIA = Math.min(quantidadeTurmas * 3, 15); // Máximo 15
+      document.getElementById('quantidadePerguntas').innerHTML = perguntasIA;
+      
+      // Se não há turmas, mostrar zeros
+      if (quantidadeTurmas === 0) {
+        document.getElementById('quantidadeAtividades').innerHTML = '0';
+        document.getElementById('mediaDesempenho').innerHTML = '0%';
+        document.getElementById('quantidadePerguntas').innerHTML = '0';
+      }
+    }
+
+    // Função para formatar números com animação
+    function animarContador(elemento, valorFinal, duracao = 1000) {
+      const elementoDOM = typeof elemento === 'string' ? document.getElementById(elemento) : elemento;
+      let valorInicial = 0;
+      const incremento = valorFinal / (duracao / 16); // 60fps
+      
+      function atualizarContador() {
+        valorInicial += incremento;
+        if (valorInicial >= valorFinal) {
+          elementoDOM.innerHTML = valorFinal;
+        } else {
+          elementoDOM.innerHTML = Math.floor(valorInicial);
+          requestAnimationFrame(atualizarContador);
+        }
+      }
+      
+      atualizarContador();
+    }
+
+    // Inicialização quando o usuário estiver logado
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        carregarEstatisticasProfessor(user.uid);
+      } else {
+        // Redirecionar para login se não estiver autenticado
+        window.location.href = "login.html";
+      }
+    });
+
+    // Animação para cards
     document.addEventListener('DOMContentLoaded', function() {
-      // Animação para cards (mantendo seu padrão)
       function animateOnScroll() {
         const cards = document.querySelectorAll('.card');
         cards.forEach((card, index) => {
@@ -179,6 +325,7 @@
       window.addEventListener('scroll', animateOnScroll);
       animateOnScroll();
     });
+
   </script>
 
 </body>

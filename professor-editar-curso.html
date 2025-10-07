@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EducaUP - Editar Curso</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Fredoka+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="pagina-principal.css">
+  <style>
+    /* Estilos específicos para esta página — alinhados com seu design */
+
+    body {
+      background-color: var(--gray-light);
+      padding-top: 70px; /* Compensa o header fixo */
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background-color: var(--primary);
+      color: var(--white);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .logo {
+      font-family: 'Fredoka One', cursive;
+      font-size: 24px;
+    }
+
+    .btn-logout {
+      color: white;
+      padding: 8px 16px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .container-main {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .card {
+      background-color: var(--white);
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.8rem;
+      color: var(--primary-dark);
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .form-label {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      color: var(--primary-dark);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .row {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .col {
+      flex: 1;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-dark);
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 50px;
+      font-weight: bold;
+      font-family: 'Fredoka One', cursive;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-block;
+      text-decoration: none;
+      margin-top: 5px;
+      margin-bottom: 15px;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-yellow);
+      color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn-warning {
+      background-color: #f39c12;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 50px;
+      font-weight: bold;
+      font-family: 'Fredoka One', cursive;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-block;
+      text-decoration: none;
+      margin-top: 5px;
+      margin-bottom: 15px;
+    }
+
+    .btn-warning:hover {
+      background-color: #d68910;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 50px;
+      font-weight: bold;
+      font-family: 'Nunito', sans-serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-block;
+      text-decoration: none;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      margin-right: 10px;
+    }
+
+    .btn-secondary:hover {
+      background-color: #5a6268;
+      transform: translateY(-2px);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+
+    .table th, .table td {
+      padding: 12px;
+      text-align: center;
+      border: 1px solid #eee;
+    }
+
+    .table th {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .table tbody tr:hover {
+      background-color: #f9f9f9;
+    }
+
+    .btn-warning-sm, .btn-danger-sm {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      margin: 0 2px;
+      border: none;
+      cursor: pointer;
+      color: white;
+    }
+
+    .btn-warning-sm {
+      background-color: #f39c12;
+    }
+
+    .btn-warning-sm:hover {
+      background-color: #d68910;
+    }
+
+    .btn-danger-sm {
+      background-color: #e74c3c;
+    }
+
+    .btn-danger-sm:hover {
+      background-color: #c0392b;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: var(--primary-dark);
+    }
+
+    .error-message {
+      background-color: #fee;
+      color: #c33;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .no-aulas {
+      text-align: center;
+      padding: 2rem;
+      color: #666;
+      font-style: italic;
+    }
+
+    .edit-mode-banner {
+      background-color: var(--accent-yellow);
+      color: var(--primary-dark);
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    /* Responsivo */
+    @media (max-width: 768px) {
+      .row {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .d-flex {
+        flex-direction: column;
+      }
+
+      .gap-4 {
+        gap: 1.5rem;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">EducaUP</div>
+    <nav>
+      <ul>
+        <li><a href="meus-cursos.html" class="btn-logout"><i class="fas fa-arrow-left"></i> Voltar</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <div class="container-main">
+
+    <!-- Formulário de Edição de Curso -->
+    <div class="card">
+      <h3 class="section-title">Editar Curso</h3>
+      <div id="loadingMessage" class="loading">
+        <i class="fas fa-spinner fa-spin"></i> Carregando informações do curso...
+      </div>
+      <div id="errorMessage" class="error-message" style="display: none;"></div>
+      <form id="courseForm" style="display: none;">
+        <!-- ... (formulário do curso permanece igual) ... -->
+        <div class="mb-3">
+          <label class="form-label">Nome do Professor *</label>
+          <input type="text" id="teacherName" class="form-control" required placeholder="Ex: João da Silva">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Título do Curso *</label>
+          <input type="text" id="courseTitle" class="form-control" required placeholder="Ex: Matemática Básica">
+        </div>
+        <div class="row">
+          <div class="col">
+            <label class="form-label">Categoria *</label>
+            <select id="courseCategory" class="form-control" required>
+              <option value="">Selecione</option>
+              <option value="matematica">Matemática</option>
+              <option value="portugues">Português</option>
+              <option value="ciencias">Ciências</option>
+              <option value="historia">História</option>
+              <option value="ingles">Inglês</option>
+              <option value="programacao">Programação</option>
+              <option value="outros">Outros</option>
+            </select>
+          </div>
+          <div class="col">
+            <label class="form-label">Nível *</label>
+            <select id="courseLevel" class="form-control" required>
+              <option value="">Selecione</option>
+              <option value="iniciante">Iniciante</option>
+              <option value="intermediario">Intermediário</option>
+              <option value="avancado">Avançado</option>
+            </select>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Descrição Curta *</label>
+          <textarea id="shortDescription" class="form-control" required maxlength="150" rows="3" placeholder="Resumo atrativo para a capa do curso"></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Carga Horária (em horas) *</label>
+          <input type="number" id="courseHours" class="form-control" required min="1" max="500" placeholder="Ex: 40">
+        </div>
+
+        <!-- SUBSEÇÃO: DETALHES DO CONTEÚDO -->
+        <div class="mb-4" style="border-top: 2px dashed #eee; padding-top: 1.5rem; margin-top: 1.5rem;">
+          <h4 style="color: var(--primary-dark); font-family: 'Fredoka One', cursive; margin-bottom: 1.5rem;">
+            📌 Detalhes do Conteúdo
+          </h4>
+
+          <div class="mb-3">
+            <label class="form-label">Sobre o Curso *</label>
+            <textarea id="aboutCourse" class="form-control" required rows="4" placeholder="Descreva o objetivo geral do curso, público-alvo e contexto."></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">O que você vai aprender *</label>
+            <textarea id="learningOutcomes" class="form-control" required rows="4" placeholder="Liste os principais tópicos ou habilidades que o aluno dominará ao final."></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Requisitos</label>
+            <textarea id="prerequisites" class="form-control" rows="3" placeholder="Ex: Conhecimento básico de matemática, acesso à internet, etc."></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Metodologia *</label>
+            <textarea id="methodology" class="form-control" required rows="3" placeholder="Descreva como o curso será ministrado: videoaulas, quizzes, IA, projetos, etc."></textarea>
+          </div>
+        </div>
+
+        <!-- Seção de Estilo Visual -->
+        <div class="row">
+          <div class="col">
+            <label class="form-label">Cor de Destaque</label>
+            <div style="display: flex; align-items: center; gap: 10px; margin: 0.5rem 0 1rem;">
+              <input type="color" id="courseColorPicker" value="#4a90e2" style="width: 50px; height: 40px; border: none; border-radius: 8px;">
+              <span id="selectedColorPreview" style="display: inline-block; width: 30px; height: 30px; border-radius: 6px; background: #4a90e2;"></span>
+              <span id="selectedColorHex" style="font-family: 'Nunito', sans-serif; color: var(--primary-dark);">#4a90e2</span>
+            </div>
+            <input type="hidden" id="courseColor" value="#4a90e2">
+          </div>
+          
+          <div class="col">
+            <label class="form-label">Emoji/Ícone</label>
+            <div class="emoji-picker" id="emojiPickerContainer" style="max-height: 120px; overflow-y: auto; padding: 5px; border: 1px solid #eee; border-radius: 8px;">
+              <!-- Emojis serão carregados por JavaScript -->
+            </div>
+            <input type="hidden" id="courseEmoji" value="📚">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary">Atualizar Curso</button>
+      </form>
+    </div>
+
+    <!-- Adicionar/Editar Aula e Lista de Aulas -->
+    <div class="d-flex gap-4 flex-wrap">
+
+     <!-- Adicionar/Editar Aula -->
+    <div class="card" style="flex: 1; min-width: 300px;">
+      <h3 class="section-title" id="formAulaTitle">Adicionar Aula</h3>
+      <div id="editModeBanner" class="edit-mode-banner" style="display: none;">
+        <i class="fas fa-edit"></i> Modo Edição - Editando Aula <span id="aulaNumeroEditando"></span>
+      </div>
+      <form id="form-aula">
+        <div class="mb-3">
+          <label class="form-label">Número da Aula</label>
+          <input type="number" class="form-control" id="numeroAula" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Título da Aula</label>
+          <input type="text" class="form-control" id="tituloAula" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Descrição</label>
+          <textarea class="form-control" id="descricaoAula" rows="3"></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Duração da Aula (minutos)</label>
+          <input type="number" class="form-control" id="duracaoAula" required min="1" max="300" placeholder="Ex: 15">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Material de Apoio</label>
+          <input type="url" class="form-control" id="linkMaterialApoio" placeholder="Cole o link do Drive aqui">
+          <small class="form-text" style="color: #666; font-size: 0.9rem; display: block; margin-bottom: 15px;">
+            Certifique-se de que o link esteja com compartilhamento "Qualquer pessoa com o link".
+          </small>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Link do Vídeo</label>
+          <input type="url" class="form-control" id="linkVideo" placeholder="https://youtube.com/...">
+        </div>
+
+        <!-- SUBSEÇÃO: ADICIONAR QUIZ -->
+        <div class="mb-4" style="border-top: 2px dashed #eee; padding-top: 1.5rem; margin-top: 1.5rem;">
+          <h4 style="color: var(--primary-dark); font-family: 'Fredoka One', cursive; margin-bottom: 1.5rem;">
+            Quiz da Aula
+          </h4>
+
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="ativarQuiz">
+            <label class="form-check-label" for="ativarQuiz">Esta aula possui quiz</label>
+          </div>
+
+          <div id="quizFields" style="display: none;">
+            <div class="mb-3">
+              <label class="form-label">Número do Quiz *</label>
+              <input type="number" class="form-control" id="numeroQuiz" required min="1" placeholder="Ex: 1">
+            </div>
+
+            <div style="padding: 1rem; background-color: #f9f9f9; border-radius: 8px;">
+              <div class="mb-3">
+                <label class="form-label">Pergunta *</label>
+                <textarea class="form-control" id="perguntaQuiz" rows="2" placeholder="Ex: Qual é o resultado de 2 + 2?"></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Alternativa A *</label>
+                <input type="text" class="form-control" id="altA" placeholder="Ex: 3">
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Alternativa B *</label>
+                <input type="text" class="form-control" id="altB" placeholder="Ex: 4">
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Alternativa C *</label>
+                <input type="text" class="form-control" id="altC" placeholder="Ex: 5">
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Alternativa D *</label>
+                <input type="text" class="form-control" id="altD" placeholder="Ex: 6">
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Marque a alternativa correta *</label>
+                <div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="respostaCorreta" id="corretaA" value="A">
+                    <label class="form-check-label" for="corretaA">A</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="respostaCorreta" id="corretaB" value="B">
+                    <label class="form-check-label" for="corretaB">B</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="respostaCorreta" id="corretaC" value="C">
+                    <label class="form-check-label" for="corretaC">C</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="respostaCorreta" id="corretaD" value="D">
+                    <label class="form-check-label" for="corretaD">D</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="botoesAula">
+          <button type="submit" class="btn-primary w-100" id="btnSubmitAula">Adicionar Aula</button>
+        </div>
+      </form>
+    </div>
+
+      <!-- Lista de Aulas -->
+      <div class="card" style="flex: 1; min-width: 300px;">
+        <h3 class="section-title" style="color: var(--accent-green);">Lista de Aulas</h3>
+        <div id="loadingAulas" class="loading" style="display: none;">
+          <i class="fas fa-spinner fa-spin"></i> Carregando aulas...
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Título</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaAulas">
+            <tr>
+              <td colspan="3" class="no-aulas">Nenhuma aula cadastrada</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { 
+      getFirestore, 
+      collection, 
+      doc, 
+      getDoc, 
+      updateDoc, 
+      addDoc, 
+      getDocs,
+      deleteDoc,
+      serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+    // Config Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAQ0s0EpWm2kmPAC3z0bNphLyjcGieWIBM",
+      authDomain: "siteweb-ca3bc.firebaseapp.com",
+      projectId: "siteweb-ca3bc",
+      storageBucket: "siteweb-ca3bc.firebasestorage.app",
+      messagingSenderId: "312050528441",
+      appId: "1:312050528441:web:70abee0173951c08402b68"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    // Lista de emojis
+    const emojisDisciplinas = [
+      '📚', '📖', '📘', '📗', '📕', '📓', '📒', '📃', '📜', '📝', '✏️', '📅', '⏳',
+      '🧮', '➕', '➖', '✖️', '➗', '🔢', '💯', '📏', '📐',
+      '🔬', '🧪', '⚗️', '🧫', '🧬', '🌍', '🌎', '🌏',
+      '🎨', '🎭', '🎬', '🎤', '🎧', '🎼', '🎹', '🖌️',
+      '💻', '🖥️', '📱', '⌨️', '🖱️', '💾', '💿', '🧩', '🤖',
+      '🗣️', '🔤', '🔠', '🔡', '💬', '🗨️', '📢', '📣',
+      '🏛️', '🏺', '⚔️', '🛡️', '📜', '🗺️', '🧭',
+      '🧠', '💡', '🔍', '📌', '🎯', '✅', '✔️',
+      '📊', '📈', '📉', '💼', '🗂️', '🧾', '💰', '🧮',
+      '🛠️', '⚙️', '🏗️', '📐', '📏', '🔧', '🔩', '🧱',
+      '🧘', '🏃', '🩺', '💊', '🧴', '🧠', '🫀', '🫁'
+    ];
+
+    // Variáveis globais
+    let cursoId = null;
+    let aulaEditandoId = null;
+    let modoEdicaoAula = false;
+
+    // Função para carregar as informações do curso
+    async function carregarCurso() {
+      const urlParams = new URLSearchParams(window.location.search);
+      cursoId = urlParams.get('id');
+
+      if (!cursoId) {
+        mostrarErro('ID do curso não encontrado na URL.');
+        return;
+      }
+
+      try {
+        const docRef = doc(db, "cursos", cursoId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const curso = docSnap.data();
+          preencherFormulario(curso);
+          await carregarAulas();
+        } else {
+          mostrarErro('Curso não encontrado.');
+        }
+      } catch (error) {
+        console.error("Erro ao carregar curso:", error);
+        mostrarErro('Erro ao carregar informações do curso.');
+      }
+    }
+
+    // Função para preencher o formulário com os dados do curso
+    function preencherFormulario(curso) {
+      document.getElementById('teacherName').value = curso.professor || '';
+      document.getElementById('courseTitle').value = curso.titulo || '';
+      document.getElementById('courseCategory').value = curso.categoria || '';
+      document.getElementById('courseLevel').value = curso.nivel || '';
+      document.getElementById('shortDescription').value = curso.descricaoCurta || '';
+      document.getElementById('courseHours').value = curso.cargaHoraria || '';
+      document.getElementById('aboutCourse').value = curso.sobre || '';
+      document.getElementById('learningOutcomes').value = curso.aprender || '';
+      document.getElementById('prerequisites').value = curso.requisitos || '';
+      document.getElementById('methodology').value = curso.metodologia || '';
+      
+      const corDestaque = curso.corDestaque || '#4a90e2';
+      document.getElementById('courseColorPicker').value = corDestaque;
+      document.getElementById('selectedColorPreview').style.backgroundColor = corDestaque;
+      document.getElementById('selectedColorHex').textContent = corDestaque;
+      document.getElementById('courseColor').value = corDestaque;
+
+      const emoji = curso.emoji || '📚';
+      document.getElementById('courseEmoji').value = emoji;
+      
+      document.querySelectorAll('#emojiPickerContainer span').forEach(span => {
+        if (span.textContent === emoji) {
+          span.style.backgroundColor = 'var(--gray-light)';
+          span.style.transform = 'scale(1.2)';
+        }
+      });
+
+      document.getElementById('loadingMessage').style.display = 'none';
+      document.getElementById('courseForm').style.display = 'block';
+    }
+
+    // Função para carregar as aulas do curso
+    async function carregarAulas() {
+      const loadingAulas = document.getElementById('loadingAulas');
+      const tbody = document.getElementById('tabelaAulas');
+      
+      loadingAulas.style.display = 'block';
+      tbody.innerHTML = '';
+
+      try {
+        const aulasQuery = collection(db, "cursos", cursoId, "aulas");
+        const querySnapshot = await getDocs(aulasQuery);
+        
+        loadingAulas.style.display = 'none';
+
+        if (querySnapshot.empty) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="3" class="no-aulas">Nenhuma aula cadastrada</td>
+            </tr>
+          `;
+          return;
+        }
+
+        const aulas = [];
+        querySnapshot.forEach((doc) => {
+          aulas.push({ ...doc.data(), id: doc.id });
+        });
+        
+        aulas.sort((a, b) => a.numero - b.numero);
+
+        aulas.forEach(aula => {
+          adicionarAulaNaTabela(aula);
+        });
+
+      } catch (error) {
+        console.error("Erro ao carregar aulas:", error);
+        loadingAulas.style.display = 'none';
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="3" class="no-aulas">Erro ao carregar aulas</td>
+          </tr>
+        `;
+      }
+    }
+
+    // Função para adicionar aula à tabela
+    function adicionarAulaNaTabela(aula) {
+      const tbody = document.getElementById('tabelaAulas');
+      
+      if (tbody.querySelector('.no-aulas')) {
+        tbody.innerHTML = '';
+      }
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${aula.numero}</td>
+        <td>${aula.titulo}</td>
+        <td>
+          <button class="btn-warning-sm" onclick="editarAula('${aula.id}')">Editar</button>
+          <button class="btn-danger-sm" onclick="excluirAula('${aula.id}', ${aula.numero})">Excluir</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    // Função para carregar dados da aula no formulário (MODO EDIÇÃO)
+    async function carregarAulaParaEdicao(aulaId) {
+      try {
+        const docRef = doc(db, "cursos", cursoId, "aulas", aulaId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const aula = docSnap.data();
+          aulaEditandoId = aulaId;
+          modoEdicaoAula = true;
+
+          // Preencher formulário com dados da aula
+          document.getElementById('numeroAula').value = aula.numero || '';
+          document.getElementById('tituloAula').value = aula.titulo || '';
+          document.getElementById('descricaoAula').value = aula.descricao || '';
+          document.getElementById('duracaoAula').value = aula.duracao || '';
+          document.getElementById('linkMaterialApoio').value = aula.materialApoio || '';
+          document.getElementById('linkVideo').value = aula.linkVideo || '';
+
+          // Configurar quiz se existir
+          if (aula.quiz) {
+            document.getElementById('ativarQuiz').checked = true;
+            document.getElementById('quizFields').style.display = 'block';
+            document.getElementById('numeroQuiz').value = aula.quiz.numero || '';
+            document.getElementById('perguntaQuiz').value = aula.quiz.pergunta || '';
+            document.getElementById('altA').value = aula.quiz.alternativas[0]?.texto || '';
+            document.getElementById('altB').value = aula.quiz.alternativas[1]?.texto || '';
+            document.getElementById('altC').value = aula.quiz.alternativas[2]?.texto || '';
+            document.getElementById('altD').value = aula.quiz.alternativas[3]?.texto || '';
+
+            // Marcar alternativa correta
+            aula.quiz.alternativas.forEach((alt, index) => {
+              if (alt.correta) {
+                const letra = ['A', 'B', 'C', 'D'][index];
+                document.getElementById(`correta${letra}`).checked = true;
+              }
+            });
+          } else {
+            document.getElementById('ativarQuiz').checked = false;
+            document.getElementById('quizFields').style.display = 'none';
+          }
+
+          // Atualizar interface para modo edição
+          entrarModoEdicaoAula(aula.numero);
+        }
+      } catch (error) {
+        console.error("Erro ao carregar aula para edição:", error);
+        alert("Erro ao carregar dados da aula.");
+      }
+    }
+
+    // Função para entrar no modo edição de aula
+    function entrarModoEdicaoAula(numeroAula) {
+      document.getElementById('formAulaTitle').textContent = 'Editar Aula';
+      document.getElementById('editModeBanner').style.display = 'block';
+      document.getElementById('aulaNumeroEditando').textContent = numeroAula;
+      document.getElementById('btnSubmitAula').textContent = 'Atualizar Aula';
+      document.getElementById('btnSubmitAula').className = 'btn-warning w-100';
+
+      // Adicionar botão cancelar
+      const botoesAula = document.getElementById('botoesAula');
+      if (!document.getElementById('btnCancelarEdicao')) {
+        const btnCancelar = document.createElement('button');
+        btnCancelar.type = 'button';
+        btnCancelar.id = 'btnCancelarEdicao';
+        btnCancelar.className = 'btn-secondary w-100';
+        btnCancelar.textContent = 'Cancelar Edição';
+        btnCancelar.onclick = cancelarEdicaoAula;
+        botoesAula.appendChild(btnCancelar);
+      }
+    }
+
+    // Função para sair do modo edição de aula
+    function sairModoEdicaoAula() {
+      modoEdicaoAula = false;
+      aulaEditandoId = null;
+
+      document.getElementById('formAulaTitle').textContent = 'Adicionar Aula';
+      document.getElementById('editModeBanner').style.display = 'none';
+      document.getElementById('btnSubmitAula').textContent = 'Adicionar Aula';
+      document.getElementById('btnSubmitAula').className = 'btn-primary w-100';
+
+      // Remover botão cancelar
+      const btnCancelar = document.getElementById('btnCancelarEdicao');
+      if (btnCancelar) {
+        btnCancelar.remove();
+      }
+
+      // Limpar formulário
+      document.getElementById('form-aula').reset();
+      document.getElementById('ativarQuiz').checked = false;
+      document.getElementById('quizFields').style.display = 'none';
+    }
+
+    // Função para mostrar erro
+    function mostrarErro(mensagem) {
+      document.getElementById('loadingMessage').style.display = 'none';
+      document.getElementById('errorMessage').style.display = 'block';
+      document.getElementById('errorMessage').textContent = mensagem;
+    }
+
+    // Configurar emojis
+    function configurarEmojis() {
+      const container = document.getElementById('emojiPickerContainer');
+      emojisDisciplinas.forEach(emoji => {
+        const span = document.createElement('span');
+        span.textContent = emoji;
+        span.style.cursor = 'pointer';
+        span.style.fontSize = '1.4rem';
+        span.style.padding = '4px';
+        span.style.borderRadius = '6px';
+        span.style.transition = 'all 0.2s';
+        span.addEventListener('click', () => {
+          document.querySelectorAll('#emojiPickerContainer span').forEach(el => {
+            el.style.backgroundColor = 'transparent';
+            el.style.transform = 'scale(1)';
+          });
+          span.style.backgroundColor = 'var(--gray-light)';
+          span.style.transform = 'scale(1.2)';
+          document.getElementById('courseEmoji').value = emoji;
+        });
+        container.appendChild(span);
+      });
+    }
+
+    // Configurar seletor de cor
+    function configurarSeletorCor() {
+      const colorPicker = document.getElementById('courseColorPicker');
+      const colorPreview = document.getElementById('selectedColorPreview');
+      const colorHex = document.getElementById('selectedColorHex');
+      const hiddenColorInput = document.getElementById('courseColor');
+
+      colorPicker.addEventListener('input', () => {
+        const color = colorPicker.value;
+        colorPreview.style.backgroundColor = color;
+        colorHex.textContent = color;
+        hiddenColorInput.value = color;
+      });
+    }
+
+    // Configurar toggle do quiz
+    function configurarToggleQuiz() {
+      document.getElementById('ativarQuiz').addEventListener('change', function() {
+        document.getElementById('quizFields').style.display = this.checked ? 'block' : 'none';
+      });
+    }
+
+    // Inicialização quando o usuário estiver logado
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        configurarEmojis();
+        configurarSeletorCor();
+        configurarToggleQuiz();
+        carregarCurso();
+        
+        document.getElementById('courseForm').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          await atualizarCurso();
+        });
+
+        document.getElementById('form-aula').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          if (modoEdicaoAula) {
+            await atualizarAula();
+          } else {
+            await adicionarAula();
+          }
+        });
+
+      } else {
+        window.location.href = "login.html";
+      }
+    });
+
+    // Função para atualizar o curso
+    async function atualizarCurso() {
+      const cursoData = {
+        professor: document.getElementById('teacherName').value,
+        titulo: document.getElementById('courseTitle').value,
+        categoria: document.getElementById('courseCategory').value,
+        nivel: document.getElementById('courseLevel').value,
+        descricaoCurta: document.getElementById('shortDescription').value,
+        cargaHoraria: parseInt(document.getElementById('courseHours').value),
+        sobre: document.getElementById('aboutCourse').value,
+        aprender: document.getElementById('learningOutcomes').value,
+        requisitos: document.getElementById('prerequisites').value,
+        metodologia: document.getElementById('methodology').value,
+        corDestaque: document.getElementById('courseColor').value,
+        emoji: document.getElementById('courseEmoji').value,
+        updatedAt: serverTimestamp()
+      };
+
+      try {
+        await updateDoc(doc(db, "cursos", cursoId), cursoData);
+        alert('✅ Curso atualizado com sucesso!');
+      } catch (error) {
+        console.error("Erro ao atualizar curso:", error);
+        alert('❌ Erro ao atualizar curso.');
+      }
+    }
+
+    // Função para adicionar aula (MODO NORMAL)
+    async function adicionarAula() {
+      const aulaData = {
+        numero: parseInt(document.getElementById('numeroAula').value),
+        titulo: document.getElementById('tituloAula').value,
+        descricao: document.getElementById('descricaoAula').value,
+        duracao: parseInt(document.getElementById('duracaoAula').value),
+        linkVideo: document.getElementById('linkVideo').value,
+        materialApoio: document.getElementById('linkMaterialApoio').value,
+        createdAt: serverTimestamp()
+      };
+
+      if (document.getElementById('ativarQuiz').checked) {
+        const quiz = {
+          numero: parseInt(document.getElementById('numeroQuiz').value),
+          pergunta: document.getElementById('perguntaQuiz').value,
+          alternativas: [
+            { texto: document.getElementById('altA').value, correta: document.getElementById('corretaA').checked },
+            { texto: document.getElementById('altB').value, correta: document.getElementById('corretaB').checked },
+            { texto: document.getElementById('altC').value, correta: document.getElementById('corretaC').checked },
+            { texto: document.getElementById('altD').value, correta: document.getElementById('corretaD').checked }
+          ]
+        };
+        aulaData.quiz = quiz;
+      }
+
+      try {
+        const docRef = await addDoc(collection(db, "cursos", cursoId, "aulas"), aulaData);
+        adicionarAulaNaTabela({ ...aulaData, id: docRef.id });
+        alert("✅ Aula adicionada com sucesso!");
+        document.getElementById('form-aula').reset();
+        document.getElementById('ativarQuiz').checked = false;
+        document.getElementById('quizFields').style.display = 'none';
+      } catch (error) {
+        console.error("Erro ao salvar aula:", error);
+        alert("❌ Erro ao salvar aula.");
+      }
+    }
+
+    // Função para atualizar aula (MODO EDIÇÃO)
+    async function atualizarAula() {
+      const aulaData = {
+        numero: parseInt(document.getElementById('numeroAula').value),
+        titulo: document.getElementById('tituloAula').value,
+        descricao: document.getElementById('descricaoAula').value,
+        duracao: parseInt(document.getElementById('duracaoAula').value),
+        linkVideo: document.getElementById('linkVideo').value,
+        materialApoio: document.getElementById('linkMaterialApoio').value,
+        updatedAt: serverTimestamp()
+      };
+
+      if (document.getElementById('ativarQuiz').checked) {
+        const quiz = {
+          numero: parseInt(document.getElementById('numeroQuiz').value),
+          pergunta: document.getElementById('perguntaQuiz').value,
+          alternativas: [
+            { texto: document.getElementById('altA').value, correta: document.getElementById('corretaA').checked },
+            { texto: document.getElementById('altB').value, correta: document.getElementById('corretaB').checked },
+            { texto: document.getElementById('altC').value, correta: document.getElementById('corretaC').checked },
+            { texto: document.getElementById('altD').value, correta: document.getElementById('corretaD').checked }
+          ]
+        };
+        aulaData.quiz = quiz;
+      } else {
+        aulaData.quiz = null; // Remove o quiz se foi desmarcado
+      }
+
+      try {
+        await updateDoc(doc(db, "cursos", cursoId, "aulas", aulaEditandoId), aulaData);
+        alert("✅ Aula atualizada com sucesso!");
+        
+        // Recarregar a lista de aulas e sair do modo edição
+        await carregarAulas();
+        sairModoEdicaoAula();
+      } catch (error) {
+        console.error("Erro ao atualizar aula:", error);
+        alert("❌ Erro ao atualizar aula.");
+      }
+    }
+
+    // Funções globais para ações das aulas
+    window.editarAula = function(aulaId) {
+      carregarAulaParaEdicao(aulaId);
+    };
+
+    window.excluirAula = async function(aulaId, numero) {
+      if (!confirm(`Tem certeza que deseja excluir a Aula ${numero}?`)) return;
+
+      try {
+        await deleteDoc(doc(db, "cursos", cursoId, "aulas", aulaId));
+        await carregarAulas();
+        alert("Aula excluída com sucesso!");
+        
+        // Se estava editando a aula excluída, sair do modo edição
+        if (aulaEditandoId === aulaId) {
+          sairModoEdicaoAula();
+        }
+      } catch (error) {
+        console.error("Erro ao excluir aula:", error);
+        alert("Erro ao excluir aula.");
+      }
+    };
+
+    window.cancelarEdicaoAula = function() {
+      sairModoEdicaoAula();
+    };
+
+  </script>
+
+</body>
+</html>
