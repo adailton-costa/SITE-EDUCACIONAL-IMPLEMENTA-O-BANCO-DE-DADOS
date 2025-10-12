@@ -38,6 +38,8 @@
           <p class="centralizado">
             <a href="/index.html" class="voltar-link">Voltar ao login</a>
           </p>
+
+          <div id="timerDisplay" class="centralizado" style="margin-top:10px; font-weight:bold; color:#3498db;"></div>
           <div id="message" class="centralizado"></div>
         </form>
       </div>
@@ -72,10 +74,34 @@
 
     const form = document.getElementById('resetForm');
     const message = document.getElementById('message');
+    const timerDisplay = document.getElementById('timerDisplay');
 
-    if ( true (mode === 'resetPassword' && oobCode)) {
+    if (mode === 'resetPassword' && oobCode) {
+      const expirationTime = Date.now() + 10 * 60 * 1000; // 10 minutos
+
+      const timer = setInterval(() => {
+        const remaining = expirationTime - Date.now();
+
+        if (remaining <= 0) {
+          clearInterval(timer);
+          form.style.display = 'none';
+          message.textContent = "⏰ O link de redefinição expirou após 10 minutos. Solicite um novo.";
+          message.style.color = "#e74c3c";
+          timerDisplay.textContent = "";
+          return;
+        }
+
+        // Calcula minutos e segundos restantes
+        const minutes = Math.floor((remaining / 1000 / 60) % 60);
+        const seconds = Math.floor((remaining / 1000) % 60);
+
+        timerDisplay.textContent = `⏱ Tempo restante: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      }, 1000);
+
+      // Envio do formulário
       form.addEventListener('submit', (e) => {
         e.preventDefault();
+
         const newPassword = document.getElementById('newPassword').value;
         const confirmPassword = document.getElementById('confirmPassword').value;
 
@@ -87,8 +113,10 @@
 
         confirmPasswordReset(auth, oobCode, newPassword)
           .then(() => {
+            clearInterval(timer);
             message.textContent = "Senha alterada com sucesso!";
             message.style.color = "#2ecc71";
+            timerDisplay.textContent = "";
             form.reset();
           })
           .catch(error => {
