@@ -75,14 +75,12 @@
   const message = document.getElementById('message');
 
   if (mode === 'resetPassword' && oobCode) {
-    // VERIFICA DIRETAMENTE NO FIREBASE SE O LINK É VÁLIDO
+    // Verifica se o código é válido (Firebase cuida da expiração)
     checkActionCode(auth, oobCode)
       .then((info) => {
-        // Link válido - configura o formulário
         setupForm();
       })
       .catch((error) => {
-        // Link expirado ou inválido
         if (error.code === 'auth/invalid-action-code' || error.code === 'auth/expired-action-code') {
           handleExpiredLink();
         } else {
@@ -109,7 +107,7 @@
       return;
     }
 
-    // TENTA REDEFINIR A SENHA - O FIREBASE VAI VALIDAR SE AINDA É VÁLIDO
+    // Firebase valida automaticamente se o código ainda é válido
     confirmPasswordReset(auth, oobCode, newPassword)
       .then(() => {
         message.innerHTML = `
@@ -118,11 +116,9 @@
         `;
         message.style.color = "#2ecc71";
         form.reset();
-        
-        // Redireciona após 2 segundos
-        setTimeout(() => {
-          window.location.href = "index.html";
-        }, 2000);
+
+        // ✅ Redirecionamento IMEDIATO (sem setTimeout)
+        window.location.href = "index.html";
       })
       .catch(error => {
         if (error.code === 'auth/invalid-action-code' || error.code === 'auth/expired-action-code') {
@@ -139,7 +135,7 @@
     message.innerHTML = `
       ⏰ <strong>Link expirado!</strong><br>
       Este link de redefinição já expirou.<br>
-      <strong>Os links de redefinição têm validade de 5 minutos a partir do envio do email.</strong><br><br>
+      <strong>Os links de redefinição têm validade limitada.</strong><br><br>
       <a href="recuperar-senha.html" style="color: #3498db; text-decoration: underline; font-weight: bold;">
         🔗 Solicite um novo link aqui
       </a>
