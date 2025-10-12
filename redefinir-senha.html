@@ -34,6 +34,11 @@
           </div>
 
           <button type="submit" class="submit-btn"><i class="fas fa-lock"></i> Alterar Senha</button>
+          
+          <p class="centralizado">
+            <a href="index.html" class="voltar-link">← Voltar ao login</a>
+          </p>
+          
           <div id="message" class="centralizado"></div>
         </form>
       </div>
@@ -65,11 +70,15 @@
   const urlParams = new URLSearchParams(window.location.search);
   const oobCode = urlParams.get('oobCode');
   const mode = urlParams.get('mode');
+  const test = urlParams.get('test'); // Parâmetro para modo de teste
 
   const form = document.getElementById('resetForm');
   const message = document.getElementById('message');
 
-  if (mode === 'resetPassword' && oobCode) {
+  // 🔥 MODO DE TESTE - ADICIONE ESTA PARTE NO INÍCIO
+  if (test === 'true') {
+    simulateTestMode();
+  } else if (mode === 'resetPassword' && oobCode) {
     // Verifica se o código é válido (Firebase cuida da expiração)
     checkActionCode(auth, oobCode)
       .then((info) => {
@@ -84,6 +93,41 @@
       });
   } else {
     handleInvalidLink();
+  }
+
+  // 🔥 FUNÇÃO DE TESTE (adicione esta função)
+  function simulateTestMode() {
+    message.innerHTML = "🧪 <strong>MODO DE TESTE ATIVADO</strong><br>Simulando redefinição de senha...";
+    message.style.color = "#3498db";
+    
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (newPassword !== confirmPassword) {
+        message.textContent = "As senhas não coincidem.";
+        message.style.color = "red";
+        return;
+      }
+
+      // Simula sucesso sem chamar o Firebase
+      message.innerHTML = `
+        ✅ <strong>TESTE: Senha alterada com sucesso!</strong><br>
+        Em produção, isso atualizaria a senha no Firebase.<br><br>
+        Redirecionando para o login...
+      `;
+      message.style.color = "#2ecc71";
+      form.reset();
+
+      console.log("TESTE - Nova senha:", newPassword);
+      
+      // Redireciona após 2 segundos
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 2000);
+    });
   }
 
   function setupForm() {
