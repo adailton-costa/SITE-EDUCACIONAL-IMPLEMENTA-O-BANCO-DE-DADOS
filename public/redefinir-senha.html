@@ -39,7 +39,6 @@
             <a href="/index.html" class="voltar-link">Voltar ao login</a>
           </p>
 
-          <div id="timerDisplay" class="centralizado" style="margin-top:10px; font-weight:bold; color:#3498db;"></div>
           <div id="message" class="centralizado"></div>
         </form>
       </div>
@@ -74,123 +73,91 @@
 
   const form = document.getElementById('resetForm');
   const message = document.getElementById('message');
-  const timerDisplay = document.getElementById('timerDisplay');
 
-  // Tempo de expiração fixo (10 minutos a partir do momento atual)
-  // Na prática real, isso viria do Firebase, mas vamos simular
-  const EXPIRATION_MINUTES = 10;
-  
   if (mode === 'resetPassword' && oobCode) {
-    // Verifica se o código ainda é válido
+    // VERIFICA DIRETAMENTE NO FIREBASE SE O LINK É VÁLIDO
     checkActionCode(auth, oobCode)
       .then((info) => {
-        // Código é válido - inicia o timer
-        startTimer();
+        // Link válido - configura o formulário
         setupForm();
       })
       .catch((error) => {
-        // Código expirado ou inválido
-        handleExpiredLink();
+        // Link expirado ou inválido
+        if (error.code === 'auth/invalid-action-code' || error.code === 'auth/expired-action-code') {
+          handleExpiredLink();
+        } else {
+          handleInvalidLink();
+        }
       });
   } else {
     handleInvalidLink();
   }
 
-  function startTimer() {
-    // Usa o tempo atual + 10 minutos como expiração
-    // Na prática real, você pegaria o timestamp de quando o link foi criado
-    const expirationTime = Date.now() + (EXPIRATION_MINUTES * 60 * 1000);
-    
-    // Salva no sessionStorage para não reiniciar ao recarregar
-    const storageKey = `expiration_${oobCode}`;
-    const savedExpiration = sessionStorage.getItem(storageKey);
-    
-    const finalExpirationTime = savedExpiration ? parseInt(savedExpiration) : expirationTime;
-    
-    if (!savedExpiration) {
-      sessionStorage.setItem(storageKey, finalExpirationTime.toString());
-    }
-
-    const timer = setInterval(() => {
-      const remaining = finalExpirationTime - Date.now();
-
-      if (remaining <= 0) {
-        clearInterval(timer);
-        sessionStorage.removeItem(storageKey);
-        handleExpiredLink();
-        return;
-      }
-
-      const minutes = Math.floor(remaining / 1000 / 60);
-      const seconds = Math.floor((remaining / 1000) % 60);
-
-      timerDisplay.textContent = `⏱ Tempo restante: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-      
-      // Alerta visual quando faltar 1 minuto
-      if (minutes === 0 && seconds <= 59) {
-        timerDisplay.style.color = "#e74c3c";
-      }
-    }, 1000);
+  function setupForm() {
+    form.addEventListener('submit', handleSubmit);
   }
 
-  function setupForm() {
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
+  function handleSubmit(e) {
+    e.preventDefault();
 
-      const newPassword = document.getElementById('newPassword').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
 
-      if (newPassword !== confirmPassword) {
-        message.textContent = "As senhas não coincidem.";
-        message.style.color = "red";
-        return;
-      }
+    if (newPassword !== confirmPassword) {
+      message.textContent = "As senhas não coincidem.";
+      message.style.color = "red";
+      return;
+    }
 
-      confirmPasswordReset(auth, oobCode, newPassword)
-        .then(() => {
-          // Limpa o storage após sucesso
-          sessionStorage.removeItem(`expiration_${oobCode}`);
-          message.textContent = "✅ Senha alterada com sucesso!";
-          message.style.color = "#2ecc71";
-          timerDisplay.textContent = "";
-          form.reset();
-          
-          // Opcional: Redirecionar automaticamente após 3 segundos
-          setTimeout(() => {
-            window.location.href = "index.html";
-          }, 3000);
-        })
-        .catch(error => {
+    // TENTA REDEFINIR A SENHA - O FIREBASE VAI VALIDAR SE AINDA É VÁLIDO
+    confirmPasswordReset(auth, oobCode, newPassword)
+      .then(() => {
+        message.innerHTML = `
+          ✅ <strong>Senha alterada com sucesso!</strong><br>
+          Redirecionando para o login...
+        `;
+        message.style.color = "#2ecc71";
+        form.reset();
+        
+        // Redireciona após 2 segundos
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 2000);
+      })
+      .catch(error => {
+        if (error.code === 'auth/invalid-action-code' || error.code === 'auth/expired-action-code') {
+          handleExpiredLink();
+        } else {
           message.textContent = "Erro: " + error.message;
           message.style.color = "#e74c3c";
-        });
-    });
+        }
+      });
   }
 
   function handleExpiredLink() {
     form.style.display = 'none';
     message.innerHTML = `
       ⏰ <strong>Link expirado!</strong><br>
-      Este link de redefinição expirou após ${EXPIRATION_MINUTES} minutos.<br>
-      <a href="recuperar-senha.html" style="color: #3498db; text-decoration: underline;">
-        Solicite um novo link aqui
+      Este link de redefinição já expirou.<br>
+      <strong>Os links de redefinição têm validade de 5 minutos a partir do envio do email.</strong><br><br>
+      <a href="recuperar-senha.html" style="color: #3498db; text-decoration: underline; font-weight: bold;">
+        🔗 Solicite um novo link aqui
       </a>
     `;
     message.style.color = "#e74c3c";
-    timerDisplay.textContent = "";
   }
 
   function handleInvalidLink() {
     form.style.display = 'none';
     message.innerHTML = `
-      ❌ <strong>Link inválido!</strong><br>
-      Este link de redefinição não é válido.<br>
-      <a href="recuperar-senha.html" style="color: #3498db; text-decoration: underline;">
-        Solicite um novo link aqui
+      ❌ <strong>Link inválido ou já utilizado!</strong><br>
+      Este link de redefinição não é válido ou já foi usado.<br><br>
+      <a href="recuperar-senha.html" style="color: #3498db; text-decoration: underline; font-weight: bold;">
+        🔗 Solicite um novo link aqui
       </a>
     `;
     message.style.color = "#e74c3c";
   }
-</script>
+  </script>
 </body>
 </html>
