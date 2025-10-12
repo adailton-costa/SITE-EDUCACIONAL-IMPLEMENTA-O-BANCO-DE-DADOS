@@ -57,78 +57,140 @@
   </footer>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, confirmPasswordReset } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getAuth, confirmPasswordReset, checkActionCode } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAQ0s0EpWm2kmPAC3z0bNphLyjcGieWIBM",
-      authDomain: "siteweb-ca3bc.firebaseapp.com"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyAQ0s0EpWm2kmPAC3z0bNphLyjcGieWIBM",
+    authDomain: "siteweb-ca3bc.firebaseapp.com"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const oobCode = urlParams.get('oobCode');
-    const mode = urlParams.get('mode');
+  const urlParams = new URLSearchParams(window.location.search);
+  const oobCode = urlParams.get('oobCode');
+  const mode = urlParams.get('mode');
 
-    const form = document.getElementById('resetForm');
-    const message = document.getElementById('message');
-    const timerDisplay = document.getElementById('timerDisplay');
+  const form = document.getElementById('resetForm');
+  const message = document.getElementById('message');
+  const timerDisplay = document.getElementById('timerDisplay');
 
-    if (mode === 'resetPassword' && oobCode) {
-      const expirationTime = Date.now() + 10 * 60 * 1000; // 10 minutos
-
-      const timer = setInterval(() => {
-        const remaining = expirationTime - Date.now();
-
-        if (remaining <= 0) {
-          clearInterval(timer);
-          form.style.display = 'none';
-          message.textContent = "⏰ O link de redefinição expirou após 10 minutos. Solicite um novo.";
-          message.style.color = "#e74c3c";
-          timerDisplay.textContent = "";
-          return;
-        }
-
-        // Calcula minutos e segundos restantes
-        const minutes = Math.floor((remaining / 1000 / 60) % 60);
-        const seconds = Math.floor((remaining / 1000) % 60);
-
-        timerDisplay.textContent = `⏱ Tempo restante: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-      }, 1000);
-
-      // Envio do formulário
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const newPassword = document.getElementById('newPassword').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
-
-        if (newPassword !== confirmPassword) {
-          message.textContent = "As senhas não coincidem.";
-          message.style.color = "red";
-          return;
-        }
-
-        confirmPasswordReset(auth, oobCode, newPassword)
-          .then(() => {
-            clearInterval(timer);
-            message.textContent = "Senha alterada com sucesso!";
-            message.style.color = "#2ecc71";
-            timerDisplay.textContent = "";
-            form.reset();
-          })
-          .catch(error => {
-            message.textContent = "Erro: " + error.message;
-            message.style.color = "#e74c3c";
-          });
+  // Tempo de expiração fixo (10 minutos a partir do momento atual)
+  // Na prática real, isso viria do Firebase, mas vamos simular
+  const EXPIRATION_MINUTES = 10;
+  
+  if (mode === 'resetPassword' && oobCode) {
+    // Verifica se o código ainda é válido
+    checkActionCode(auth, oobCode)
+      .then((info) => {
+        // Código é válido - inicia o timer
+        startTimer();
+        setupForm();
+      })
+      .catch((error) => {
+        // Código expirado ou inválido
+        handleExpiredLink();
       });
-    } else {
-      form.style.display = 'none';
-      message.textContent = "Link inválido ou expirado.";
-      message.style.color = "#e74c3c";
+  } else {
+    handleInvalidLink();
+  }
+
+  function startTimer() {
+    // Usa o tempo atual + 10 minutos como expiração
+    // Na prática real, você pegaria o timestamp de quando o link foi criado
+    const expirationTime = Date.now() + (EXPIRATION_MINUTES * 60 * 1000);
+    
+    // Salva no sessionStorage para não reiniciar ao recarregar
+    const storageKey = `expiration_${oobCode}`;
+    const savedExpiration = sessionStorage.getItem(storageKey);
+    
+    const finalExpirationTime = savedExpiration ? parseInt(savedExpiration) : expirationTime;
+    
+    if (!savedExpiration) {
+      sessionStorage.setItem(storageKey, finalExpirationTime.toString());
     }
-  </script>
+
+    const timer = setInterval(() => {
+      const remaining = finalExpirationTime - Date.now();
+
+      if (remaining <= 0) {
+        clearInterval(timer);
+        sessionStorage.removeItem(storageKey);
+        handleExpiredLink();
+        return;
+      }
+
+      const minutes = Math.floor(remaining / 1000 / 60);
+      const seconds = Math.floor((remaining / 1000) % 60);
+
+      timerDisplay.textContent = `⏱ Tempo restante: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      
+      // Alerta visual quando faltar 1 minuto
+      if (minutes === 0 && seconds <= 59) {
+        timerDisplay.style.color = "#e74c3c";
+      }
+    }, 1000);
+  }
+
+  function setupForm() {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (newPassword !== confirmPassword) {
+        message.textContent = "As senhas não coincidem.";
+        message.style.color = "red";
+        return;
+      }
+
+      confirmPasswordReset(auth, oobCode, newPassword)
+        .then(() => {
+          // Limpa o storage após sucesso
+          sessionStorage.removeItem(`expiration_${oobCode}`);
+          message.textContent = "✅ Senha alterada com sucesso!";
+          message.style.color = "#2ecc71";
+          timerDisplay.textContent = "";
+          form.reset();
+          
+          // Opcional: Redirecionar automaticamente após 3 segundos
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 3000);
+        })
+        .catch(error => {
+          message.textContent = "Erro: " + error.message;
+          message.style.color = "#e74c3c";
+        });
+    });
+  }
+
+  function handleExpiredLink() {
+    form.style.display = 'none';
+    message.innerHTML = `
+      ⏰ <strong>Link expirado!</strong><br>
+      Este link de redefinição expirou após ${EXPIRATION_MINUTES} minutos.<br>
+      <a href="recuperar-senha.html" style="color: #3498db; text-decoration: underline;">
+        Solicite um novo link aqui
+      </a>
+    `;
+    message.style.color = "#e74c3c";
+    timerDisplay.textContent = "";
+  }
+
+  function handleInvalidLink() {
+    form.style.display = 'none';
+    message.innerHTML = `
+      ❌ <strong>Link inválido!</strong><br>
+      Este link de redefinição não é válido.<br>
+      <a href="recuperar-senha.html" style="color: #3498db; text-decoration: underline;">
+        Solicite um novo link aqui
+      </a>
+    `;
+    message.style.color = "#e74c3c";
+  }
+</script>
 </body>
 </html>
