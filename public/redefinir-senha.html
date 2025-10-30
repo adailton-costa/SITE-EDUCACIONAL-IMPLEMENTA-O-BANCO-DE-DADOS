@@ -4,151 +4,224 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Redefinir Senha - EducaUP</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Fredoka+One&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="recuperar-senha.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <style>
+    /* Reset e base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(to right, #0f2027, #2c5364, #0f2027);
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Cabeçalho */
+    header {
+      background-color: rgba(30, 58, 69, 0.95);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    /* Conteúdo principal */
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    #formContainer {
+      background: #0e1a22;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 26px;
+      margin-bottom: 24px;
+      color: #ffffff;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: #1a2a36;
+      color: white;
+      outline: none;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background: #1e90ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.3s;
+    }
+
+    .submit-btn:hover {
+      background: #1a7fd4;
+    }
+
+    #message {
+      margin-top: 20px;
+      min-height: 24px;
+      font-weight: 600;
+    }
+
+    /* Rodapé */
+    footer {
+      background: rgba(30, 58, 69, 0.95);
+      text-align: center;
+      padding: 16px;
+      font-size: 14px;
+      color: #aaa;
+    }
+
+    /* Responsivo */
+    @media (max-width: 480px) {
+      header {
+        padding: 1rem;
+      }
+      .logo {
+        font-size: 24px;
+      }
+      #formContainer {
+        padding: 20px;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
     <div class="logo">EducaUP</div>
-    <nav>
-      <ul>
-        <li><a href="#"><i class="fas fa-envelope"></i> Contato</a></li>
-      </ul>
-    </nav>
   </header>
 
-  <main class="course-container">
-    <div class="enrollment-form">
-      <div id="formContainer">
-        <h2 class="titulo-recuperar">Redefinir Senha</h2>
-        <form id="resetForm">
-          <div class="form-group">
-            <label for="newPassword">Nova Senha</label>
-            <input type="password" id="newPassword" required />
-          </div>
+  <main>
+    <div id="formContainer">
+      <h2>Redefinir Senha</h2>
+      <form id="resetForm">
+        <div class="form-group">
+          <label for="newPassword">Nova Senha</label>
+          <input type="password" id="newPassword" required />
+        </div>
 
-          <div class="form-group">
-            <label for="confirmPassword">Confirmar Nova Senha</label>
-            <input type="password" id="confirmPassword" required />
-          </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirmar Nova Senha</label>
+          <input type="password" id="confirmPassword" required />
+        </div>
 
-          <button type="submit" class="submit-btn"><i class="fas fa-lock"></i> Alterar Senha</button>
-          <div id="message" class="centralizado"></div>
-        </form>
-      </div>
+        <button type="submit" class="submit-btn">
+          <i class="fas fa-lock"></i> Alterar Senha
+        </button>
+      </form>
+
+      <!-- ✅ MENSAGEM FORA DO FORMULÁRIO — AGORA VAI APARECER! -->
+      <div id="message"></div>
     </div>
   </main>
 
   <footer>
-    <div class="social-links">
-      <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
-      <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
-      <a href="#"><i class="fab fa-youtube"></i> YouTube</a>
-      <a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a>
-    </div>
-    <p class="copyright">© 2025 EducaUP</p>
+    <p>© 2025 EducaUP</p>
   </footer>
 
   <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-  import { getAuth, confirmPasswordReset, checkActionCode } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, confirmPasswordReset } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAQ0s0EpWm2kmPAC3z0bNphLyjcGieWIBM",
-    authDomain: "siteweb-ca3bc.firebaseapp.com"
-  };
+    const firebaseConfig = {
+      apiKey: "AIzaSyAQ0s0EpWm2kmPAC3z0bNphLyjcGieWIBM",
+      authDomain: "siteweb-ca3bc.firebaseapp.com"
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const oobCode = urlParams.get('oobCode');
-  const mode = urlParams.get('mode');
+    const urlParams = new URLSearchParams(window.location.search);
+    const oobCode = urlParams.get('oobCode');
+    const mode = urlParams.get('mode');
 
-  const form = document.getElementById('resetForm');
-  const message = document.getElementById('message');
+    const form = document.getElementById('resetForm');
+    const messageEl = document.getElementById('message');
 
-  if (mode === 'resetPassword' && oobCode) {
-    // Verifica se o código é válido (Firebase cuida da expiração)
-    checkActionCode(auth, oobCode)
-      .then((info) => {
-        setupForm();
-      })
-      .catch((error) => {
-        if (error.code === 'auth/invalid-action-code' || error.code === 'auth/expired-action-code') {
-          handleExpiredLink();
-        } else {
-          handleInvalidLink();
+    if (mode !== 'resetPassword' || !oobCode) {
+      form.style.display = 'none';
+      messageEl.innerHTML = `
+        ❌ <strong>Link inválido.</strong><br>
+        Solicite um novo link de redefinição.
+      `;
+      messageEl.style.color = "#e74c3c";
+    } else {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (newPassword !== confirmPassword) {
+          messageEl.textContent = "As senhas não coincidem.";
+          messageEl.style.color = "#e74c3c";
+          return;
+        }
+
+        try {
+          await confirmPasswordReset(auth, oobCode, newPassword);
+          // Esconde só o formulário, mantém a mensagem visível
+          form.style.display = 'none';
+          messageEl.innerHTML = `
+            ✅ <strong>Senha alterada com sucesso!</strong><br>
+          `;
+          messageEl.style.color = "#2ecc71";
+        } catch (error) {
+          let msg = "Não foi possível redefinir a senha.";
+          if (error.code === 'auth/expired-action-code' || error.code === 'auth/invalid-action-code') {
+            msg = "Este link já expirou ou foi usado. Solicite um novo.";
+          }
+          messageEl.textContent = msg;
+          messageEl.style.color = "#e74c3c";
         }
       });
-  } else {
-    handleInvalidLink();
-  }
-
-  function setupForm() {
-    form.addEventListener('submit', handleSubmit);
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    const newPassword = document.getElementById('newPassword').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-
-    if (newPassword !== confirmPassword) {
-      message.textContent = "As senhas não coincidem.";
-      message.style.color = "red";
-      return;
     }
-
-    // Firebase valida automaticamente se o código ainda é válido
-    confirmPasswordReset(auth, oobCode, newPassword)
-      .then(() => {
-        message.innerHTML = `
-          ✅ <strong>Senha alterada com sucesso!</strong><br>
-          Redirecionando para o login...
-        `;
-        message.style.color = "#2ecc71";
-        form.reset();
-
-        // ✅ Redirecionamento IMEDIATO (sem setTimeout)
-        window.location.href = "./login.html";
-      })
-      .catch(error => {
-        if (error.code === 'auth/invalid-action-code' || error.code === 'auth/expired-action-code') {
-          handleExpiredLink();
-        } else {
-          message.textContent = "Erro: " + error.message;
-          message.style.color = "#e74c3c";
-        }
-      });
-  }
-
-  function handleExpiredLink() {
-    form.style.display = 'none';
-    message.innerHTML = `
-      ⏰ <strong>Link expirado!</strong><br>
-      Este link de redefinição já expirou.<br>
-      <strong>Os links de redefinição têm validade limitada.</strong><br><br>
-      <a href="recuperar-senha.html" style="color: #3498db; text-decoration: underline; font-weight: bold;">
-        🔗 Solicite um novo link aqui
-      </a>
-    `;
-    message.style.color = "#e74c3c";
-  }
-
-  function handleInvalidLink() {
-    form.style.display = 'none';
-    message.innerHTML = `
-      ❌ <strong>Link inválido ou já utilizado!</strong><br>
-      Este link de redefinição não é válido ou já foi usado.<br><br>
-      <a href="recuperar-senha.html" style="color: #3498db; text-decoration: underline; font-weight: bold;">
-        🔗 Solicite um novo link aqui
-      </a>
-    `;
-    message.style.color = "#e74c3c";
-  }
   </script>
 </body>
 </html>
